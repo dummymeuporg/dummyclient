@@ -14,6 +14,9 @@ void Client::connect(const char* host, unsigned short port) {
         throw ConnectionError();
     }
     m_socket.setBlocking(false);
+
+    m_state = std::make_shared<ClientState::InitialState>(*this); 
+    m_state->resume();
 }
 
 void Client::checkData() {
@@ -40,7 +43,7 @@ void Client::checkData() {
     if (m_packetSize == receivedBytes) {
         // Everything is fine. Reset the packet size and handle the data.
         std::cerr << "I got data!" << std::endl;
-        std::cerr << buffer.data() << std::endl;
+        m_state->onRead(buffer);
         m_packetSize = 0;
     } else {
         std::cerr << "Houston, I don't know how to handle this error."
@@ -49,34 +52,7 @@ void Client::checkData() {
     }
 }
 
-void Client::authenticate()
-{
-    const std::string& account(m_credentials.account());
-    const std::uint8_t* sessionID(m_credentials.sessionID());
-    // send account and uuid to the server.
-    std::vector<std::uint8_t> buffer(
-        sizeof(std::uint16_t) + // holds the size of the packet
-        sizeof(std::uint16_t) + // holds the size of the account name
-        account.size() + // holds the account
-        16 // holds the uuid.
-    );
-    *(reinterpret_cast<std::uint16_t*>(buffer.data())) =
-        buffer.size() - sizeof(std::uint16_t);
-    *(reinterpret_cast<std::uint16_t*>(buffer.data()) + 1) =
-        account.size();
-
-    // Put the account
-    std::copy(account.begin(),
-              account.end(),
-              buffer.data() + 2 * sizeof(std::uint16_t)
-    );
-
-    // Put the session ID
-    ::memcpy(buffer.data() + (2 * sizeof(std::uint16_t) + account.size()),
-             sessionID,
-             16);
-
-    // Send the packet.
-    m_socket.send(buffer.data(), buffer.size());
-
+void Client::changeState(std::shared_ptr<ClientState::State> state) {
+    m_state = state;
+    m_state->resume();
 }

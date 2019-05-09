@@ -6,6 +6,8 @@ add_executable(dummyclient
 	src/main.cpp
     src/client.cpp
     src/credentials.cpp
+    src/client_state/state.cpp
+    src/client_state/initial_state.cpp
 )
 
 target_link_libraries(dummyclient

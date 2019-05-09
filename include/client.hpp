@@ -1,9 +1,11 @@
 #pragma once
 
 #include <exception>
+#include <memory>
 
 #include <SFML/Network.hpp>
 
+#include "client_state/initial_state.hpp"
 #include "credentials.hpp"
 
 class ClientError : public std::exception {
@@ -32,13 +34,18 @@ public:
         return m_credentials;
     }
 
+    sf::TcpSocket& socket() {
+        return m_socket;
+    }
+
     void checkData();
     void connect(const char* host, unsigned short port);
     void authenticate();
+    void changeState(std::shared_ptr<ClientState::State>);
 
 private:
     sf::TcpSocket m_socket;
     std::uint16_t m_packetSize;
     Credentials m_credentials;
-    //std::shared_ptr<ClientState::State> m_state;
+    std::shared_ptr<ClientState::State> m_state;
 };

@@ -16,7 +16,6 @@ int main(int argc, char* argv[])
     sf::RenderWindow window(sf::VideoMode(1024, 768), "DummyClient");
     Client client(credentials);
     client.connect("localhost", 6612);
-    client.authenticate();
     while (window.isOpen())
     {
         sf::Event event;
