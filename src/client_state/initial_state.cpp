@@ -6,6 +6,7 @@
 #include "credentials.hpp"
 
 #include "client_state/initial_state.hpp"
+#include "client_state/receive_characters_state.hpp"
 
 namespace ClientState {
 
@@ -40,6 +41,9 @@ void InitialState::resume() {
 
     // Send the packet.
     m_client.socket().send(buffer.data(), buffer.size());
+    m_client.changeState(
+        std::make_shared<ClientState::ReceiveCharactersState>(m_client)
+    );
 
 }
 
