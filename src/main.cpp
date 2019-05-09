@@ -26,6 +26,7 @@ int main(int argc, char* argv[])
                 window.close();
         }
 
+        client.checkData();
         window.clear();
         window.display();
     }

@@ -12,8 +12,15 @@ class ClientError : public std::exception {
 
 class ConnectionError : public ClientError {
 public:
-    const char* what() const noexcept {
-        return "cannot connect to server.";
+    virtual const char* what() const noexcept override {
+        return "cannot connect to server";
+    }
+};
+
+class ReceiveError : public ClientError {
+public:
+    virtual const char* what() const noexcept override {
+        return "cannot receive data from server";
     }
 };
 

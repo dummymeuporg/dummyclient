@@ -35,12 +35,17 @@ void Client::checkData() {
     status = m_socket.receive(reinterpret_cast<void*>(buffer.data()),
                               m_packetSize,
                               receivedBytes);
+    std::cerr << "Packet size: " << m_packetSize << std::endl;
+    std::cerr << "ReceivedBytes: " << receivedBytes << std::endl;
     if (m_packetSize == receivedBytes) {
         // Everything is fine. Reset the packet size and handle the data.
+        std::cerr << "I got data!" << std::endl;
         std::cerr << buffer.data() << std::endl;
+        m_packetSize = 0;
     } else {
         std::cerr << "Houston, I don't know how to handle this error."
             << std::endl;
+        ::exit(-1);
     }
 }
 
