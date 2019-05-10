@@ -9,6 +9,8 @@ add_executable(dummyclient
     src/client_state/state.cpp
     src/client_state/initial_state.cpp
     src/client_state/receive_characters_state.cpp
+    src/screen/screen.cpp
+    src/screen/select_character_screen.cpp
 )
 
 target_link_libraries(dummyclient

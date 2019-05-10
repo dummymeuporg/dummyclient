@@ -4,7 +4,8 @@
 #include "client.hpp"
 
 Client::Client(const Credentials& credentials)
-    : m_packetSize(0), m_credentials(credentials)
+    : m_packetSize(0), m_credentials(credentials), m_state(nullptr),
+      m_screen(nullptr)
 {
 }
 
@@ -42,7 +43,7 @@ void Client::checkData() {
     std::cerr << "ReceivedBytes: " << receivedBytes << std::endl;
     if (m_packetSize == receivedBytes) {
         // Everything is fine. Reset the packet size and handle the data.
-        std::cerr << "I got data!" << std::endl;
+        std::cerr << "I got data! " << buffer.size() << std::endl;
         m_state->onRead(buffer);
         m_packetSize = 0;
     } else {
@@ -55,4 +56,12 @@ void Client::checkData() {
 void Client::changeState(std::shared_ptr<ClientState::State> state) {
     m_state = state;
     m_state->resume();
+}
+
+void Client::setScreen(std::shared_ptr<Screen::Screen> screen) {
+    m_screen = screen;
+}
+
+void Client::update() {
+    m_screen->notify();
 }
