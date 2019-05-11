@@ -29,7 +29,7 @@ public:
 
 class Client {
 public:
-    Client(const Credentials&);
+    Client(const Credentials&&);
 
     const Credentials& credentials() const {
         return m_credentials;

@@ -3,8 +3,8 @@
 
 #include "client.hpp"
 
-Client::Client(const Credentials& credentials)
-    : m_packetSize(0), m_credentials(credentials), m_state(nullptr),
+Client::Client(const Credentials&& credentials)
+    : m_packetSize(0), m_credentials(std::move(credentials)), m_state(nullptr),
       m_screen(nullptr)
 {
 }
