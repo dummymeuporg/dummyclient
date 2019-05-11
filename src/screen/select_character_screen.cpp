@@ -12,7 +12,8 @@ namespace Screen {
 SelectCharacterScreen::SelectCharacterScreen(::Game& game,
                                              ::Client& client,
                                              ::WidgetBuilder& widgetBuilder)
-    : UIScreen(game, client, widgetBuilder), m_charactersCount(-1)
+    : UIScreen(game, client, widgetBuilder), m_charactersCount(-1),
+      m_createCharacterButton(widgetBuilder.build<Widget::Button>())
 {
 }
 

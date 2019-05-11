@@ -9,9 +9,9 @@ public:
     WidgetBuilder(::ResourceProvider&);
 
     template<typename T>
-    std::shared_ptr<Widget::Widget>
-    build(std::shared_ptr<Widget::Widget> parent) {
-        return std::make_shared<T>(parent, *this);
+    std::shared_ptr<T>
+    build(std::shared_ptr<Widget::Widget> parent = nullptr) {
+        return std::make_shared<T>(parent, m_resourceProvider);
     }
 
     // XXX: should not be accessed.

@@ -6,9 +6,17 @@ Button::Button(std::shared_ptr<Widget> parent,
                ::ResourceProvider& resourceProvider)
     : Widget(parent, resourceProvider) {}
 
-Button& setCaption(const std::string& caption) {
+Button& Button::setCaption(const std::string& caption) {
     m_caption = caption;
     return *this;
+}
+
+void Button::paint() {
+
+}
+
+void Button::handleEvent(const sf::Event& event) {
+
 }
 
 } // namespace Widget
