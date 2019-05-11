@@ -29,10 +29,10 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     m_createCharacterButton->setCaption("New character");
 
     m_accountLabel
-        ->setCaption("Hello!")
-        .setFontSize(18)
-        .setColor(sf::Color::Green)
-        .setStyle(0)
+        ->setCaption(m_client.account())
+        .setFontSize(24)
+        .setColor(sf::Color::Red)
+        .setStyle(sf::Text::Bold | sf::Text::Underlined)
         .setFont("arial.ttf")
         .setPos(100, 100);
 
