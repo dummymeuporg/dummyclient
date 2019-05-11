@@ -11,7 +11,7 @@ Button& Button::setCaption(const std::string& caption) {
     return *this;
 }
 
-void Button::paint() {
+void Button::paint(sf::RenderWindow& window) {
 
 }
 

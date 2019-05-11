@@ -7,7 +7,7 @@ namespace Widget {
 class Button : public Widget {
 public:
     Button(std::shared_ptr<Widget>, ::ResourceProvider&);
-    virtual void paint() override;
+    virtual void paint(sf::RenderWindow&) override;
     virtual void handleEvent(const sf::Event& event) override;
     const std::string& caption() const {
         return m_caption;

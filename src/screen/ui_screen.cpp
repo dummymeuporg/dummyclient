@@ -1,4 +1,5 @@
 #include "client.hpp"
+#include "game.hpp"
 
 #include "screen/ui_screen.hpp"
 
@@ -11,4 +12,16 @@ UIScreen::UIScreen(::Game& game,
 {
 }
 
+UIScreen& UIScreen::addWidget(std::shared_ptr<Widget::Widget> widget)
+{
+    m_widgets.push_back(widget);
+    return *this;
 }
+
+void UIScreen::draw() {
+    for (const auto& widget: m_widgets) {
+        widget->paint(m_game.window());
+    }
+}
+
+} // namespace Screen
