@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include "screen/screen.hpp"
 
 namespace Screen {
@@ -10,8 +12,7 @@ public:
     virtual void notify() override;
     virtual void draw() override;
 private:
-    sf::Font m_arialFont;
-    //std::unique_ptr<
+    std::uint16_t m_charactersCount;
 };
 
 } // namespace Screen

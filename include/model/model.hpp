@@ -9,7 +9,7 @@ namespace Screen {
 
 namespace Model {
 
-class Model {
+class Model : public std::enable_shared_from_this<Model> {
 public:
     Model();
     void update();
