@@ -21,7 +21,7 @@ add_executable(dummyclient
     src/screen/select_character_screen.cpp
     src/model/model.cpp
     src/model/characters_list_model.cpp
-	src/widget/widget.cpp
+	src/widget/abstract/widget.cpp
 	src/widget/button.cpp
 	src/widget/label.cpp
 )

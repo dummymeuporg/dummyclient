@@ -13,18 +13,59 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
                                              ::Client& client,
                                              ::WidgetBuilder& widgetBuilder)
     : UIScreen(game, client, widgetBuilder), m_charactersCount(-1),
-      m_createCharacterButton(widgetBuilder.build<Widget::Button>())
+      m_createCharacterButton(widgetBuilder.build<Widget::Button>()),
+      m_accountLabel(widgetBuilder.build<Widget::Label>()),
+    m_charactersCountLabel(widgetBuilder.build<Widget::Label>())
 {
+    m_createCharacterButton->setPos(850, 700);
+    m_createCharacterButton
+        ->setBackgroundColor(sf::Color(183, 109, 44))
+        .setBorderColor(sf::Color(94, 47, 6))
+        .setColor(sf::Color::Black)
+        .setStyle(0)
+        .setFontSize(18);
+
+    m_createCharacterButton->setFont("arial.ttf");
+    m_createCharacterButton->setCaption("New character");
+
+    m_accountLabel
+        ->setCaption("Hello!")
+        .setFontSize(18)
+        .setColor(sf::Color::Green)
+        .setStyle(0)
+        .setFont("arial.ttf")
+        .setPos(100, 100);
+
+    m_charactersCountLabel
+        ->setFontSize(24)
+        .setColor(sf::Color::White)
+        .setFont("arial.ttf");
+
+    addWidget(m_accountLabel);
+    addWidget(m_createCharacterButton);
+    addWidget(m_charactersCountLabel);
 }
 
 void SelectCharacterScreen::notify() {
     const Model::CharactersListModel* model = 
         reinterpret_cast<const Model::CharactersListModel*>(m_model.get());
     std::cerr << "Screen notified. Update info." << std::endl;
+    std::stringstream ss;
     m_charactersCount = model->characters().size();
+    ss << "You have " << m_charactersCount << " characters";
+
+    m_charactersCountLabel->setCaption(ss.str());
+
+    // Center the label
+    sf::Text& caption(m_charactersCountLabel->caption());
+    sf::FloatRect textRect = caption.getLocalBounds();
+    caption.setOrigin(textRect.left + textRect.width/2.0f,
+                      textRect.top  + textRect.height/2.0f);
+    caption.setPosition(1042/2, 768/2);
 }
 
 void SelectCharacterScreen::draw() {
+    UIScreen::draw();
     sf::RenderWindow& window(m_game.window());
     sf::Font& font(widgetBuilder().resourceProvider().font("arial.ttf"));
     sf::Text text;
@@ -39,21 +80,6 @@ void SelectCharacterScreen::draw() {
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
     window.draw(text);
-
-    if (m_charactersCount >= 0) {
-        std::stringstream ss;
-        ss << "You have " << m_charactersCount << " characters.";
-        sf::Text countText;
-		countText.setString(ss.str());
-        countText.setFont(font);
-        countText.setCharacterSize(24);
-        countText.setColor(sf::Color::White);
-        sf::FloatRect textRect = countText.getLocalBounds();
-		countText.setOrigin(textRect.left + textRect.width/2.0f,
-                       textRect.top  + textRect.height/2.0f);
-		countText.setPosition(1042/2, 768/2);
-        window.draw(countText);
-	}
 }
 
 void SelectCharacterScreen::handleEvent(const sf::Event& event) {

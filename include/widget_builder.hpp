@@ -1,6 +1,6 @@
 #pragma once
 
-#include "widget/widget.hpp"
+#include "widget/abstract/widget.hpp"
 
 class ResourceProvider;
 
@@ -10,7 +10,7 @@ public:
 
     template<typename T>
     std::shared_ptr<T>
-    build(std::shared_ptr<Widget::Widget> parent = nullptr) {
+    build(std::shared_ptr<Widget::Abstract::Widget> parent = nullptr) {
         return std::make_shared<T>(parent, m_resourceProvider);
     }
 

@@ -12,7 +12,7 @@ UIScreen::UIScreen(::Game& game,
 {
 }
 
-UIScreen& UIScreen::addWidget(std::shared_ptr<Widget::Widget> widget)
+UIScreen& UIScreen::addWidget(std::shared_ptr<Widget::Abstract::Widget> widget)
 {
     m_widgets.push_back(widget);
     return *this;

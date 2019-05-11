@@ -4,6 +4,7 @@
 
 #include "screen/ui_screen.hpp"
 #include "widget/button.hpp"
+#include "widget/label.hpp"
 
 namespace Screen {
 
@@ -16,6 +17,8 @@ public:
 private:
     std::int16_t m_charactersCount;
     std::shared_ptr<Widget::Button> m_createCharacterButton;
+    std::shared_ptr<Widget::Label> m_accountLabel;
+    std::shared_ptr<Widget::Label> m_charactersCountLabel;
 };
 
 } // namespace Screen

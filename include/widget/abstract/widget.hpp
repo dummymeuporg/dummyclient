@@ -8,6 +8,8 @@
 
 namespace Widget {
 
+namespace Abstract {
+
 class Widget : public std::enable_shared_from_this<Widget> {
 public:
     Widget(std::shared_ptr<Widget>, ::ResourceProvider&);
@@ -38,5 +40,7 @@ private:
     std::uint16_t m_x, m_y;
 
 };
+
+} // namespace Abstract
 
 } // namespace Widget

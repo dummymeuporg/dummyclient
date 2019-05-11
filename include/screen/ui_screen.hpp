@@ -14,10 +14,10 @@ public:
     ::WidgetBuilder& widgetBuilder() {
         return m_widgetBuilder;
     }
-    UIScreen& addWidget(std::shared_ptr<Widget::Widget>);
+    UIScreen& addWidget(std::shared_ptr<Widget::Abstract::Widget>);
 private:
     ::WidgetBuilder& m_widgetBuilder;
-    std::vector<std::shared_ptr<Widget::Widget>> m_widgets;
+    std::vector<std::shared_ptr<Widget::Abstract::Widget>> m_widgets;
 };
 
 } // namespace Screen
