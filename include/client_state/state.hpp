@@ -1,13 +1,14 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 class Client;
 
 namespace ClientState {
 
-class State {
+class State : public std::enable_shared_from_this<State> {
 public:
     State(::Client&);
     virtual void resume() = 0;

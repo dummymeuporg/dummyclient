@@ -11,7 +11,7 @@ Game::Game(const char* account, const char* sessionID)
 int Game::run()
 {
     std::shared_ptr<Screen::SelectCharacterScreen> screen(
-        new Screen::SelectCharacterScreen(m_window, m_client)
+        new Screen::SelectCharacterScreen(*this, m_client)
     );
     m_client.setScreen(screen);
     m_client.connect("localhost", 6612);
@@ -31,4 +31,16 @@ int Game::run()
     }
 
     return EXIT_SUCCESS;
+}
+
+const sf::Font& Game::font(const std::string& fontName) {
+    if (m_fonts.find(fontName) == std::end(m_fonts)) {
+        sf::Font font;
+        if(!font.loadFromFile(fontName))
+        {
+            throw FontLoadingError();
+        }
+        m_fonts[fontName] = std::move(font);
+    }
+    return m_fonts[fontName];
 }

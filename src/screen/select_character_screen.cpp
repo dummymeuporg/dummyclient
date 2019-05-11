@@ -1,26 +1,23 @@
 #include "client.hpp"
+#include "game.hpp"
 
 #include "screen/select_character_screen.hpp"
 
 namespace Screen {
 
-SelectCharacterScreen::SelectCharacterScreen(sf::RenderWindow& window,
+SelectCharacterScreen::SelectCharacterScreen(::Game& game,
                                              ::Client& client)
-    : Screen(window, client)
+    : Screen(game, client)
 {
-    if (!m_arialFont.loadFromFile("arial.ttf"))
-    {
-        // erreur...
-    }
-
 }
 
 void SelectCharacterScreen::notify() {
 }
 
 void SelectCharacterScreen::draw() {
+    sf::RenderWindow& window(m_game.window());
     sf::Text text;
-    text.setFont(m_arialFont);
+    text.setFont(m_game.font("arial.ttf"));
 
     text.setString(m_client.account());
 
@@ -30,7 +27,7 @@ void SelectCharacterScreen::draw() {
 
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-    m_window.draw(text);
+    window.draw(text);
 
 }
 

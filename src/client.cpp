@@ -61,7 +61,3 @@ void Client::changeState(std::shared_ptr<ClientState::State> state) {
 void Client::setScreen(std::shared_ptr<Screen::Screen> screen) {
     m_screen = screen;
 }
-
-void Client::update() {
-    m_screen->notify();
-}

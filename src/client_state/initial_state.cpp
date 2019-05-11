@@ -46,6 +46,7 @@ void InitialState::resume() {
 }
 
 void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
+    auto self(shared_from_this());
     std::cerr << "Will read data." << std::endl;
     if (buffer[0] == 1) {
         std::cerr << "Login successfull!" << std::endl;
@@ -57,7 +58,6 @@ void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
     m_client.changeState(
         std::make_shared<ClientState::ReceiveCharactersState>(m_client)
     );
-    m_client.update();
 }
 
 } // namespace ClientState

@@ -6,7 +6,7 @@ namespace Screen {
 
 class SelectCharacterScreen : public Screen {
 public:
-    SelectCharacterScreen(sf::RenderWindow&, ::Client&);
+    SelectCharacterScreen(::Game&, ::Client&);
     virtual void notify() override;
     virtual void draw() override;
 private:

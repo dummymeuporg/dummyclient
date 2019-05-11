@@ -4,8 +4,8 @@
 #include "screen/screen.hpp"
 
 namespace Screen {
-Screen::Screen(sf::RenderWindow& window, ::Client& client)
-    : m_window(window), m_client(client)
+Screen::Screen(::Game& game, ::Client& client)
+    : m_game(game), m_client(client)
 {
 }
 
