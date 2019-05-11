@@ -10,8 +10,9 @@
 namespace Screen {
 
 SelectCharacterScreen::SelectCharacterScreen(::Game& game,
-                                             ::Client& client)
-    : Screen(game, client), m_charactersCount(-1)
+                                             ::Client& client,
+                                             ::WidgetBuilder& widgetBuilder)
+    : UIScreen(game, client, widgetBuilder), m_charactersCount(-1)
 {
 }
 
@@ -24,8 +25,9 @@ void SelectCharacterScreen::notify() {
 
 void SelectCharacterScreen::draw() {
     sf::RenderWindow& window(m_game.window());
+    sf::Font& font(widgetBuilder().resourceProvider().font("arial.ttf"));
     sf::Text text;
-    text.setFont(m_game.font("arial.ttf"));
+    text.setFont(font);
 
     text.setString(m_client.account());
 
@@ -42,7 +44,7 @@ void SelectCharacterScreen::draw() {
         ss << "You have " << m_charactersCount << " characters.";
         sf::Text countText;
 		countText.setString(ss.str());
-        countText.setFont(m_game.font("arial.ttf"));
+        countText.setFont(font);
         countText.setCharacterSize(24);
         countText.setColor(sf::Color::White);
         sf::FloatRect textRect = countText.getLocalBounds();
@@ -51,6 +53,10 @@ void SelectCharacterScreen::draw() {
 		countText.setPosition(1042/2, 768/2);
         window.draw(countText);
 	}
+}
+
+void SelectCharacterScreen::handleEvent(const sf::Event& event) {
+
 }
 
 } // namespace Screen

@@ -11,13 +11,17 @@ add_executable(dummyclient
     src/client.cpp
     src/credentials.cpp
     src/game.cpp
+    src/resource_provider.cpp
+    src/widget_builder.cpp
     src/client_state/state.cpp
     src/client_state/initial_state.cpp
     src/client_state/receive_characters_state.cpp
     src/screen/screen.cpp
+    src/screen/ui_screen.cpp
     src/screen/select_character_screen.cpp
     src/model/model.cpp
     src/model/characters_list_model.cpp
+	src/widget/widget.cpp
 )
 
 target_link_libraries(dummyclient

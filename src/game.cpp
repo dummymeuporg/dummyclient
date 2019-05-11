@@ -2,6 +2,8 @@
 
 #include "game.hpp"
 #include "screen/select_character_screen.hpp"
+#include "resource_provider.hpp"
+#include "widget_builder.hpp"
 
 Game::Game(const char* account, const char* sessionID) 
     : m_client(Credentials(account, sessionID)),
@@ -10,8 +12,10 @@ Game::Game(const char* account, const char* sessionID)
 
 int Game::run()
 {
+    ResourceProvider resourceProvider;
+    WidgetBuilder widgetBuilder(resourceProvider);
     std::shared_ptr<Screen::SelectCharacterScreen> screen(
-        new Screen::SelectCharacterScreen(*this, m_client)
+        new Screen::SelectCharacterScreen(*this, m_client, widgetBuilder)
     );
     m_client.setScreen(screen);
     m_client.connect("localhost", 6612);
@@ -31,16 +35,4 @@ int Game::run()
     }
 
     return EXIT_SUCCESS;
-}
-
-const sf::Font& Game::font(const std::string& fontName) {
-    if (m_fonts.find(fontName) == std::end(m_fonts)) {
-        sf::Font font;
-        if(!font.loadFromFile(fontName))
-        {
-            throw FontLoadingError();
-        }
-        m_fonts[fontName] = std::move(font);
-    }
-    return m_fonts[fontName];
 }
