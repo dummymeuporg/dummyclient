@@ -23,6 +23,7 @@ add_executable(dummyclient
     src/model/characters_list_model.cpp
 	src/widget/widget.cpp
 	src/widget/button.cpp
+	src/widget/label.cpp
 )
 
 target_link_libraries(dummyclient
