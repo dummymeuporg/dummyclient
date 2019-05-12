@@ -10,6 +10,7 @@ add_executable(dummyclient
 	src/main.cpp
     src/client.cpp
     src/credentials.cpp
+    src/custom_event_queue.cpp
     src/game.cpp
     src/resource_provider.cpp
     src/widget_builder.cpp
