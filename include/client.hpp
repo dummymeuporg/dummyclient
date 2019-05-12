@@ -49,17 +49,8 @@ public:
         return m_game;
     }
 
-    // Model accessors
-    const std::vector<void*>& characters() const {
-        return m_characters;
-    }
-
     const std::string& account() const {
-        return m_account;
-    }
-
-    void setAccount(std::string account) {
-        m_account = std::move(account);
+        return m_credentials.account();
     }
 
 private:
@@ -68,8 +59,4 @@ private:
     std::uint16_t m_packetSize;
     Credentials m_credentials;
     std::shared_ptr<ClientState::State> m_state;
-
-    // Model
-    std::string m_account;
-    std::vector<void*> m_characters;
 };

@@ -41,7 +41,6 @@ void InitialState::resume() {
 
     // Send the packet.
     m_client.socket().send(buffer.data(), buffer.size());
-    m_client.setAccount(std::move(account));
 
 }
 

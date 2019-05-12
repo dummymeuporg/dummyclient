@@ -12,7 +12,6 @@ class SelectCharacterScreen : public UIScreen {
 public:
     SelectCharacterScreen(::Game&, ::Client&, ::WidgetBuilder&);
     virtual void notify() override;
-    virtual void draw() override;
     virtual void handleCustomEvent(const ::CustomEvent&) override;
 private:
     std::int16_t m_charactersCount;

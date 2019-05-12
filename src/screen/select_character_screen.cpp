@@ -29,6 +29,7 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     m_createCharacterButton->setFont("arial.ttf");
     m_createCharacterButton->setCaption("New character");
 
+    std::cerr << "Account is " << m_client.account() << std::endl;
     m_accountLabel
         ->setCaption(m_client.account())
         .setFontSize(24)
@@ -65,6 +66,7 @@ void SelectCharacterScreen::notify() {
     caption.setPosition(1042/2, 768/2);
 }
 
+/*
 void SelectCharacterScreen::draw() {
     UIScreen::draw();
     sf::RenderWindow& window(m_game.window());
@@ -82,6 +84,7 @@ void SelectCharacterScreen::draw() {
 
     window.draw(text);
 }
+*/
 
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
 {
