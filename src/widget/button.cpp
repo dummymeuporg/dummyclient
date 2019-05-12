@@ -5,7 +5,7 @@ namespace Widget {
 
 Button::Button(std::shared_ptr<Widget> parent,
                ::ResourceProvider& resourceProvider)
-    : Label(parent, resourceProvider)
+    : Label(parent, resourceProvider), m_isHovered(false), m_isPushed(false)
 {    
 }
 
@@ -15,8 +15,117 @@ void Button::paint(sf::RenderWindow& window) {
     Label::paint(window);
 }
 
-void Button::handleEvent(const sf::Event& event) {
+bool Button::_onMouseMoved(const sf::Event& event)
+{
+    bool forwardEvent = true;
+    sf::Vector2f labelPos = m_caption.getPosition();
+    sf::FloatRect textRect = m_caption.getLocalBounds();
+    sf::Color bgColor = m_buttonBackground.getFillColor();
+    int deltaR = 10, deltaG = 10, deltaB = 10;
+    if ((event.mouseMove.x >= (labelPos.x - 10)) &&
+            (event.mouseMove.x <= (labelPos.x + textRect.width + 10)) &&
+            (event.mouseMove.y >= (labelPos.y - 10)) &&
+            (event.mouseMove.y <= (labelPos.y + textRect.height + 10)))
+    {
+        // The mouse is hovering the button. No need to forward it.
+        forwardEvent = false;
+        if (!m_isHovered)
+        {
+            m_isHovered = true;
+            m_buttonBackground.setFillColor(
+                sf::Color(
+                    bgColor.r + deltaR,
+                    bgColor.g + deltaG,
+                    bgColor.b + deltaB
+                )
+            );
+        }
+    } else {
+        if (m_isHovered)
+        {
+            m_isHovered = false;
+            // Cancel the push state if the mouse leaves the button.
+            if (m_isPushed) {
+                std::cerr << "Cancel the pushed state" << std::endl;
+                m_isPushed = false;
+                deltaR += 30;
+                deltaG += 30;
+                deltaB += 30;
+            }
+            sf::Color bgColor = m_buttonBackground.getFillColor();
+            m_buttonBackground.setFillColor(
+                sf::Color(
+                    bgColor.r - deltaR,
+                    bgColor.g - deltaG,
+                    bgColor.b - deltaB
+                )
+            );
 
+        }
+    }
+    return forwardEvent;
+}
+
+bool Button::_onMouseButtonPressed(const sf::Event& event) {
+    // The button has to be hovered first.
+    bool forwardEvent = true;
+    sf::Color bgColor = m_buttonBackground.getFillColor();
+    if (m_isHovered) {
+        if (!m_isPushed)
+        {
+            if (event.mouseButton.button == sf::Mouse::Left) {
+                m_isPushed = true;
+                m_buttonBackground.setFillColor(
+                    sf::Color(
+                        bgColor.r + 30,
+                        bgColor.g + 30,
+                        bgColor.b + 30
+                    )
+                );
+                forwardEvent = false;
+            }
+        }
+    }
+    return forwardEvent;
+}
+
+bool Button::_onMouseButtonReleased(const sf::Event& event) {
+    bool forwardEvent = true;
+    sf::Color bgColor = m_buttonBackground.getFillColor();
+    if (m_isHovered && m_isPushed)
+    {
+        if (event.mouseButton.button == sf::Mouse::Left) {
+            m_isPushed = false;
+            m_buttonBackground.setFillColor(
+                sf::Color(
+                    bgColor.r - 30,
+                    bgColor.g - 30,
+                    bgColor.b - 30
+                )
+            );
+            forwardEvent = false;
+        }
+    }
+    return forwardEvent;
+}
+
+bool Button::handleEvent(const sf::Event& event) {
+    bool forwardEvent = true;
+    switch(event.type)
+    {
+    case sf::Event::MouseMoved:
+        forwardEvent = _onMouseMoved(event); 
+        break;
+    case sf::Event::MouseButtonPressed:
+        forwardEvent = _onMouseButtonPressed(event);
+        break;
+    case sf::Event::MouseButtonReleased:
+        forwardEvent = _onMouseButtonReleased(event);
+        break;
+    default:
+        break;
+    }
+    return forwardEvent;
 }
 
 Button& Button::setBackgroundColor(const sf::Color& color) {

@@ -14,7 +14,7 @@ class Widget : public std::enable_shared_from_this<Widget> {
 public:
     Widget(std::shared_ptr<Widget>, ::ResourceProvider&);
     virtual void paint(sf::RenderWindow&) = 0;
-    virtual void handleEvent(const sf::Event& event) = 0;
+    virtual bool handleEvent(const sf::Event& event) = 0;
     Widget& setPos(std::uint16_t, std::uint16_t);
 
     std::uint16_t x() const {

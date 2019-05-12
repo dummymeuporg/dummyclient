@@ -8,7 +8,7 @@ class Label : public Abstract::Widget {
 public:
     Label(std::shared_ptr<Widget>, ::ResourceProvider&);
     virtual void paint(sf::RenderWindow&) override;
-    virtual void handleEvent(const sf::Event& event) override;
+    virtual bool handleEvent(const sf::Event& event) override;
 
     const sf::Text& caption() const {
         return m_caption;

@@ -8,7 +8,7 @@ namespace Screen {
 class UIScreen : public Screen {
 public:
     UIScreen(::Game&, ::Client&, ::WidgetBuilder&);
-    virtual void handleEvent(const sf::Event&) = 0;
+    virtual void handleEvent(const sf::Event&) override;
     virtual void notify() = 0;
     virtual void draw();
     ::WidgetBuilder& widgetBuilder() {

@@ -82,8 +82,4 @@ void SelectCharacterScreen::draw() {
     window.draw(text);
 }
 
-void SelectCharacterScreen::handleEvent(const sf::Event& event) {
-
-}
-
 } // namespace Screen

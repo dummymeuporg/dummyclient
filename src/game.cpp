@@ -30,6 +30,7 @@ int Game::run()
 
         m_client.checkData();
         m_window.clear();
+        m_client.screen()->handleEvent(event);
         m_client.screen()->draw();
         m_window.display();
     }

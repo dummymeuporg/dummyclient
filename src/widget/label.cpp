@@ -40,8 +40,8 @@ void Label::paint(sf::RenderWindow& window) {
     window.draw(m_caption);
 }
 
-void Label::handleEvent(const sf::Event& event) {
-
+bool Label::handleEvent(const sf::Event& event) {
+    return true;
 }
 
 } // namespace Widget

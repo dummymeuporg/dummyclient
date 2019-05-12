@@ -24,4 +24,13 @@ void UIScreen::draw() {
     }
 }
 
+void UIScreen::handleEvent(const sf::Event& event)
+{
+    for(const auto& widget: m_widgets) {
+        if(!widget->handleEvent(event)) {
+            break;
+        }
+    }
+}
+
 } // namespace Screen
