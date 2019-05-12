@@ -46,3 +46,7 @@ int Game::run()
 
     return EXIT_SUCCESS;
 }
+
+void Game::setScreen(std::shared_ptr<Screen::Screen> screen) {
+    m_currentScreen = screen;
+}

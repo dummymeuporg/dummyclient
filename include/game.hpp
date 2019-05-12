@@ -12,6 +12,7 @@ class Game {
 public:
     Game(const char*, const char*);
     int run();
+    void setScreen(std::shared_ptr<Screen::Screen> screen);
     sf::RenderWindow& window() {
         return m_window;
     }

@@ -50,14 +50,14 @@ void InitialState::onRead(const std::vector<std::uint8_t>& buffer) {
     std::cerr << "Will read data." << std::endl;
     if (buffer[0] == 1) {
         std::cerr << "Login successfull!" << std::endl;
+        m_client.changeState(
+            std::make_shared<ClientState::ReceiveCharactersState>(m_client)
+        );
     } else {
         std::cerr << "wrong credentials." << std::endl;
         ::exit(-1);
     }
 
-    m_client.changeState(
-        std::make_shared<ClientState::ReceiveCharactersState>(m_client)
-    );
 }
 
 } // namespace ClientState

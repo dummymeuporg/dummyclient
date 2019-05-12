@@ -23,7 +23,6 @@ void Screen::setModel(std::shared_ptr<Model::Model> model) {
 }
 
 void Screen::handleCustomEvent(const CustomEvent& event) {
-    event;
 }
 
 } // namespace Screen

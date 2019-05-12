@@ -5,6 +5,7 @@
 #include "game.hpp"
 
 #include "model/characters_list_model.hpp"
+#include "screen/create_character_screen.hpp"
 #include "screen/select_character_screen.hpp"
 
 namespace Screen {
@@ -84,8 +85,11 @@ void SelectCharacterScreen::draw() {
 
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
 {
+    auto self(shared_from_this());
     if (event.source() == m_createCharacterButton.get()) {
         std::cerr << "Create character please." << std::endl;
+        m_game.setScreen(std::make_shared<CreateCharacterScreen>(
+            m_game, m_client, widgetBuilder()));
     }
 }
 
