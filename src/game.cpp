@@ -8,8 +8,11 @@
 #include "widget_builder.hpp"
 
 Game::Game(const char* account, const char* sessionID) 
-    : m_client(Credentials(account, sessionID)),
-      m_window(sf::VideoMode(1024, 768), "DummyClient")
+    : m_client(*this, Credentials(account, sessionID)),
+      m_window(sf::VideoMode(1024, 768), "DummyClient"),
+      m_widgetBuilder(m_resourceProvider, m_customEventQueue),
+      m_currentScreen(new Screen::SelectCharacterScreen(
+        *this, m_client, m_widgetBuilder))
 { }
 
 int Game::run()
@@ -17,10 +20,6 @@ int Game::run()
     ResourceProvider resourceProvider;
     CustomEventQueue customEventQueue;
     WidgetBuilder widgetBuilder(resourceProvider, customEventQueue);
-    std::shared_ptr<Screen::SelectCharacterScreen> screen(
-        new Screen::SelectCharacterScreen(*this, m_client, widgetBuilder)
-    );
-    m_client.setScreen(screen);
     m_client.connect("localhost", 6612);
     while (m_window.isOpen())
     {
@@ -33,15 +32,15 @@ int Game::run()
 
         m_client.checkData();
         m_window.clear();
-        m_client.screen()->handleEvent(event);
+        m_currentScreen->handleEvent(event);
 
         CustomEvent customEvent;
-        customEventQueue.pollEvent(customEvent);
+        m_customEventQueue.pollEvent(customEvent);
         if (customEvent.type() != CustomEvent::None) {
-            m_client.screen()->handleCustomEvent(customEvent);
+            m_currentScreen->handleCustomEvent(customEvent);
         }
 
-        m_client.screen()->draw();
+        m_currentScreen->draw();
         m_window.display();
     }
 

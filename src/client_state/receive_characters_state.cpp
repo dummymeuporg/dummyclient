@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "client.hpp"
+#include "game.hpp"
 #include "client_state/receive_characters_state.hpp"
 #include "model/characters_list_model.hpp"
 
@@ -15,7 +16,7 @@ void ReceiveCharactersState::resume() {
     // Nothing to do for now.
     // The client will select the character later on.
     m_model = std::make_shared<Model::CharactersListModel>();
-    m_client.screen()->setModel(m_model);
+    m_client.game().screen()->setModel(m_model);
 }
 
 void ReceiveCharactersState::onRead(const std::vector<std::uint8_t>& buffer) {

@@ -29,7 +29,7 @@ public:
 
 class Client {
 public:
-    Client(const Credentials&&);
+    Client(::Game&, const Credentials&&);
 
     const Credentials& credentials() const {
         return m_credentials;
@@ -43,16 +43,15 @@ public:
     void connect(const char* host, unsigned short port);
     void authenticate();
     void changeState(std::shared_ptr<ClientState::State>);
-    void setScreen(std::shared_ptr<Screen::Screen>);
     void update();
+
+    ::Game& game() {
+        return m_game;
+    }
 
     // Model accessors
     const std::vector<void*>& characters() const {
         return m_characters;
-    }
-
-    std::shared_ptr<Screen::Screen> screen() {
-        return m_screen;
     }
 
     const std::string& account() const {
@@ -64,11 +63,11 @@ public:
     }
 
 private:
+    ::Game& m_game;
     sf::TcpSocket m_socket;
     std::uint16_t m_packetSize;
     Credentials m_credentials;
     std::shared_ptr<ClientState::State> m_state;
-    std::shared_ptr<Screen::Screen> m_screen;
 
     // Model
     std::string m_account;

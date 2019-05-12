@@ -3,9 +3,9 @@
 
 #include "client.hpp"
 
-Client::Client(const Credentials&& credentials)
-    : m_packetSize(0), m_credentials(std::move(credentials)), m_state(nullptr),
-      m_screen(nullptr)
+Client::Client(::Game& game, const Credentials&& credentials)
+    : m_game(game), m_packetSize(0), m_credentials(std::move(credentials)),
+      m_state(nullptr)
 {
 }
 
@@ -56,8 +56,4 @@ void Client::checkData() {
 void Client::changeState(std::shared_ptr<ClientState::State> state) {
     m_state = state;
     m_state->resume();
-}
-
-void Client::setScreen(std::shared_ptr<Screen::Screen> screen) {
-    m_screen = screen;
 }
