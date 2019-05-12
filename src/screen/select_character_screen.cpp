@@ -36,7 +36,7 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
         .setColor(sf::Color::Red)
         .setStyle(sf::Text::Bold | sf::Text::Underlined)
         .setFont("arial.ttf")
-        .setPos(100, 100);
+        .setPos(0, 0);
 
     m_charactersCountLabel
         ->setFontSize(24)
@@ -65,26 +65,6 @@ void SelectCharacterScreen::notify() {
                       textRect.top  + textRect.height/2.0f);
     caption.setPosition(1042/2, 768/2);
 }
-
-/*
-void SelectCharacterScreen::draw() {
-    UIScreen::draw();
-    sf::RenderWindow& window(m_game.window());
-    sf::Font& font(widgetBuilder().resourceProvider().font("arial.ttf"));
-    sf::Text text;
-    text.setFont(font);
-
-    text.setString(m_client.account());
-
-    text.setCharacterSize(24);
-
-    text.setColor(sf::Color::Red);
-
-    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-    window.draw(text);
-}
-*/
 
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
 {
