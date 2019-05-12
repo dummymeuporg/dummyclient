@@ -105,6 +105,12 @@ bool Button::_onMouseButtonReleased(const sf::Event& event) {
                     bgColor.b - 30
                 )
             );
+            pushEvent(
+                CustomEvent(
+                    reinterpret_cast<const void*>(shared_from_this().get()),
+                    CustomEvent::ButtonClicked
+                )
+            );
             forwardEvent = false;
         }
     }

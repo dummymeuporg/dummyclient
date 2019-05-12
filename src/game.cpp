@@ -36,7 +36,9 @@ int Game::run()
 
         CustomEvent customEvent;
         customEventQueue.pollEvent(customEvent);
-        m_client.screen()->handleCustomEvent(customEvent);
+        if (customEvent.type() != CustomEvent::None) {
+            m_client.screen()->handleCustomEvent(customEvent);
+        }
 
         m_client.screen()->draw();
         m_window.display();

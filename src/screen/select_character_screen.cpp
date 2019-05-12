@@ -84,7 +84,9 @@ void SelectCharacterScreen::draw() {
 
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
 {
-    event;
+    if (event.source() == m_createCharacterButton.get()) {
+        std::cerr << "Create character please." << std::endl;
+    }
 }
 
 } // namespace Screen
