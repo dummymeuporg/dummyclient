@@ -11,7 +11,7 @@ Game::Game(const char* account, const char* sessionID)
     : m_client(*this, Credentials(account, sessionID)),
       m_window(sf::VideoMode(1024, 768), "DummyClient"),
       m_widgetBuilder(m_resourceProvider, m_customEventQueue),
-      m_currentScreen(new Screen::SelectCharacterScreen(
+      m_currentScreen(std::make_shared<Screen::SelectCharacterScreen>(
         *this, m_client, m_widgetBuilder))
 { }
 
