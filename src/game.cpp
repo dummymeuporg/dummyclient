@@ -2,6 +2,7 @@
 
 #include "custom_event_queue.hpp"
 #include "game.hpp"
+#include "screen/create_character_screen.hpp"
 #include "screen/select_character_screen.hpp"
 #include "resource_provider.hpp"
 #include "widget_builder.hpp"

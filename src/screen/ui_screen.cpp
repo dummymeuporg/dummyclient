@@ -33,4 +33,9 @@ void UIScreen::handleEvent(const sf::Event& event)
     }
 }
 
+void UIScreen::notify()
+{
+
+}
+
 } // namespace Screen

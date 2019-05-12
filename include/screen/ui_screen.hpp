@@ -9,11 +9,12 @@ class UIScreen : public Screen {
 public:
     UIScreen(::Game&, ::Client&, ::WidgetBuilder&);
     virtual void handleEvent(const sf::Event&) override;
-    virtual void notify() = 0;
+    virtual void notify();
     virtual void draw();
     ::WidgetBuilder& widgetBuilder() {
         return m_widgetBuilder;
     }
+protected:
     UIScreen& addWidget(std::shared_ptr<Widget::Abstract::Widget>);
 private:
     ::WidgetBuilder& m_widgetBuilder;

@@ -19,6 +19,7 @@ add_executable(dummyclient
     src/client_state/receive_characters_state.cpp
     src/screen/screen.cpp
     src/screen/ui_screen.cpp
+    src/screen/create_character_screen.cpp
     src/screen/select_character_screen.cpp
     src/model/model.cpp
     src/model/characters_list_model.cpp
