@@ -6,7 +6,7 @@ namespace Widget {
 
 class Button : public Label {
 public:
-    Button(std::shared_ptr<Widget>, ::ResourceProvider&);
+    Button(std::shared_ptr<Widget>, ::ResourceProvider&, ::CustomEventQueue&);
     virtual void paint(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
     Button& setBackgroundColor(const sf::Color&);

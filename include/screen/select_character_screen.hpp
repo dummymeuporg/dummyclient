@@ -13,6 +13,7 @@ public:
     SelectCharacterScreen(::Game&, ::Client&, ::WidgetBuilder&);
     virtual void notify() override;
     virtual void draw() override;
+    virtual void handleCustomEvent(const ::CustomEvent&) override;
 private:
     std::int16_t m_charactersCount;
     std::shared_ptr<Widget::Button> m_createCharacterButton;

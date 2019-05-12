@@ -3,6 +3,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 
+class CustomEvent;
 class Client;
 class Game;
 
@@ -18,6 +19,7 @@ public:
     virtual ~Screen();
     void setModel(std::shared_ptr<Model::Model>);
     virtual void handleEvent(const sf::Event&) = 0;
+    virtual void handleCustomEvent(const CustomEvent&);
     virtual void notify() = 0;
     virtual void draw() = 0;
 

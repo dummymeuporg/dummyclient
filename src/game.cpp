@@ -1,5 +1,6 @@
 #include <cstdlib>
 
+#include "custom_event_queue.hpp"
 #include "game.hpp"
 #include "screen/select_character_screen.hpp"
 #include "resource_provider.hpp"
@@ -13,7 +14,8 @@ Game::Game(const char* account, const char* sessionID)
 int Game::run()
 {
     ResourceProvider resourceProvider;
-    WidgetBuilder widgetBuilder(resourceProvider);
+    CustomEventQueue customEventQueue;
+    WidgetBuilder widgetBuilder(resourceProvider, customEventQueue);
     std::shared_ptr<Screen::SelectCharacterScreen> screen(
         new Screen::SelectCharacterScreen(*this, m_client, widgetBuilder)
     );
@@ -31,6 +33,11 @@ int Game::run()
         m_client.checkData();
         m_window.clear();
         m_client.screen()->handleEvent(event);
+
+        CustomEvent customEvent;
+        customEventQueue.pollEvent(customEvent);
+        m_client.screen()->handleCustomEvent(customEvent);
+
         m_client.screen()->draw();
         m_window.display();
     }

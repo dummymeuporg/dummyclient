@@ -22,4 +22,8 @@ void Screen::setModel(std::shared_ptr<Model::Model> model) {
     m_model->addScreen(shared_from_this());
 }
 
+void Screen::handleCustomEvent(const CustomEvent& event) {
+    event;
+}
+
 } // namespace Screen

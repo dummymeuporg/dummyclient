@@ -5,8 +5,10 @@ namespace Widget {
 namespace Abstract {
 
 Widget::Widget(std::shared_ptr<Widget> parent,
-               ::ResourceProvider& resourceProvider)
-    : m_parent(parent), m_resourceProvider(resourceProvider), m_x(0), m_y(0)
+               ::ResourceProvider& resourceProvider,
+               ::CustomEventQueue& eventQueue)
+    : m_parent(parent), m_resourceProvider(resourceProvider),
+      m_eventQueue(eventQueue), m_x(0), m_y(0)
 {
 
 }

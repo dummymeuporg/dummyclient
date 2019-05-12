@@ -12,7 +12,7 @@ public:
         Count
     };
 
-    CustomEvent(const void*, Type);
+    CustomEvent(const void* = nullptr, Type = None);
 
     const void* source() const {
         return m_eventSource;

@@ -1,17 +1,18 @@
 #pragma once
 
+#include "custom_event_queue.hpp"
 #include "widget/abstract/widget.hpp"
 
 class ResourceProvider;
 
 class WidgetBuilder {
 public:
-    WidgetBuilder(::ResourceProvider&);
+    WidgetBuilder(::ResourceProvider&, ::CustomEventQueue&);
 
     template<typename T>
     std::shared_ptr<T>
     build(std::shared_ptr<Widget::Abstract::Widget> parent = nullptr) {
-        return std::make_shared<T>(parent, m_resourceProvider);
+        return std::make_shared<T>(parent, m_resourceProvider, m_eventQueue);
     }
 
     // XXX: should not be accessed.
@@ -21,4 +22,5 @@ public:
 
 private:
     ::ResourceProvider& m_resourceProvider;
+    ::CustomEventQueue& m_eventQueue;
 };
