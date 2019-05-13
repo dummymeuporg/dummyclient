@@ -10,11 +10,12 @@ public:
     Textbox(std::shared_ptr<Widget>, ::ResourceProvider&, ::CustomEventQueue&);
     virtual void paint(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
-    Textbox& setSize(int, int);
+    Textbox& setRect(int, int, int, int);
     std::string content() const {
         return m_content.str();
     }
 private:
+    sf::RectangleShape m_shape;
     std::stringstream m_content;
 };
 
