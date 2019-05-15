@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include "utils/singleton.hpp"
 
 class CustomEvent {
 public:
@@ -28,7 +29,7 @@ private:
 
 };
 
-class CustomEventQueue {
+class CustomEventQueue : public Singleton<CustomEventQueue> {
 public:
     CustomEventQueue();
     void pollEvent(CustomEvent&);

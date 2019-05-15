@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils/singleton.hpp"
 #include <SFML/Graphics.hpp>
 
 class ResourceProviderError : public std::exception {
@@ -13,7 +14,7 @@ class FontLoadingError : public ResourceProviderError {
 };
 
 
-class ResourceProvider {
+class ResourceProvider : public Singleton<ResourceProvider> {
 public:
     ResourceProvider();
     sf::Font& font(const std::string&);

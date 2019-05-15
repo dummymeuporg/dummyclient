@@ -3,10 +3,8 @@
 
 namespace Widget {
 
-Button::Button(std::shared_ptr<Widget> parent,
-               ::ResourceProvider& resourceProvider,
-               ::CustomEventQueue& eventQueue)
-    : Label(parent, resourceProvider, eventQueue),
+Button::Button(std::shared_ptr<Widget> parent)
+    : Label(parent),
       m_isHovered(false), m_isPushed(false)
 {    
 }

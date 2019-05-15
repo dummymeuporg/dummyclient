@@ -6,7 +6,7 @@ namespace Widget {
 
 class Label : public Abstract::Widget {
 public:
-    Label(std::shared_ptr<Widget>, ::ResourceProvider&, ::CustomEventQueue&);
+    Label(std::shared_ptr<Widget> = nullptr);
     virtual void paint(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
 

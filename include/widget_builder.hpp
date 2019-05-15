@@ -12,7 +12,7 @@ public:
     template<typename T>
     std::shared_ptr<T>
     build(std::shared_ptr<Widget::Abstract::Widget> parent = nullptr) {
-        return std::make_shared<T>(parent, m_resourceProvider, m_eventQueue);
+        return std::make_shared<T>(parent);
     }
 
     // XXX: should not be accessed.

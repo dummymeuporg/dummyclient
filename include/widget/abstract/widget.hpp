@@ -13,7 +13,7 @@ namespace Abstract {
 
 class Widget : public std::enable_shared_from_this<Widget> {
 public:
-    Widget(std::shared_ptr<Widget>, ::ResourceProvider&, ::CustomEventQueue&);
+    Widget(std::shared_ptr<Widget> = nullptr);
     virtual void paint(sf::RenderWindow&) = 0;
     virtual bool handleEvent(const sf::Event& event) = 0;
     Widget& setPos(std::uint16_t, std::uint16_t);

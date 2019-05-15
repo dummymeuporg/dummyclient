@@ -26,8 +26,8 @@ public:
 private:
     Client m_client;
     sf::RenderWindow m_window;
-    ::CustomEventQueue m_customEventQueue;
-    ::ResourceProvider m_resourceProvider;
+    ::CustomEventQueue& m_customEventQueue;
+    ::ResourceProvider& m_resourceProvider;
     ::WidgetBuilder m_widgetBuilder;
     std::shared_ptr<Screen::Screen> m_currentScreen;
 };

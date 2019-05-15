@@ -2,10 +2,8 @@
 
 namespace Widget {
 
-Label::Label(std::shared_ptr<Widget> parent,
-               ::ResourceProvider& resourceProvider,
-               ::CustomEventQueue& eventQueue)
-    : Widget(parent, resourceProvider, eventQueue) {}
+Label::Label(std::shared_ptr<Widget> parent)
+    : Widget(parent) {}
 
 Label& Label::setCaption(const std::string& caption) {
     m_caption.setString(caption);

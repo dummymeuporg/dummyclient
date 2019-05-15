@@ -2,10 +2,7 @@
 
 namespace Widget {
 
-Textbox::Textbox(std::shared_ptr<Widget> parent,
-                 ::ResourceProvider& resourceProvider,
-                 ::CustomEventQueue& eventQueue)
-    : Widget(parent, resourceProvider, eventQueue)
+Textbox::Textbox(std::shared_ptr<Widget> parent) : Widget(parent)
 {
 
 }
