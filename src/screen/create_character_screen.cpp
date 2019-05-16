@@ -11,7 +11,10 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
     : UIScreen(game, client, widgetBuilder),
       m_characterNameLabel(widgetBuilder.build<Widget::Label>()),
       m_characterNameTextbox(widgetBuilder.build<Widget::Textbox>()),
-      m_characterSkinLabel(widgetBuilder.build<Widget::Label>())
+      m_characterSkinLabel(widgetBuilder.build<Widget::Label>()),
+      m_skinPicker(std::make_shared<Widget::SkinPicker>(
+          std::vector<std::string>({"WhiteScale.png"})
+      ))
 {
     m_characterNameLabel
         ->setCaption("Name: ")
@@ -38,9 +41,13 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
         .setFont("arial.ttf")
         .setPos(100, 200);
 
+    m_skinPicker
+        ->setPos(230, 200);
+
     addWidget(m_characterNameLabel);
     addWidget(m_characterNameTextbox);
     addWidget(m_characterSkinLabel);
+    addWidget(m_skinPicker);
 }
 
 } // namespace Screen

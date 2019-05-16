@@ -1,6 +1,6 @@
 #include <filesystem>
+#include <iostream>
 #include "resource_provider.hpp"
-
 
 namespace fs = std::filesystem;
 
@@ -24,6 +24,7 @@ sf::Texture& ResourceProvider::texture(const std::string& textureName) {
     if (m_textures.find(textureKey) == std::end(m_textures))
     {
         sf::Texture texture;
+        std::cerr << "File is " << textureKey;
         if (!texture.loadFromFile(textureKey)) {
             throw ::TextureLoadingError();
         }

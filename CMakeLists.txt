@@ -27,6 +27,7 @@ add_executable(dummyclient
 	src/widget/abstract/widget.cpp
 	src/widget/button.cpp
 	src/widget/label.cpp
+	src/widget/skin_picker.cpp
 	src/widget/textbox.cpp
 )
 

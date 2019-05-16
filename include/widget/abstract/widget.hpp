@@ -35,6 +35,10 @@ protected:
         return m_resourceProvider.font(fontName);
     }
 
+    sf::Texture& texture(const std::string& textureName) {
+        return m_resourceProvider.texture(textureName);
+    }
+
     void pushEvent(const CustomEvent& event) {
         m_eventQueue.pushEvent(event);
     }
