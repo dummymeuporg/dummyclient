@@ -4,6 +4,7 @@ include_directories(include vendor/libdummy/include)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
 	-L${CMAKE_CURRENT_SOURCE_DIR}/vendor/libdummy/build")
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -Wall")
 
 add_executable(dummyclient
@@ -36,4 +37,5 @@ target_link_libraries(dummyclient
 	sfml-system
 	sfml-window
     dummy
+    stdc++fs
 )

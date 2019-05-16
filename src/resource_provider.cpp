@@ -1,4 +1,8 @@
+#include <filesystem>
 #include "resource_provider.hpp"
+
+
+namespace fs = std::filesystem;
 
 ResourceProvider::ResourceProvider() {}
 
@@ -12,4 +16,19 @@ sf::Font& ResourceProvider::font(const std::string& fontName) {
         m_fonts[fontName] = std::move(font);
     }
     return m_fonts[fontName];
+}
+
+sf::Texture& ResourceProvider::texture(const std::string& textureName) {
+    fs::path fullPath(std::move(fs::path("chipset")) / textureName);
+    const std::string& textureKey(fullPath.string());
+    if (m_textures.find(textureKey) == std::end(m_textures))
+    {
+        sf::Texture texture;
+        if (!texture.loadFromFile(textureKey)) {
+            throw ::TextureLoadingError();
+        }
+        m_textures[textureKey] = std::move(texture);
+
+    }
+    return m_textures[textureKey];
 }
