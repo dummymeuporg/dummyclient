@@ -4,11 +4,20 @@ include_directories(include vendor/libdummy/include)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
 	-L${CMAKE_CURRENT_SOURCE_DIR}/vendor/libdummy/build")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
+set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -Wall")
 
-add_executable(dummyclient
-	src/main.cpp
+set(HEADERS
+    include/client.hpp
+    include/credentials.hpp
+    include/custom_event_queue.hpp
+    include/game.hpp
+    include/resource_provider.hpp
+    include/widget_builder.hpp
+)
+
+set(SOURCES
+    src/main.cpp
     src/client.cpp
     src/credentials.cpp
     src/custom_event_queue.cpp
@@ -24,19 +33,22 @@ add_executable(dummyclient
     src/screen/select_character_screen.cpp
     src/model/model.cpp
     src/model/characters_list_model.cpp
-	src/widget/abstract/widget.cpp
-	src/widget/button.cpp
-	src/widget/label.cpp
-	src/widget/skin_picker.cpp
-	src/widget/textbox.cpp
+    src/widget/abstract/widget.cpp
+    src/widget/button.cpp
+    src/widget/label.cpp
+    src/widget/skin_picker.cpp
+    src/widget/textbox.cpp
 )
+
+add_executable(dummyclient ${SOURCES} ${HEADERS})
+
 
 target_link_libraries(dummyclient
     boost_system
-	sfml-graphics
+    sfml-graphics
     sfml-network
-	sfml-system
-	sfml-window
+    sfml-system
+    sfml-window
     dummy
     stdc++fs
 )
