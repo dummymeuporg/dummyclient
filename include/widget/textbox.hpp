@@ -21,10 +21,13 @@ public:
         return m_content.str();
     }
 private:
+    bool _onMouseMoved(const sf::Event&);
     bool _onMouseButtonPressed(const sf::Event&);
     sf::RectangleShape m_shape;
     sf::Text m_text; // What the user will see.
     std::stringstream m_content;
+    bool m_isHovered;
+    bool m_isFocused;
 };
 
 } // namespace Widget
