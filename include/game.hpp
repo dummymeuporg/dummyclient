@@ -10,6 +10,7 @@
 
 class Game {
 public:
+    static const int FPS = 60;
     Game(const char*, const char*);
     int run();
     void setScreen(std::shared_ptr<Screen::Screen> screen);

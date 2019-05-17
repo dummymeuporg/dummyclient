@@ -21,6 +21,7 @@ int Game::run()
 {
     WidgetBuilder widgetBuilder(m_resourceProvider, m_customEventQueue);
     m_client.connect("localhost", 6612);
+    sf::Clock clock;
     while (m_window.isOpen())
     {
         sf::Event event;
@@ -40,8 +41,12 @@ int Game::run()
             m_currentScreen->handleCustomEvent(customEvent);
         }
 
-        m_currentScreen->draw();
-        m_window.display();
+        if (clock.getElapsedTime().asMilliseconds() > 1000/Game::FPS) {
+            m_currentScreen->draw();
+            m_window.display();
+            clock.restart();
+        }
+        sf::sleep(sf::milliseconds(1));
     }
 
     return EXIT_SUCCESS;
