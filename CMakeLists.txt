@@ -10,40 +10,8 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -Wall")
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 find_package(Boost COMPONENTS system REQUIRED)
 
-add_subdirectory(src)
-
-set(HEADERS
-    include/client.hpp
-    include/credentials.hpp
-    include/custom_event_queue.hpp
-    include/game.hpp
-    include/resource_provider.hpp
-    include/widget_builder.hpp
-)
-
-set(SOURCES
-    src/main.cpp
-    src/client.cpp
-    src/credentials.cpp
-    src/custom_event_queue.cpp
-    src/game.cpp
-    src/resource_provider.cpp
-    src/widget_builder.cpp
-    src/client_state/state.cpp
-    src/client_state/initial_state.cpp
-    src/client_state/receive_characters_state.cpp
-    src/screen/screen.cpp
-    src/screen/ui_screen.cpp
-    src/screen/create_character_screen.cpp
-    src/screen/select_character_screen.cpp
-    src/model/model.cpp
-    src/model/characters_list_model.cpp
-    src/widget/abstract/widget.cpp
-    src/widget/button.cpp
-    src/widget/label.cpp
-    src/widget/skin_picker.cpp
-    src/widget/textbox.cpp
-)
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE HEADERS "include/*.hpp")
 
 add_executable(dummyclient ${SOURCES} ${HEADERS})
 
