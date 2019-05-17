@@ -12,9 +12,18 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
       m_characterNameLabel(widgetBuilder.build<Widget::Label>()),
       m_characterNameTextbox(widgetBuilder.build<Widget::Textbox>()),
       m_characterSkinLabel(widgetBuilder.build<Widget::Label>()),
-      m_skinPicker(std::make_shared<Widget::SkinPicker>(
-          std::vector<std::string>({"WhiteScale.png"})
-      ))
+      m_skinPreviewer(std::make_shared<Widget::SkinPreviewer>(
+          std::vector<std::string>({"Avanta.png",
+                                    "bluewarrior.png",
+                                    "Cyana.png",
+                                    "Lily-csl.png",
+                                    "Quelqun-tiny.png",
+                                    "tykelj2.png",
+                                    "WhiteScale.png",
+                                    "WhiteScale2.png"})
+      )),
+      m_leftSkinButton(std::make_shared<Widget::Button>()),
+      m_rightSkinButton(std::make_shared<Widget::Button>())
 {
     m_characterNameLabel
         ->setCaption("Name: ")
@@ -41,13 +50,43 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
         .setFont("arial.ttf")
         .setPos(100, 200);
 
-    m_skinPicker
-        ->setPos(230, 200);
+    m_skinPreviewer->setPos(230, 200);
+
+    m_leftSkinButton->setPos(220, 250);
+    m_leftSkinButton
+        ->setBackgroundColor(sf::Color(183, 109, 44))
+        .setBorderColor(sf::Color(94, 47, 6))
+        .setColor(sf::Color::Black)
+        .setStyle(0)
+        .setFontSize(36);
+    m_leftSkinButton->setFont("arial.ttf");
+    m_leftSkinButton->setCaption("<");
+
+    m_rightSkinButton->setPos(450, 250);
+    m_rightSkinButton
+        ->setBackgroundColor(sf::Color(183, 109, 44))
+        .setBorderColor(sf::Color(94, 47, 6))
+        .setColor(sf::Color::Black)
+        .setStyle(0)
+        .setFontSize(36);
+    m_rightSkinButton->setFont("arial.ttf");
+    m_rightSkinButton->setCaption(">");
 
     addWidget(m_characterNameLabel);
     addWidget(m_characterNameTextbox);
     addWidget(m_characterSkinLabel);
-    addWidget(m_skinPicker);
+    addWidget(m_skinPreviewer);
+    addWidget(m_leftSkinButton);
+    addWidget(m_rightSkinButton);
+}
+
+
+void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
+    if (event.source() == m_leftSkinButton.get()) {
+        m_skinPreviewer->showPreviousSkin();
+    } else if(event.source() == m_rightSkinButton.get()) {
+        m_skinPreviewer->showNextSkin();
+    }
 }
 
 } // namespace Screen

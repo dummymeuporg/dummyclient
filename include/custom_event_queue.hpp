@@ -9,6 +9,8 @@ public:
     enum Type {
         None,
         ButtonClicked,
+        SetFocus,
+        ReleaseFocus,
 
         Count
     };

@@ -17,6 +17,14 @@ Widget& Widget::setPos(std::uint16_t x, std::uint16_t y) {
     return *this;
 }
 
+bool Widget::handleEvent(const sf::Event& event) {
+    return true;
+}
+
+bool Widget::handleCustomEvent(const ::CustomEvent& event) {
+    return true;
+}
+
 } // namespace Abstract
 
 } // namespace Widget
