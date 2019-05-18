@@ -5,10 +5,8 @@
 
 namespace Screen {
 
-UIScreen::UIScreen(::Game& game,
-                   ::Client& client,
-                   ::WidgetBuilder& widgetBuilder)
-    : Screen(game, client), m_widgetBuilder(widgetBuilder)
+UIScreen::UIScreen(::Game& game, ::Client& client)
+    : Screen(game, client)
 {
 }
 

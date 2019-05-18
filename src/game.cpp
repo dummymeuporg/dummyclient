@@ -5,21 +5,18 @@
 #include "screen/create_character_screen.hpp"
 #include "screen/select_character_screen.hpp"
 #include "resource_provider.hpp"
-#include "widget_builder.hpp"
 
 Game::Game(const char* account, const char* sessionID) 
     : m_client(*this, Credentials(account, sessionID)),
       m_window(sf::VideoMode(1024, 768), "DummyClient"),
       m_customEventQueue(CustomEventQueue::instance()),
       m_resourceProvider(ResourceProvider::instance()),
-      m_widgetBuilder(m_resourceProvider, m_customEventQueue),
       m_currentScreen(std::make_shared<Screen::SelectCharacterScreen>(
-        *this, m_client, m_widgetBuilder))
+        *this, m_client))
 { }
 
 int Game::run()
 {
-    WidgetBuilder widgetBuilder(m_resourceProvider, m_customEventQueue);
     m_client.connect("localhost", 6612);
     sf::Clock clock;
     while (m_window.isOpen())

@@ -10,7 +10,7 @@ namespace Screen {
 
 class SelectCharacterScreen : public UIScreen {
 public:
-    SelectCharacterScreen(::Game&, ::Client&, ::WidgetBuilder&);
+    SelectCharacterScreen(::Game&, ::Client&);
     virtual void notify() override;
     virtual void handleCustomEvent(const ::CustomEvent&) override;
 private:

@@ -6,7 +6,6 @@
 #include "custom_event_queue.hpp"
 #include "client.hpp"
 #include "resource_provider.hpp"
-#include "widget_builder.hpp"
 
 class Game {
 public:
@@ -29,6 +28,5 @@ private:
     sf::RenderWindow m_window;
     ::CustomEventQueue& m_customEventQueue;
     ::ResourceProvider& m_resourceProvider;
-    ::WidgetBuilder m_widgetBuilder;
     std::shared_ptr<Screen::Screen> m_currentScreen;
 };

@@ -6,12 +6,11 @@
 namespace Screen {
 
 CreateCharacterScreen::CreateCharacterScreen(::Game& game,
-                                             ::Client& client,
-                                             ::WidgetBuilder& widgetBuilder)
-    : UIScreen(game, client, widgetBuilder),
-      m_characterNameLabel(widgetBuilder.build<Widget::Label>()),
-      m_characterNameTextbox(widgetBuilder.build<Widget::Textbox>()),
-      m_characterSkinLabel(widgetBuilder.build<Widget::Label>()),
+                                             ::Client& client)
+    : UIScreen(game, client),
+      m_characterNameLabel(std::make_shared<Widget::Label>()),
+      m_characterNameTextbox(std::make_shared<Widget::Textbox>()),
+      m_characterSkinLabel(std::make_shared<Widget::Label>()),
       m_skinPreviewer(std::make_shared<Widget::SkinPreviewer>(
           std::vector<std::string>({"Avanta.png",
                                     "bluewarrior.png",

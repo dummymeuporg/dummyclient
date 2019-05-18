@@ -11,12 +11,11 @@
 namespace Screen {
 
 SelectCharacterScreen::SelectCharacterScreen(::Game& game,
-                                             ::Client& client,
-                                             ::WidgetBuilder& widgetBuilder)
-    : UIScreen(game, client, widgetBuilder), m_charactersCount(-1),
-      m_createCharacterButton(widgetBuilder.build<Widget::Button>()),
-      m_accountLabel(widgetBuilder.build<Widget::Label>()),
-    m_charactersCountLabel(widgetBuilder.build<Widget::Label>())
+                                             ::Client& client)
+    : UIScreen(game, client), m_charactersCount(-1),
+      m_createCharacterButton(std::make_shared<Widget::Button>()),
+      m_accountLabel(std::make_shared<Widget::Label>()),
+    m_charactersCountLabel(std::make_shared<Widget::Label>())
 {
     m_createCharacterButton->setPos(850, 700);
     m_createCharacterButton
@@ -72,7 +71,7 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
     if (event.source() == m_createCharacterButton.get()) {
         std::cerr << "Create character please." << std::endl;
         m_game.setScreen(std::make_shared<CreateCharacterScreen>(
-            m_game, m_client, widgetBuilder()));
+            m_game, m_client));
     }
 }
 
