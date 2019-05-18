@@ -13,6 +13,7 @@ public:
     CreateCharacterScreen(::Game&, ::Client&, ::WidgetBuilder&);
     virtual void handleCustomEvent(const ::CustomEvent&) override;
 private:
+    void _handleButtonClicked(const ::CustomEvent&);
     std::shared_ptr<Widget::Label> m_characterNameLabel; 
     std::shared_ptr<Widget::Textbox> m_characterNameTextbox;
     std::shared_ptr<Widget::Label> m_characterSkinLabel; 

@@ -3,6 +3,8 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 
+#include "game_element.hpp"
+
 class CustomEvent;
 class Client;
 class Game;
@@ -13,13 +15,14 @@ namespace Model {
 
 namespace Screen {
 
-class Screen : public std::enable_shared_from_this<Screen> {
+class Screen : public std::enable_shared_from_this<Screen>,
+               public ::GameElement
+{
 public:
     Screen(::Game&, ::Client&);
     virtual ~Screen();
     void setModel(std::shared_ptr<Model::Model>);
     virtual void handleEvent(const sf::Event&) = 0;
-    virtual void handleCustomEvent(const CustomEvent&);
     virtual void notify() = 0;
     virtual void draw() = 0;
 

@@ -105,8 +105,9 @@ bool Button::_onMouseButtonReleased(const sf::Event& event) {
             );
             pushEvent(
                 CustomEvent(
-                    reinterpret_cast<const void*>(shared_from_this().get()),
-                    CustomEvent::ButtonClicked
+                    reinterpret_cast<void*>(shared_from_this().get()),
+                    CustomEvent::ButtonClicked,
+                    reinterpret_cast<void*>(shared_from_this().get())
                 )
             );
             forwardEvent = false;

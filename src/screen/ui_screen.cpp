@@ -33,6 +33,15 @@ void UIScreen::handleEvent(const sf::Event& event)
     }
 }
 
+void UIScreen::handleCustomEvent(const ::CustomEvent& event) {
+    for (const auto& widget: m_widgets) {
+        if (event.target() == widget.get()) {
+            widget->handleCustomEvent(event);
+            break;
+        }
+    }
+}
+
 void UIScreen::notify()
 {
 

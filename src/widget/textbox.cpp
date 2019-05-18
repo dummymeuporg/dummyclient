@@ -39,15 +39,34 @@ bool Textbox::_onMouseMoved(const sf::Event& event) {
 bool Textbox::_onMouseButtonPressed(const sf::Event& event) {
     bool forwardEvent = true;
 
-    // Do not handle the event if the textbox is not captured.
-    if(!m_isHovered) {
+    // Do not handle the event if the textbox is not hovered but focused,
+    // release the handle.
+    if(!m_isHovered and m_isFocused) {
+        pushEvent(
+            ::CustomEvent(
+                reinterpret_cast<void*>(shared_from_this().get()),
+                CustomEvent::ReleaseFocus
+            )
+        );
         return forwardEvent;
     }
 
-    if (event.mouseButton.button == sf::Mouse::Left)
-    {
+    if (event.mouseButton.button == sf::Mouse::Left) {
+        // Send a focus message.
+        pushEvent(
+            ::CustomEvent(
+                reinterpret_cast<void*>(shared_from_this().get()),
+                CustomEvent::SetFocus
+            )
+        );
     }
     return forwardEvent;
+}
+
+void Textbox::handleCustomEvent(const ::CustomEvent& event) {
+    if (event.type() == CustomEvent::Type::SetFocus) {
+        m_isFocused = true;
+    }
 }
 
 bool Textbox::handleEvent(const sf::Event& event) {

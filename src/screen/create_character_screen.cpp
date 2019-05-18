@@ -80,12 +80,22 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
     addWidget(m_rightSkinButton);
 }
 
-
-void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
+void CreateCharacterScreen::_handleButtonClicked(const ::CustomEvent& event) {
     if (event.source() == m_leftSkinButton.get()) {
         m_skinPreviewer->showPreviousSkin();
     } else if(event.source() == m_rightSkinButton.get()) {
         m_skinPreviewer->showNextSkin();
+    }
+}
+
+void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
+    switch(event.type()) {
+    case ::CustomEvent::Type::ButtonClicked:
+        _handleButtonClicked(event);
+        break;
+    default:
+        UIScreen::handleCustomEvent(event);
+        break;
     }
 }
 

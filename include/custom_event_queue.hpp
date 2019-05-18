@@ -15,10 +15,14 @@ public:
         Count
     };
 
-    CustomEvent(const void* = nullptr, Type = None);
+    CustomEvent(void* = nullptr, Type = None, void* = nullptr);
 
-    const void* source() const {
+    void* source() const {
         return m_eventSource;
+    }
+
+    void* target() const {
+        return m_eventTarget;
     }
 
     Type type() const {
@@ -26,8 +30,9 @@ public:
     }
 
 private:
-    const void* m_eventSource;
+    void* m_eventSource;
     Type m_type;
+    void* m_eventTarget;
 
 };
 

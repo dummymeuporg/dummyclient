@@ -9,6 +9,7 @@ class UIScreen : public Screen {
 public:
     UIScreen(::Game&, ::Client&, ::WidgetBuilder&);
     virtual void handleEvent(const sf::Event&) override;
+    virtual void handleCustomEvent(const ::CustomEvent&) override;
     virtual void notify();
     virtual void draw();
     ::WidgetBuilder& widgetBuilder() {
