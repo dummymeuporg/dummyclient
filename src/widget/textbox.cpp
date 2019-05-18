@@ -26,7 +26,6 @@ bool Textbox::_onMouseMoved(const sf::Event& event) {
         event.mouseMove.x <= (origin.x + bounds.width) &&
         event.mouseMove.y <= (origin.y + bounds.height))
     {
-        std::cerr << "Is hovered." << std::endl;
         m_isHovered = true;
     }
     else
@@ -42,23 +41,25 @@ bool Textbox::_onMouseButtonPressed(const sf::Event& event) {
     // Do not handle the event if the textbox is not hovered but focused,
     // release the handle.
     if(!m_isHovered and m_isFocused) {
+        std::cerr << "Release for focus." << std::endl;
         pushEvent(
             ::CustomEvent(
                 reinterpret_cast<void*>(shared_from_this().get()),
-                CustomEvent::ReleaseFocus
+                CustomEvent::ReleaseFocus,
+                reinterpret_cast<void*>(shared_from_this().get())
             )
         );
         return forwardEvent;
-    }
-
-    if (event.mouseButton.button == sf::Mouse::Left) {
+    } else if (event.mouseButton.button == sf::Mouse::Left) {
         // Send a focus message.
         pushEvent(
             ::CustomEvent(
                 reinterpret_cast<void*>(shared_from_this().get()),
-                CustomEvent::SetFocus
+                CustomEvent::SetFocus,
+                reinterpret_cast<void*>(shared_from_this().get())
             )
         );
+        forwardEvent = false;
     }
     return forwardEvent;
 }
@@ -66,6 +67,10 @@ bool Textbox::_onMouseButtonPressed(const sf::Event& event) {
 void Textbox::handleCustomEvent(const ::CustomEvent& event) {
     if (event.type() == CustomEvent::Type::SetFocus) {
         m_isFocused = true;
+        std::cerr << "Got focused." << std::endl;
+    } else if(event.type() == CustomEvent::Type::ReleaseFocus) {
+        m_isFocused = false;
+        std::cerr << "Lost focus." << std::endl;
     }
 }
 
