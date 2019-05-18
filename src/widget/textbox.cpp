@@ -10,6 +10,20 @@ Textbox::Textbox(std::shared_ptr<Widget> parent)
 }
 
 void Textbox::paint(sf::RenderWindow& renderWindow) {
+    int delta = 30;
+    sf::Color backgroundColor(m_shape.getFillColor());
+    if (m_isFocused) {
+        backgroundColor.r = m_backgroundColor.r + delta;
+        backgroundColor.g = m_backgroundColor.g + delta;
+        backgroundColor.b = m_backgroundColor.b + delta;
+    } else {
+        backgroundColor.r = m_backgroundColor.r - delta;
+        backgroundColor.g = m_backgroundColor.g - delta;
+        backgroundColor.b = m_backgroundColor.b - delta;
+    }
+
+    m_shape.setFillColor(backgroundColor);
+
     renderWindow.draw(m_shape);
     const sf::Vector2f& shapePos(m_shape.getPosition());
     m_text.setPosition(shapePos.x + 5, shapePos.y + 5);
@@ -50,7 +64,7 @@ bool Textbox::_onMouseButtonPressed(const sf::Event& event) {
             )
         );
         return forwardEvent;
-    } else if (event.mouseButton.button == sf::Mouse::Left) {
+    } else if (event.mouseButton.button == sf::Mouse::Left && m_isHovered) {
         // Send a focus message.
         pushEvent(
             ::CustomEvent(
@@ -111,7 +125,8 @@ Textbox& Textbox::setColor(const sf::Color& color) {
 }
 
 Textbox& Textbox::setBackgroundColor(const sf::Color& color) {
-    m_shape.setFillColor(color);
+    m_backgroundColor = color;
+    m_shape.setFillColor(m_backgroundColor);
     return *this;
 }
 

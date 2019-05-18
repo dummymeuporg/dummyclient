@@ -29,6 +29,7 @@ private:
     std::stringstream m_content;
     bool m_isHovered;
     bool m_isFocused;
+    sf::Color m_backgroundColor;
 };
 
 } // namespace Widget
