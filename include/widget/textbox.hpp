@@ -22,6 +22,9 @@ public:
         return m_content.str();
     }
 private:
+    bool _onKeyPressed(const sf::Event&);
+    bool _onKeyReleased(const sf::Event&);
+    bool _onTextEntered(const sf::Event&);
     bool _onMouseMoved(const sf::Event&);
     bool _onMouseButtonPressed(const sf::Event&);
     sf::RectangleShape m_shape;
@@ -30,6 +33,10 @@ private:
     bool m_isHovered;
     bool m_isFocused;
     sf::Color m_backgroundColor;
+    sf::Clock m_carretClock;
+    bool m_isCarretDrawn;
+    unsigned int m_carretIndex;
+    sf::Keyboard::Key m_lastKeyInput;
 };
 
 } // namespace Widget

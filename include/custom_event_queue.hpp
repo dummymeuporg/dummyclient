@@ -11,6 +11,8 @@ public:
         ButtonClicked,
         SetFocus,
         ReleaseFocus,
+        LeftArrowPressed,
+        RightArrowPressed,
 
         Count
     };

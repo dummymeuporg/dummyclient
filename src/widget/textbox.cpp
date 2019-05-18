@@ -4,7 +4,8 @@
 namespace Widget {
 
 Textbox::Textbox(std::shared_ptr<Widget> parent)
-    : Widget(parent), m_isHovered(false), m_isFocused(false)
+    : Widget(parent), m_isHovered(false), m_isFocused(false),
+      m_isCarretDrawn(false), m_carretIndex(0)
 {
 
 }
@@ -16,6 +17,12 @@ void Textbox::paint(sf::RenderWindow& renderWindow) {
         backgroundColor.r = m_backgroundColor.r + delta;
         backgroundColor.g = m_backgroundColor.g + delta;
         backgroundColor.b = m_backgroundColor.b + delta;
+        
+        if (m_carretClock.getElapsedTime().asMilliseconds() >= 500) {
+            m_isCarretDrawn = !m_isCarretDrawn;
+            m_carretClock.restart();
+        }
+
     } else {
         backgroundColor.r = m_backgroundColor.r - delta;
         backgroundColor.g = m_backgroundColor.g - delta;
@@ -28,6 +35,55 @@ void Textbox::paint(sf::RenderWindow& renderWindow) {
     const sf::Vector2f& shapePos(m_shape.getPosition());
     m_text.setPosition(shapePos.x + 5, shapePos.y + 5);
     renderWindow.draw(m_text);
+
+    if (m_isCarretDrawn) {
+        const sf::Vector2f& textPosition(
+            m_text.findCharacterPos(m_carretIndex));
+        sf::RectangleShape carret;
+        carret.setPosition(textPosition.x, textPosition.y);
+        carret.setSize(sf::Vector2f(2, 24));
+        carret.setFillColor(sf::Color(0, 0, 0));
+        renderWindow.draw(carret);
+    }
+}
+
+bool Textbox::_onTextEntered(const sf::Event& event) {
+    return true;
+}
+
+bool Textbox::_onKeyReleased(const sf::Event& event) {
+    bool forwardEvent = true;
+    std::cerr << "Key released. " << event.key.code << std::endl;
+    switch(m_lastKeyInput) {
+    case sf::Keyboard::Left:
+        if (m_carretIndex > 0) {
+            --m_carretIndex;
+        }
+        forwardEvent = false;
+        m_lastKeyInput = sf::Keyboard::Unknown;
+        m_carretClock.restart();
+        m_isCarretDrawn = true;
+        break;
+    case sf::Keyboard::Right:
+        if (m_carretIndex < m_content.str().size()) {
+            ++m_carretIndex;
+        }
+        forwardEvent = false;
+        m_lastKeyInput = sf::Keyboard::Unknown;
+        m_carretClock.restart();
+        m_isCarretDrawn = true;
+        break;
+    default:
+        break;
+    }
+    return forwardEvent;
+}
+
+bool Textbox::_onKeyPressed(const sf::Event& event) {
+    bool forwardEvent = true;
+    std::cerr << "Key pressed. " << event.key.code << std::endl;
+    m_lastKeyInput = event.key.code;
+    return forwardEvent;
 }
 
 bool Textbox::_onMouseMoved(const sf::Event& event) {
@@ -82,9 +138,12 @@ void Textbox::handleCustomEvent(const ::CustomEvent& event) {
     if (event.type() == CustomEvent::Type::SetFocus) {
         m_isFocused = true;
         std::cerr << "Got focused." << std::endl;
+        m_carretClock.restart();
+        m_isCarretDrawn = true;
     } else if(event.type() == CustomEvent::Type::ReleaseFocus) {
         m_isFocused = false;
         std::cerr << "Lost focus." << std::endl;
+        m_isCarretDrawn = false;
     }
 }
 
@@ -96,6 +155,15 @@ bool Textbox::handleEvent(const sf::Event& event) {
         break;
     case sf::Event::MouseButtonPressed:
         forwardEvent = _onMouseButtonPressed(event);
+        break;
+    case sf::Event::KeyPressed:
+        forwardEvent = _onKeyPressed(event);
+        break;
+    case sf::Event::TextEntered:
+        forwardEvent = _onTextEntered(event);
+        break;
+    case sf::Event::KeyReleased:
+        forwardEvent = _onKeyReleased(event);
         break;
     default:
         break;
