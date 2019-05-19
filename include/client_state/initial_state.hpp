@@ -8,7 +8,7 @@ class InitialState : public State {
 public:
     InitialState(::Client&);
     virtual void resume() override;
-    virtual void onRead(const std::vector<std::uint8_t>& buffer) override;
+    virtual void onRead(Dummy::Protocol::IncomingPacket&) override;
 };
 
 } // namespace ClientState

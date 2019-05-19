@@ -44,13 +44,22 @@ void Client::checkData() {
     if (m_packetSize == receivedBytes) {
         // Everything is fine. Reset the packet size and handle the data.
         std::cerr << "I got data! " << buffer.size() << std::endl;
-        m_state->onRead(buffer);
+        Dummy::Protocol::IncomingPacket pkt(buffer);
+        m_state->onRead(pkt);
         m_packetSize = 0;
     } else {
         std::cerr << "Houston, I don't know how to handle this error."
             << std::endl;
         ::exit(-1);
     }
+}
+
+void Client::send(const std::uint8_t* data, std::size_t size) {
+    m_socket.send(data, size);
+}
+
+void Client::send(const Dummy::Protocol::OutgoingPacket& packet) {
+    m_socket.send(packet.buffer(), packet.size());
 }
 
 void Client::changeState(std::shared_ptr<ClientState::State> state) {
