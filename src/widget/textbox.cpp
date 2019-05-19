@@ -201,13 +201,19 @@ bool Textbox::handleEvent(const sf::Event& event) {
         forwardEvent = _onMouseButtonPressed(event);
         break;
     case sf::Event::TextEntered:
-        forwardEvent = _onTextEntered(event);
+        if (m_isFocused) {
+            forwardEvent = _onTextEntered(event);
+        }
         break;
     case sf::Event::KeyPressed:
-        forwardEvent = _onKeyPressed(event);
+        if (m_isFocused) {
+            forwardEvent = _onKeyPressed(event);
+        }
         break;
     case sf::Event::KeyReleased:
-        forwardEvent = _onKeyReleased(event);
+        if (m_isFocused) {
+            forwardEvent = _onKeyReleased(event);
+        }
         break;
     default:
         break;

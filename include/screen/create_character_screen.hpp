@@ -20,6 +20,7 @@ private:
     std::shared_ptr<Widget::SkinPreviewer> m_skinPreviewer;
     std::shared_ptr<Widget::Button> m_leftSkinButton;
     std::shared_ptr<Widget::Button> m_rightSkinButton;
+    std::shared_ptr<Widget::Button> m_createCharacterButton;
 };
 
 } // namespace Screen

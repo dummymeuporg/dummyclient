@@ -22,7 +22,8 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
                                     "WhiteScale2.png"})
       )),
       m_leftSkinButton(std::make_shared<Widget::Button>()),
-      m_rightSkinButton(std::make_shared<Widget::Button>())
+      m_rightSkinButton(std::make_shared<Widget::Button>()),
+      m_createCharacterButton(std::make_shared<Widget::Button>())
 {
     m_characterNameLabel
         ->setCaption("Name: ")
@@ -72,12 +73,25 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
     m_rightSkinButton->setFont("arial.ttf");
     m_rightSkinButton->setCaption(">");
 
+    m_createCharacterButton->setPos(220, 450);
+    m_createCharacterButton
+        ->setBackgroundColor(sf::Color(183, 109, 44))
+        .setBorderColor(sf::Color(94, 47, 6))
+        .setColor(sf::Color::Black)
+        .setStyle(0)
+        .setFontSize(24);
+    m_createCharacterButton->setFont("arial.ttf");
+    m_createCharacterButton->setCaption("Create");
+
+
+
     addWidget(m_characterNameLabel);
     addWidget(m_characterNameTextbox);
     addWidget(m_characterSkinLabel);
     addWidget(m_skinPreviewer);
     addWidget(m_leftSkinButton);
     addWidget(m_rightSkinButton);
+    addWidget(m_createCharacterButton);
 }
 
 void CreateCharacterScreen::_handleButtonClicked(const ::CustomEvent& event) {
