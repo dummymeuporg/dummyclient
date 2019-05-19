@@ -5,6 +5,8 @@
 
 #include <SFML/Network.hpp>
 
+#include "protocol/outgoing_packet.hpp"
+
 #include "client_state/initial_state.hpp"
 #include "credentials.hpp"
 #include "screen/screen.hpp"
@@ -44,6 +46,8 @@ public:
     void authenticate();
     void changeState(std::shared_ptr<ClientState::State>);
     void update();
+    void send(const std::uint8_t*, std::size_t);
+    void send(const Dummy::Protocol::OutgoingPacket&);
 
     ::Game& game() {
         return m_game;

@@ -19,11 +19,11 @@ void ReceiveCharactersState::resume() {
     m_client.game().screen()->setModel(m_model);
 }
 
-void ReceiveCharactersState::onRead(const std::vector<std::uint8_t>& buffer) {
+void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     // Here, we will get the server answer once the character has been either
     // created or selected.
-    std::uint16_t charactersCount =
-        *(reinterpret_cast<const std::uint16_t*>(buffer.data()));
+    std::uint16_t charactersCount;
+    pkt >> charactersCount;
     std::cerr << "[ReceiveCharactersState] got " << charactersCount <<
         " characters. " << std::endl;
 
