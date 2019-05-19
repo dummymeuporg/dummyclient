@@ -1,3 +1,4 @@
+#include <iostream>
 #include "client.hpp"
 #include "game.hpp"
 #include "screen/create_character_screen.hpp"
@@ -40,7 +41,7 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
         .setBorderColor(sf::Color(128, 128, 128))
         .setRect(230, 90, 420, 40)
         .setMaxLength(25)
-        .setContent("Name")
+        .setContent("")
         .setFont("arial.ttf");
 
     m_characterSkinLabel
@@ -99,6 +100,11 @@ void CreateCharacterScreen::_handleButtonClicked(const ::CustomEvent& event) {
         m_skinPreviewer->showPreviousSkin();
     } else if(event.source() == m_rightSkinButton.get()) {
         m_skinPreviewer->showNextSkin();
+    } else if (event.source() == m_createCharacterButton.get()) {
+        std::cerr << "Create the character." << std::endl;
+        std::cerr << "Name: " << m_characterNameTextbox->content() << std::endl;
+        std::cerr << "Chipset: "<< m_skinPreviewer->skin() << std::endl;
+
     }
 }
 

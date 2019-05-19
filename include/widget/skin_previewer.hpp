@@ -13,6 +13,9 @@ public:
     void showNextSkin();
     void showPreviousSkin();
     SkinPreviewer& setPos(int, int);
+    const std::string& skin() const {
+        return m_skinList[m_currentSkinIndex];
+    }
 private:
     int m_currentSkinIndex;
     sf::Vector2f m_origin;
