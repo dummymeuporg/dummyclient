@@ -4,7 +4,11 @@
 namespace Widget {
 
 Textbox::Textbox(std::shared_ptr<Widget> parent)
-    : Widget(parent), m_isHovered(false), m_isFocused(false),
+    : Widget(parent),
+      m_maxLength(-1),
+      m_isHovered(false),
+      m_isFocused(false),
+      m_isTextRepeating(false),
       m_isCarretDrawn(false), m_carretIndex(0)
 {
 
@@ -47,41 +51,81 @@ void Textbox::paint(sf::RenderWindow& renderWindow) {
     }
 }
 
+void Textbox::_handleTextEntered(const sf::Event& event) {
+    if (event.key.code == '\010'/* Backspace */) {
+        if (m_carretIndex > 0) {
+            std::string content(m_content.str());
+            m_content.clear();
+            m_content.str("");
+            m_content << content.substr(0, m_carretIndex-1)
+                << content.substr(m_carretIndex);
+            m_text.setString(m_content.str());
+            --m_carretIndex;
+        }
+    } else if (std::isalpha(event.key.code) ||
+               event.key.code == ' ') {
+        if (m_maxLength > 0 && m_content.str().size() == m_maxLength) {
+            return;
+        }
+        m_content << static_cast<char>(event.key.code);
+        std::cerr << "Content = " << m_content.str() << std::endl;
+        m_text.setString(m_content.str());
+        m_carretIndex++;
+        m_carretClock.restart();
+        m_isCarretDrawn = true;
+    }
+}
+
 bool Textbox::_onTextEntered(const sf::Event& event) {
-    return true;
+    bool forwardEvent = true;
+    std::cerr << "Text entered: " << event.key.code << std::endl;
+    if (m_isTextRepeating
+         && m_textRepeatClock.getElapsedTime().asMilliseconds() >= 30) {
+        _handleTextEntered(event);
+        m_textRepeatClock.restart();
+    } else if (m_lastTextInput != event.key.code) {
+        _handleTextEntered(event);
+        m_textFirstClock.restart();
+    } else if (!m_isTextRepeating
+               && m_textFirstClock.getElapsedTime().asMilliseconds() >= 300) {
+        m_isTextRepeating = true;
+        _handleTextEntered(event);
+        m_textRepeatClock.restart();
+    }
+        
+    m_lastTextInput = event.key.code;
+    return forwardEvent;
 }
 
 bool Textbox::_onKeyReleased(const sf::Event& event) {
     bool forwardEvent = true;
-    std::cerr << "Key released. " << event.key.code << std::endl;
-    switch(m_lastKeyInput) {
-    case sf::Keyboard::Left:
+    if(m_lastKeyInput == sf::Keyboard::Left) {
         if (m_carretIndex > 0) {
             --m_carretIndex;
+            m_content.seekg(m_carretIndex);
         }
         forwardEvent = false;
-        m_lastKeyInput = sf::Keyboard::Unknown;
         m_carretClock.restart();
         m_isCarretDrawn = true;
-        break;
-    case sf::Keyboard::Right:
+    } else if (m_lastKeyInput == sf::Keyboard::Right) {
         if (m_carretIndex < m_content.str().size()) {
             ++m_carretIndex;
+            m_content.seekg(m_carretIndex);
         }
         forwardEvent = false;
-        m_lastKeyInput = sf::Keyboard::Unknown;
         m_carretClock.restart();
         m_isCarretDrawn = true;
-        break;
-    default:
-        break;
-    }
+    } 
+    m_lastKeyInput = sf::Keyboard::Unknown;
+    m_lastTextInput = sf::Keyboard::Unknown;
+    m_isTextRepeating = false;
+    m_textFirstClock.restart();
+    m_textRepeatClock.restart();
     return forwardEvent;
 }
 
 bool Textbox::_onKeyPressed(const sf::Event& event) {
     bool forwardEvent = true;
-    std::cerr << "Key pressed. " << event.key.code << std::endl;
     m_lastKeyInput = event.key.code;
     return forwardEvent;
 }
@@ -156,11 +200,11 @@ bool Textbox::handleEvent(const sf::Event& event) {
     case sf::Event::MouseButtonPressed:
         forwardEvent = _onMouseButtonPressed(event);
         break;
-    case sf::Event::KeyPressed:
-        forwardEvent = _onKeyPressed(event);
-        break;
     case sf::Event::TextEntered:
         forwardEvent = _onTextEntered(event);
+        break;
+    case sf::Event::KeyPressed:
+        forwardEvent = _onKeyPressed(event);
         break;
     case sf::Event::KeyReleased:
         forwardEvent = _onKeyReleased(event);
@@ -210,6 +254,10 @@ Textbox& Textbox::setContent(const std::string& str)
     m_content << str;
     m_text.setString(m_content.str());
     return *this;
+}
+
+Textbox& Textbox::setMaxLength(int maxLength) {
+    m_maxLength = maxLength;
 }
 
 } // namespace Widget

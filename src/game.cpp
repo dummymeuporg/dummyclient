@@ -20,6 +20,7 @@ int Game::run()
     m_client.connect("localhost", 6612);
     sf::Clock clock;
     m_window.setKeyRepeatEnabled(false);
+    m_window.setFramerateLimit(Game::FPS);
     while (m_window.isOpen())
     {
         sf::Event event;

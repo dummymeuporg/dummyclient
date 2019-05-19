@@ -37,7 +37,8 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
         .setColor(sf::Color::Black)
         .setBackgroundColor(sf::Color(200, 200, 200))
         .setBorderColor(sf::Color(128, 128, 128))
-        .setRect(230, 90, 200, 40)
+        .setRect(230, 90, 420, 40)
+        .setMaxLength(25)
         .setContent("Name")
         .setFont("arial.ttf");
 
