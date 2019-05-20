@@ -84,8 +84,6 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
     m_createCharacterButton->setFont("arial.ttf");
     m_createCharacterButton->setCaption("Create");
 
-
-
     addWidget(m_characterNameLabel);
     addWidget(m_characterNameTextbox);
     addWidget(m_characterSkinLabel);
@@ -101,11 +99,25 @@ void CreateCharacterScreen::_handleButtonClicked(const ::CustomEvent& event) {
     } else if(event.source() == m_rightSkinButton.get()) {
         m_skinPreviewer->showNextSkin();
     } else if (event.source() == m_createCharacterButton.get()) {
-        std::cerr << "Create the character." << std::endl;
-        std::cerr << "Name: " << m_characterNameTextbox->content() << std::endl;
-        std::cerr << "Chipset: "<< m_skinPreviewer->skin() << std::endl;
-
+        _onCreateCharacterButton();
     }
+}
+
+void CreateCharacterScreen::_onCreateCharacterButton() {
+    const std::string& characterName(m_characterNameTextbox->content());
+    const std::string& skin(m_skinPreviewer->skin());
+    std::cerr << "Create the character." << std::endl;
+    std::cerr << "Name: " << m_characterNameTextbox->content()
+        << std::endl;
+    std::cerr << "Chipset: " << m_skinPreviewer->skin()
+        << std::endl;
+
+    Dummy::Protocol::OutgoingPacket pkt;
+    std::uint8_t command = 1; // create_character
+
+    pkt << command << characterName << skin;
+    m_client.send(pkt);
+
 }
 
 void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
