@@ -19,8 +19,8 @@ public:
     Textbox& setBorderColor(const sf::Color& color);
     Textbox& setMaxLength(int);
     Textbox& setContent(const std::string& str);
-    std::string content() const {
-        return m_content.str();
+    const std::string& content() const {
+        return m_content;
     }
 private:
 
@@ -36,7 +36,8 @@ private:
     int m_maxLength; /* For text. */
     sf::RectangleShape m_shape;
     sf::Text m_text; // What the user will see.
-    std::stringstream m_content;
+    //std::stringstream m_content;
+    std::string m_content;
     bool m_isHovered;
     bool m_isFocused;
     bool m_isTextRepeating;

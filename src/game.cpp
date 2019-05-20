@@ -17,7 +17,7 @@ Game::Game(const char* account, const char* sessionID)
 
 int Game::run()
 {
-    m_client.connect("localhost", 6612);
+    m_client.connect("127.0.0.1", 6612);
     sf::Clock clock;
     m_window.setKeyRepeatEnabled(false);
     m_window.setFramerateLimit(Game::FPS);

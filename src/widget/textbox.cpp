@@ -54,22 +54,19 @@ void Textbox::paint(sf::RenderWindow& renderWindow) {
 void Textbox::_handleTextEntered(const sf::Event& event) {
     if (event.key.code == '\010'/* Backspace */) {
         if (m_carretIndex > 0) {
-            std::string content(m_content.str());
-            m_content.clear();
-            m_content.str("");
-            m_content << content.substr(0, m_carretIndex-1)
-                << content.substr(m_carretIndex);
-            m_text.setString(m_content.str());
+            m_content = m_content.substr(0, m_carretIndex-1)
+                + m_content.substr(m_carretIndex);
+            m_text.setString(m_content);
             --m_carretIndex;
         }
     } else if (std::isalpha(event.key.code) ||
                event.key.code == ' ') {
-        if (m_maxLength > 0 && m_content.str().size() == m_maxLength) {
+        if (m_maxLength > 0 && m_content.size() == m_maxLength) {
             return;
         }
-        m_content << static_cast<char>(event.key.code);
-        std::cerr << "Content = " << m_content.str() << std::endl;
-        m_text.setString(m_content.str());
+        m_content.insert(m_carretIndex, 1, static_cast<char>(event.key.code));
+        std::cerr << "Content = " << m_content << std::endl;
+        m_text.setString(m_content);
         m_carretIndex++;
         m_carretClock.restart();
         m_isCarretDrawn = true;
@@ -102,15 +99,13 @@ bool Textbox::_onKeyReleased(const sf::Event& event) {
     if(m_lastKeyInput == sf::Keyboard::Left) {
         if (m_carretIndex > 0) {
             --m_carretIndex;
-            m_content.seekg(m_carretIndex);
         }
         forwardEvent = false;
         m_carretClock.restart();
         m_isCarretDrawn = true;
     } else if (m_lastKeyInput == sf::Keyboard::Right) {
-        if (m_carretIndex < m_content.str().size()) {
+        if (m_carretIndex < m_content.size()) {
             ++m_carretIndex;
-            m_content.seekg(m_carretIndex);
         }
         forwardEvent = false;
         m_carretClock.restart();
@@ -256,14 +251,14 @@ Textbox& Textbox::setBorderColor(const sf::Color& color) {
 
 Textbox& Textbox::setContent(const std::string& str)
 {
-    m_content.flush();
-    m_content << str;
-    m_text.setString(m_content.str());
+    m_content = str;
+    m_text.setString(m_content);
     return *this;
 }
 
 Textbox& Textbox::setMaxLength(int maxLength) {
     m_maxLength = maxLength;
+    return *this;
 }
 
 } // namespace Widget
