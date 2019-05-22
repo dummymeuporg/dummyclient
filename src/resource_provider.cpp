@@ -19,7 +19,7 @@ sf::Font& ResourceProvider::font(const std::string& fontName) {
 }
 
 sf::Texture& ResourceProvider::texture(const std::string& textureName) {
-    fs::path fullPath(std::move(fs::path("chipset")) / textureName);
+    fs::path fullPath(std::move(fs::path("chipsets")) / textureName);
     const std::string& textureKey(fullPath.string());
     if (m_textures.find(textureKey) == std::end(m_textures))
     {
