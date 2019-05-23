@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include <boost/range/irange.hpp>
+
 #include "client.hpp"
 #include "game.hpp"
 #include "client_state/receive_characters_state.hpp"
@@ -27,6 +29,12 @@ void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     std::cerr << "[ReceiveCharactersState] got " << charactersCount <<
         " characters. " << std::endl;
 
+    for(auto i: boost::irange(charactersCount))
+    {
+        Dummy::Core::Character chr;
+        pkt >> chr;
+        m_model->addCharacter(std::move(chr));
+    }
     m_model->update();
 }
 

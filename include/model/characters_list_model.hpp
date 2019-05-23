@@ -2,17 +2,17 @@
 
 #include <vector>
 
-#include "protocol/character_info.hpp"
+#include "core/character.hpp"
 #include "model/model.hpp"
 
-using CharactersList = std::vector<Dummy::Protocol::CharacterInfo>;
+using CharactersList = std::vector<Dummy::Core::Character>;
 
 namespace Model {
 
 class CharactersListModel : public Model {
 public:
     CharactersListModel();
-    void addCharacter(Dummy::Protocol::CharacterInfo chacacterInfo);
+    void addCharacter(Dummy::Core::Character&& chacacterInfo);
     const CharactersList& characters() const {
         return m_characters;
     }
