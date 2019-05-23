@@ -3,6 +3,7 @@
 namespace Widget {
 
 CharacterSelector::CharacterSelector(std::shared_ptr<Widget> parent)
+    : m_selectedCharacter(-1)
 {
 
 }

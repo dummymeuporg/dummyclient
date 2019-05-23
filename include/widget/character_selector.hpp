@@ -9,6 +9,8 @@ public:
     CharacterSelector(std::shared_ptr<Widget> = nullptr);
     virtual void paint(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
+private:
+    int m_selectedCharacter;
 };
 
 } // namespace Widget
