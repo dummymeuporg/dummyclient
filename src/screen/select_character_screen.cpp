@@ -15,7 +15,8 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     : UIScreen(game, client), m_charactersCount(-1),
       m_createCharacterButton(std::make_shared<Widget::Button>()),
       m_accountLabel(std::make_shared<Widget::Label>()),
-    m_charactersCountLabel(std::make_shared<Widget::Label>())
+    m_charactersCountLabel(std::make_shared<Widget::Label>()),
+    m_characterSelector(std::make_shared<Widget::CharacterSelector>())
 {
     m_createCharacterButton->setPos(850, 700);
     m_createCharacterButton
@@ -42,9 +43,13 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
         .setColor(sf::Color::White)
         .setFont("arial.ttf");
 
+    // 322 = (1024/2) - (width of character selector / 2)
+    m_characterSelector->setPos(322, 600);
+
     addWidget(m_accountLabel);
     addWidget(m_createCharacterButton);
     addWidget(m_charactersCountLabel);
+    addWidget(m_characterSelector);
 }
 
 void SelectCharacterScreen::notify() {
@@ -56,6 +61,7 @@ void SelectCharacterScreen::notify() {
     ss << "You have " << m_charactersCount << " characters";
 
     m_charactersCountLabel->setCaption(ss.str());
+    m_characterSelector->setCharacters(model->characters());
 
     // Center the label
     sf::Text& caption(m_charactersCountLabel->caption());

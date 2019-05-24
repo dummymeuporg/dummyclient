@@ -31,9 +31,10 @@ void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
 
     for(auto i: boost::irange(charactersCount))
     {
-        Dummy::Core::Character chr;
-        pkt >> chr;
-        m_model->addCharacter(std::move(chr));
+        std::shared_ptr<Dummy::Core::Character> chr =
+            std::make_shared<Dummy::Core::Character>();
+        pkt >> *chr;
+        m_model->addCharacter(chr);
     }
     m_model->update();
 }

@@ -5,14 +5,15 @@
 #include "core/character.hpp"
 #include "model/model.hpp"
 
-using CharactersList = std::vector<Dummy::Core::Character>;
 
 namespace Model {
 
 class CharactersListModel : public Model {
 public:
+    using CharactersList =
+        std::vector<std::shared_ptr<Dummy::Core::Character>>;
     CharactersListModel();
-    void addCharacter(Dummy::Core::Character&& chacacterInfo);
+    void addCharacter(std::shared_ptr<Dummy::Core::Character>);
     const CharactersList& characters() const {
         return m_characters;
     }
