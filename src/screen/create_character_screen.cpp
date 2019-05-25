@@ -127,7 +127,6 @@ void CreateCharacterScreen::_onCreateCharacterButton() {
     m_initialCharactersCount = model->characters().size();
     const std::string& characterName(m_characterNameTextbox->content());
     const std::string& skin(m_skinPreviewer->skin());
-    std::cerr << "Create the character." << std::endl;
     std::cerr << "Name: " << m_characterNameTextbox->content()
         << std::endl;
     std::cerr << "Chipset: " << m_skinPreviewer->skin()
@@ -153,10 +152,10 @@ void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
 }
 
 void CreateCharacterScreen::_back() {
+    auto self(shared_from_this());
     std::shared_ptr<SelectCharacterScreen> screen =
         std::make_shared<SelectCharacterScreen>(m_game, m_client);
     screen->setModel(m_model);
-    m_model->update();
     m_game.setScreen(screen);
 }
 

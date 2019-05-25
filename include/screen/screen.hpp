@@ -21,6 +21,9 @@ class Screen : public std::enable_shared_from_this<Screen>,
 public:
     Screen(::Game&, ::Client&);
     virtual ~Screen();
+    std::shared_ptr<Model::Model> model() const {
+        return m_model;
+    }
     void setModel(std::shared_ptr<Model::Model>);
     void detachFromModel();
     virtual void handleEvent(const sf::Event&) = 0;

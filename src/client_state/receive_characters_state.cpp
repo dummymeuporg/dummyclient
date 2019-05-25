@@ -20,6 +20,7 @@ void ReceiveCharactersState::resume() {
     // The client will select the character later on.
     m_model = std::make_shared<Model::CharactersListModel>();
     m_client.game().screen()->setModel(m_model);
+    m_model->update();
 }
 
 void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
@@ -33,12 +34,12 @@ void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
 
     for(auto i: boost::irange(charactersCount))
     {
+        i = i;
         std::shared_ptr<Dummy::Core::Character> chr =
             std::make_shared<Dummy::Core::Character>();
         pkt >> *chr;
         m_model->addCharacter(chr);
     }
-    m_model->update();
     m_client.changeState(std::make_shared<ManageCharactersState>(m_client));
 }
 

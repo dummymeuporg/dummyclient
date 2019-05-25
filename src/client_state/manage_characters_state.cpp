@@ -1,3 +1,4 @@
+#include <memory>
 #include <iostream>
 
 #include "client.hpp"
@@ -13,8 +14,10 @@ ManageCharactersState::ManageCharactersState(::Client& client)
 }
 
 void ManageCharactersState::resume() {
-    m_model = std::make_shared<Model::CharactersListModel>();
-    m_client.game().screen()->setModel(m_model);
+    // So ugly.
+    m_model = std::dynamic_pointer_cast<Model::CharactersListModel>(
+        m_client.game().screen()->model()
+    );
 }
 
 void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
@@ -27,7 +30,6 @@ void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
             std::make_shared<Dummy::Core::Character>();
         pkt >> *chr;
         m_model->addCharacter(chr);
-        m_model->update();
     }
 }
 

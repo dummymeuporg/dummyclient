@@ -5,13 +5,20 @@
 
 namespace Model {
 
-CharactersListModel::CharactersListModel() {}
+CharactersListModel::CharactersListModel() {
+    std::cerr << this << " CharactersListModel constructor." << std::endl;
+}
+
+CharactersListModel::~CharactersListModel() {
+    std::cerr << this << " CharactersListModel destructor." << std::endl;
+}
 
 void
 CharactersListModel::addCharacter(
     std::shared_ptr<Dummy::Core::Character> character
 )
 {
+    std::cerr << "Add character." << std::endl;
     std::cerr << character->name() << std::endl;
     std::cerr << character->skin() << std::endl;
     std::cerr << character->position().first << std::endl;
@@ -19,6 +26,8 @@ CharactersListModel::addCharacter(
     std::cerr << character->mapLocation() << std::endl;
 
     m_characters.push_back(character);
+    std::cerr << "New size: " << m_characters.size() << std::endl;
+    update();
 }
 
 }

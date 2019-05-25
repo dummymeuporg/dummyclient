@@ -13,6 +13,7 @@ public:
     using CharactersList =
         std::vector<std::shared_ptr<Dummy::Core::Character>>;
     CharactersListModel();
+    virtual ~CharactersListModel();
     void addCharacter(std::shared_ptr<Dummy::Core::Character>);
     const CharactersList& characters() const {
         return m_characters;

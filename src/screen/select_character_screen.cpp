@@ -40,9 +40,6 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     m_createCharacterButton->setFont("arial.ttf");
     m_createCharacterButton->setCaption("Create");
 
-
-
-    std::cerr << "Account is " << m_client.account() << std::endl;
     m_accountLabel
         ->setCaption(m_client.account())
         .setFontSize(24)
@@ -70,9 +67,8 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
 }
 
 void SelectCharacterScreen::notify() {
-    const Model::CharactersListModel* model = 
-        reinterpret_cast<const Model::CharactersListModel*>(m_model.get());
-    std::cerr << "Screen notified. Update info." << std::endl;
+    std::shared_ptr<Model::CharactersListModel> model = 
+        std::dynamic_pointer_cast<Model::CharactersListModel>(m_model);
     std::stringstream ss;
     m_charactersCount = model->characters().size();
     ss << "You have " << m_charactersCount << " characters";
