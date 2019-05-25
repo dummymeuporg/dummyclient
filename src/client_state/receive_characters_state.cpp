@@ -4,6 +4,7 @@
 
 #include "client.hpp"
 #include "game.hpp"
+#include "client_state/manage_characters_state.hpp"
 #include "client_state/receive_characters_state.hpp"
 #include "model/characters_list_model.hpp"
 
@@ -24,6 +25,7 @@ void ReceiveCharactersState::resume() {
 void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     // Here, we will get the server answer once the character has been either
     // created or selected.
+    auto self(shared_from_this());
     std::uint16_t charactersCount;
     pkt >> charactersCount;
     std::cerr << "[ReceiveCharactersState] got " << charactersCount <<
@@ -37,6 +39,7 @@ void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
         m_model->addCharacter(chr);
     }
     m_model->update();
+    m_client.changeState(std::make_shared<ManageCharactersState>(m_client));
 }
 
 } // namespace ClientState

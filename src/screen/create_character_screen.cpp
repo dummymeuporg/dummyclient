@@ -1,7 +1,9 @@
 #include <iostream>
 #include "client.hpp"
 #include "game.hpp"
+#include "model/characters_list_model.hpp"
 #include "screen/create_character_screen.hpp"
+#include "screen/select_character_screen.hpp"
 #include "widget/label.hpp"
 
 namespace Screen {
@@ -9,6 +11,7 @@ namespace Screen {
 CreateCharacterScreen::CreateCharacterScreen(::Game& game,
                                              ::Client& client)
     : UIScreen(game, client),
+      m_initialCharactersCount(0),
       m_characterNameLabel(std::make_shared<Widget::Label>()),
       m_characterNameTextbox(std::make_shared<Widget::Textbox>()),
       m_characterSkinLabel(std::make_shared<Widget::Label>()),
@@ -24,7 +27,8 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
       )),
       m_leftSkinButton(std::make_shared<Widget::Button>()),
       m_rightSkinButton(std::make_shared<Widget::Button>()),
-      m_createCharacterButton(std::make_shared<Widget::Button>())
+      m_createCharacterButton(std::make_shared<Widget::Button>()),
+      m_cancelButton(std::make_shared<Widget::Button>())
 {
     m_characterNameLabel
         ->setCaption("Name: ")
@@ -84,6 +88,16 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
     m_createCharacterButton->setFont("arial.ttf");
     m_createCharacterButton->setCaption("Create");
 
+    m_cancelButton->setPos(900, 600);
+    m_cancelButton
+        ->setBackgroundColor(sf::Color(183, 109, 44))
+        .setBorderColor(sf::Color(94, 47, 6))
+        .setColor(sf::Color::Black)
+        .setStyle(0)
+        .setFontSize(24);
+    m_cancelButton->setFont("arial.ttf");
+    m_cancelButton->setCaption("Cancel");
+
     addWidget(m_characterNameLabel);
     addWidget(m_characterNameTextbox);
     addWidget(m_characterSkinLabel);
@@ -91,6 +105,7 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
     addWidget(m_leftSkinButton);
     addWidget(m_rightSkinButton);
     addWidget(m_createCharacterButton);
+    addWidget(m_cancelButton);
 }
 
 void CreateCharacterScreen::_handleButtonClicked(const ::CustomEvent& event) {
@@ -100,10 +115,16 @@ void CreateCharacterScreen::_handleButtonClicked(const ::CustomEvent& event) {
         m_skinPreviewer->showNextSkin();
     } else if (event.source() == m_createCharacterButton.get()) {
         _onCreateCharacterButton();
+    } else if (event.source() == m_cancelButton.get()) {
+        _back();
     }
 }
 
 void CreateCharacterScreen::_onCreateCharacterButton() {
+    // Memorize the characters count from model first.
+    const Model::CharactersListModel* model = 
+        reinterpret_cast<const Model::CharactersListModel*>(m_model.get());
+    m_initialCharactersCount = model->characters().size();
     const std::string& characterName(m_characterNameTextbox->content());
     const std::string& skin(m_skinPreviewer->skin());
     std::cerr << "Create the character." << std::endl;
@@ -128,6 +149,26 @@ void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
     default:
         UIScreen::handleCustomEvent(event);
         break;
+    }
+}
+
+void CreateCharacterScreen::_back() {
+    std::shared_ptr<SelectCharacterScreen> screen =
+        std::make_shared<SelectCharacterScreen>(m_game, m_client);
+    screen->setModel(m_model);
+    m_model->update();
+    m_game.setScreen(screen);
+}
+
+void CreateCharacterScreen::notify() {
+    // Get the characters count from model
+    const Model::CharactersListModel* model = 
+        reinterpret_cast<const Model::CharactersListModel*>(m_model.get());
+    int charactersCount = model->characters().size();
+
+    if (m_initialCharactersCount < charactersCount) {
+        // There is a new character so the creation succeeded.
+        _back();
     }
 }
 
