@@ -5,7 +5,7 @@ namespace Widget {
 
 Button::Button(std::shared_ptr<Widget> parent)
     : Label(parent),
-      m_isHovered(false), m_isPushed(false)
+      m_isHovered(false), m_isPushed(false), m_isEnabled(true)
 {    
 }
 
@@ -118,6 +118,9 @@ bool Button::_onMouseButtonReleased(const sf::Event& event) {
 
 bool Button::handleEvent(const sf::Event& event) {
     bool forwardEvent = true;
+    if (!m_isEnabled) {
+        return forwardEvent;
+    }
     switch(event.type)
     {
     case sf::Event::MouseMoved:
@@ -166,6 +169,11 @@ Button& Button::setCaption(const std::string& caption) {
         sf::Vector2f(labelPos.x + textRect.left,
                      labelPos.y + textRect.top)
     );
+    return *this;
+}
+
+Button& Button::setEnabled(bool enabled) {
+    m_isEnabled = enabled;
     return *this;
 }
 

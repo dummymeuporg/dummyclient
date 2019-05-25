@@ -14,21 +14,33 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
                                              ::Client& client)
     : UIScreen(game, client), m_charactersCount(-1),
       m_createCharacterButton(std::make_shared<Widget::Button>()),
+      m_playButton(std::make_shared<Widget::Button>()),
       m_accountLabel(std::make_shared<Widget::Label>()),
     m_charactersCountLabel(std::make_shared<Widget::Label>()),
     m_skinPreviewer(std::make_shared<Widget::SkinPreviewer>()),
     m_characterSelector(std::make_shared<Widget::CharacterSelector>())
 {
-    m_createCharacterButton->setPos(850, 700);
+    m_playButton->setPos(880, 730);
+    m_playButton
+        ->setBackgroundColor(sf::Color(183, 109, 44))
+        .setBorderColor(sf::Color(94, 47, 6))
+        .setColor(sf::Color::Black)
+        .setStyle(0)
+        .setFontSize(18);
+    m_playButton->setFont("arial.ttf");
+    m_playButton->setCaption("Play");
+
+    m_createCharacterButton->setPos(950, 730);
     m_createCharacterButton
         ->setBackgroundColor(sf::Color(183, 109, 44))
         .setBorderColor(sf::Color(94, 47, 6))
         .setColor(sf::Color::Black)
         .setStyle(0)
         .setFontSize(18);
-
     m_createCharacterButton->setFont("arial.ttf");
-    m_createCharacterButton->setCaption("New character");
+    m_createCharacterButton->setCaption("Create");
+
+
 
     std::cerr << "Account is " << m_client.account() << std::endl;
     m_accountLabel
@@ -50,6 +62,7 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     m_characterSelector->setPos(322, 600);
 
     addWidget(m_accountLabel);
+    addWidget(m_playButton);
     addWidget(m_createCharacterButton);
     addWidget(m_charactersCountLabel);
     addWidget(m_skinPreviewer);

@@ -17,6 +17,7 @@ public:
 private:
     std::int16_t m_charactersCount;
     std::shared_ptr<Widget::Button> m_createCharacterButton;
+    std::shared_ptr<Widget::Button> m_playButton;
     std::shared_ptr<Widget::Label> m_accountLabel;
     std::shared_ptr<Widget::Label> m_charactersCountLabel;
     std::shared_ptr<Widget::SkinPreviewer> m_skinPreviewer;

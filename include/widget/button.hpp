@@ -12,6 +12,10 @@ public:
     Button& setBackgroundColor(const sf::Color&);
     Button& setBorderColor(const sf::Color&);
 	Button& setCaption(const std::string&);
+    Button& setEnabled(bool enabled);
+    bool enabled() const {
+        return m_isEnabled;
+    }
 private:
     bool _onMouseMoved(const sf::Event&);
     bool _onMouseButtonPressed(const sf::Event&);
@@ -19,6 +23,7 @@ private:
     sf::RectangleShape m_buttonBackground;
     bool m_isHovered;
     bool m_isPushed;
+    bool m_isEnabled;
 };
 
 };

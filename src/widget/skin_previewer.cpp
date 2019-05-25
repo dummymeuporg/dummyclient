@@ -21,7 +21,6 @@ void SkinPreviewer::paint(sf::RenderWindow& window) {
     // draw the sprite
     if (m_currentSkinIndex >= 0 && m_currentSkinIndex < m_skinList.size())
     {
-        std::cerr << m_skinList[m_currentSkinIndex] << std::endl;
         m_sprite.setTexture(texture(m_skinList[m_currentSkinIndex]));
         m_sprite.setScale(4, 4);
         m_sprite.setTextureRect(sf::IntRect(24, 32 * 2, 24, 32));
