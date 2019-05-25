@@ -12,6 +12,7 @@ public:
     CharacterSelector(std::shared_ptr<Widget> = nullptr);
     virtual void paint(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
+    CharacterSelector& setPos(std::uint16_t, std::uint16_t);
     CharacterSelector& setCharacters(const CharactersList&);
     const CharactersList& characters() const {
         return m_characters;
@@ -23,6 +24,7 @@ private:
     int m_selectedCharacter;
     int m_hoveredCharacter;
     CharactersList m_characters;
+    sf::Color m_backgroundColor;
     std::array<sf::RectangleShape, 5> m_backgrounds;
     std::array<sf::Sprite, 5> m_sprites;
 };
