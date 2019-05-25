@@ -19,6 +19,7 @@ private:
     std::shared_ptr<Widget::Button> m_createCharacterButton;
     std::shared_ptr<Widget::Label> m_accountLabel;
     std::shared_ptr<Widget::Label> m_charactersCountLabel;
+    std::shared_ptr<Widget::SkinPreviewer> m_skinPreviewer;
     std::shared_ptr<Widget::CharacterSelector> m_characterSelector;
 };
 

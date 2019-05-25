@@ -79,6 +79,14 @@ bool CharacterSelector::_onMouseButtonPressed(const sf::Event& event)
     {
         m_selectedCharacter = m_hoveredCharacter;
         forwardEvent = false;
+        pushEvent(
+            CustomEvent(
+                reinterpret_cast<void*>(shared_from_this().get()),
+                CustomEvent::CharacterSelected,
+                nullptr
+            )
+        );
+        m_hoveredCharacter = -1;
     }
     return forwardEvent;
 }
@@ -137,6 +145,19 @@ CharacterSelector::setCharacters(const CharactersList& charactersList)
 
 
     return *this;
+}
+
+
+std::shared_ptr<const Dummy::Core::Character>
+CharacterSelector::selectedCharacter() const {
+    if (m_selectedCharacter >= 0 && m_selectedCharacter < m_characters.size())
+    {
+        return m_characters[m_selectedCharacter];
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 } // namespace Widget

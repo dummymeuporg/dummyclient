@@ -14,6 +14,10 @@ public:
         LeftArrowPressed,
         RightArrowPressed,
 
+        // XXX: For now there is no reason
+        // to put this elsewhere:
+        CharacterSelected,
+
         Count
     };
 

@@ -13,6 +13,7 @@ public:
     void showNextSkin();
     void showPreviousSkin();
     SkinPreviewer& setPos(int, int);
+    SkinPreviewer& setSkinList(std::vector<std::string>&&);
     const std::string& skin() const {
         return m_skinList[m_currentSkinIndex];
     }

@@ -16,6 +16,7 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
       m_createCharacterButton(std::make_shared<Widget::Button>()),
       m_accountLabel(std::make_shared<Widget::Label>()),
     m_charactersCountLabel(std::make_shared<Widget::Label>()),
+    m_skinPreviewer(std::make_shared<Widget::SkinPreviewer>()),
     m_characterSelector(std::make_shared<Widget::CharacterSelector>())
 {
     m_createCharacterButton->setPos(850, 700);
@@ -43,12 +44,15 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
         .setColor(sf::Color::White)
         .setFont("arial.ttf");
 
+    m_skinPreviewer->setPos(400, 400);
+
     // 322 = (1024/2) - (width of character selector / 2)
     m_characterSelector->setPos(322, 600);
 
     addWidget(m_accountLabel);
     addWidget(m_createCharacterButton);
     addWidget(m_charactersCountLabel);
+    addWidget(m_skinPreviewer);
     addWidget(m_characterSelector);
 }
 
@@ -78,6 +82,14 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
         std::cerr << "Create character please." << std::endl;
         m_game.setScreen(std::make_shared<CreateCharacterScreen>(
             m_game, m_client));
+    } else if (event.source() == m_characterSelector.get()) {
+        std::shared_ptr<const Dummy::Core::Character> character =
+            m_characterSelector->selectedCharacter();
+        std::cerr << "Selected character: " <<
+            m_characterSelector->selectedCharacter() << std::endl;
+        m_skinPreviewer->setSkinList(
+            std::vector<std::string>({character->skin()})
+        );
     }
 }
 
