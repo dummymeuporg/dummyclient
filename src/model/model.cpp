@@ -23,6 +23,7 @@ void Model::addScreen(std::shared_ptr<Screen::Screen> screen) {
 }
 
 void Model::removeScreen(std::shared_ptr<Screen::Screen> screen) {
+    auto self(shared_from_this());
     if (m_screens.find(screen) != std::end(m_screens)) {
         m_screens.erase(screen);
     }

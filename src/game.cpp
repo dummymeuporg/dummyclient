@@ -52,5 +52,6 @@ int Game::run()
 }
 
 void Game::setScreen(std::shared_ptr<Screen::Screen> screen) {
+    m_currentScreen->detachFromModel();
     m_currentScreen = screen;
 }

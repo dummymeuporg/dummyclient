@@ -93,8 +93,10 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
     auto self(shared_from_this());
     if (event.source() == m_createCharacterButton.get()) {
         std::cerr << "Create character please." << std::endl;
-        m_game.setScreen(std::make_shared<CreateCharacterScreen>(
-            m_game, m_client));
+        std::shared_ptr<CreateCharacterScreen> screen =
+            std::make_shared<CreateCharacterScreen>(m_game, m_client);
+        screen->setModel(m_model);
+        m_game.setScreen(screen);
     } else if (event.source() == m_characterSelector.get()) {
         std::shared_ptr<const Dummy::Core::Character> character =
             m_characterSelector->selectedCharacter();

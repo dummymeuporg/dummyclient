@@ -10,16 +10,26 @@ Screen::Screen(::Game& game, ::Client& client)
 }
 
 Screen::~Screen() {
-    m_model->removeScreen(shared_from_this());
+    std::cerr << "screen destructor." << std::endl;
+}
+
+void Screen::detachFromModel() {
+    auto self(shared_from_this());
+    if (m_model != nullptr)
+    {
+        m_model->removeScreen(self);
+        m_model = nullptr;
+    }
 }
 
 void Screen::setModel(std::shared_ptr<Model::Model> model) {
+    auto self(shared_from_this());
     if (m_model != nullptr)
     {
-        m_model->removeScreen(shared_from_this());
+        m_model->removeScreen(self);
     }
     m_model = model;
-    m_model->addScreen(shared_from_this());
+    m_model->addScreen(self);
 }
 
 } // namespace Screen

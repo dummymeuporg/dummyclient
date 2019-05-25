@@ -22,6 +22,7 @@ public:
     Screen(::Game&, ::Client&);
     virtual ~Screen();
     void setModel(std::shared_ptr<Model::Model>);
+    void detachFromModel();
     virtual void handleEvent(const sf::Event&) = 0;
     virtual void notify() = 0;
     virtual void draw() = 0;
