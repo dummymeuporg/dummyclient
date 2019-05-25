@@ -5,7 +5,9 @@
 #include "game.hpp"
 
 #include "model/characters_list_model.hpp"
+
 #include "screen/create_character_screen.hpp"
+#include "screen/loading_screen.hpp"
 #include "screen/select_character_screen.hpp"
 
 namespace Screen {
@@ -29,6 +31,7 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
         .setFontSize(18);
     m_playButton->setFont("arial.ttf");
     m_playButton->setCaption("Play");
+    m_playButton->setEnabled(false);
 
     m_createCharacterButton->setPos(950, 730);
     m_createCharacterButton
@@ -81,7 +84,7 @@ void SelectCharacterScreen::notify() {
     sf::FloatRect textRect = caption.getLocalBounds();
     caption.setOrigin(textRect.left + textRect.width/2.0f,
                       textRect.top  + textRect.height/2.0f);
-    caption.setPosition(1042/2, 768/2);
+    caption.setPosition(1024/2, 768/2);
 }
 
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
@@ -101,6 +104,11 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
         m_skinPreviewer->setSkinList(
             std::vector<std::string>({character->skin()})
         );
+        m_playButton->setEnabled(true);
+    } else if (event.source() == m_playButton.get()) {
+        std::shared_ptr<LoadingScreen> screen =
+            std::make_shared<LoadingScreen>(m_game, m_client);
+        m_game.setScreen(screen);
     }
 }
 
