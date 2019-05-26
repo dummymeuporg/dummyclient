@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "client.hpp"
+#include "model/loading_model.hpp"
 #include "screen/loading_screen.hpp"
 
 namespace Screen {
@@ -43,7 +44,11 @@ void LoadingScreen::loaded() {
 }
 
 void LoadingScreen::notify() {
-
+    std::shared_ptr<Model::LoadingModel> model = 
+        std::dynamic_pointer_cast<Model::LoadingModel>(m_model);
+    if (model->status() != 0) {
+        std::cerr << "Can display map." << std::endl;
+    }
 }
 
 void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)

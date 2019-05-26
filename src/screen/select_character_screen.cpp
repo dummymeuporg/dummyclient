@@ -7,6 +7,7 @@
 #include "protocol/outgoing_packet.hpp"
 
 #include "model/characters_list_model.hpp"
+#include "model/loading_model.hpp"
 
 #include "screen/create_character_screen.hpp"
 #include "screen/loading_screen.hpp"
@@ -116,10 +117,14 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
         pkt << chr->name();
         m_client.send(pkt);
 
+        std::shared_ptr<Model::LoadingModel> model =
+            std::make_shared<Model::LoadingModel>();
+
         std::shared_ptr<LoadingScreen> screen =
             std::make_shared<LoadingScreen>(
                 m_game, m_client, chr->mapLocation()
             );
+        screen->setModel(model);
         m_client.setCharacter(chr);
         m_game.setScreen(screen);
     }
