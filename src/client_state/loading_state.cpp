@@ -14,6 +14,7 @@ LoadingState::LoadingState(::Client& client)
 }
 
 void LoadingState::resume() {
+    std::cerr << "[LoadingState]" << std::endl;
     // What do we do?
     //
     // XXX: this sucks so much. I really need to figure it out.

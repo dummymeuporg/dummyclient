@@ -3,6 +3,7 @@
 
 #include "client.hpp"
 #include "game.hpp"
+#include "client_state/loading_state.hpp"
 #include "client_state/manage_characters_state.hpp"
 #include "model/characters_list_model.hpp"
 
@@ -33,7 +34,10 @@ void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
         m_model->addCharacter(chr);
         break;
     case 2:
-        // The character has been selected.
+        // The character has been selected. Switch to loading state.
+        m_client.changeState(
+            std::make_shared<LoadingState>(m_client)
+        );
         break;
     default:
         // Something went wrong.
