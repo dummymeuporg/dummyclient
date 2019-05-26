@@ -20,6 +20,7 @@ public:
     }
 private:
     CharactersList m_characters;
+    std::shared_ptr<Dummy::Core::Character> m_selectedCharacter;
 };
 
 } // namespace model

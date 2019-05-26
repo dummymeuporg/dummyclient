@@ -4,6 +4,8 @@
 #include "client.hpp"
 #include "game.hpp"
 
+#include "protocol/outgoing_packet.hpp"
+
 #include "model/characters_list_model.hpp"
 
 #include "screen/create_character_screen.hpp"
@@ -106,6 +108,13 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
         );
         m_playButton->setEnabled(true);
     } else if (event.source() == m_playButton.get()) {
+
+        std::uint8_t request = 2;
+        Dummy::Protocol::OutgoingPacket pkt;
+        pkt << request;
+        pkt << m_characterSelector->selectedCharacter()->name();
+        m_client.send(pkt);
+
         std::shared_ptr<LoadingScreen> screen =
             std::make_shared<LoadingScreen>(m_game, m_client);
         m_game.setScreen(screen);

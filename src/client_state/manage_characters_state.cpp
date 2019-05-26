@@ -23,13 +23,20 @@ void ManageCharactersState::resume() {
 void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     std::uint8_t answer;
     pkt >> answer;
-    if (answer) {
+    std::shared_ptr<Dummy::Core::Character> chr = nullptr;
+    switch (answer) {
+    case 1:
         // The character has been successfully created.
         // Read its info and add it to the list.
-        std::shared_ptr<Dummy::Core::Character> chr =
-            std::make_shared<Dummy::Core::Character>();
+        chr = std::make_shared<Dummy::Core::Character>();
         pkt >> *chr;
         m_model->addCharacter(chr);
+        break;
+    case 2:
+        // The character has been selected.
+        break;
+    default:
+        break;
     }
 }
 

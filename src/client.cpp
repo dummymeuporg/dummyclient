@@ -5,7 +5,7 @@
 
 Client::Client(::Game& game, const Credentials&& credentials)
     : m_game(game), m_packetSize(0), m_credentials(std::move(credentials)),
-      m_state(nullptr)
+      m_state(nullptr), m_character(nullptr)
 {
 }
 

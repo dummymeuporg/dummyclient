@@ -5,6 +5,7 @@
 
 #include <SFML/Network.hpp>
 
+#include "core/character.hpp"
 #include "protocol/outgoing_packet.hpp"
 
 #include "client_state/initial_state.hpp"
@@ -63,4 +64,5 @@ private:
     std::uint16_t m_packetSize;
     Credentials m_credentials;
     std::shared_ptr<ClientState::State> m_state;
+    std::shared_ptr<Dummy::Core::Character> m_character;
 };
