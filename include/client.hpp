@@ -62,6 +62,10 @@ public:
         return m_character;
     }
 
+    const std::pair<std::uint16_t, std::uint16_t> pixelPosition() const {
+        return m_pixelPosition;
+    }
+
     void setCharacter(std::shared_ptr<Dummy::Core::Character>);
 
 private:
@@ -71,4 +75,5 @@ private:
     Credentials m_credentials;
     std::shared_ptr<ClientState::State> m_state;
     std::shared_ptr<Dummy::Core::Character> m_character;
+    std::pair<std::uint16_t, std::uint16_t> m_pixelPosition;
 };

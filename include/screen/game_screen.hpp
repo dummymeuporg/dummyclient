@@ -15,6 +15,7 @@ public:
     virtual void draw() override;
 private:
     void _drawLayer(::Sprites&);
+    void _drawCharacter();
     std::unique_ptr<::MapView> m_mapView;
 };
 

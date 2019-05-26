@@ -69,4 +69,6 @@ void Client::changeState(std::shared_ptr<ClientState::State> state) {
 
 void Client::setCharacter(std::shared_ptr<Dummy::Core::Character> character) {
     m_character = character;
+    m_pixelPosition.first = character->position().first * 64;
+    m_pixelPosition.second = character->position().second * 64;
 }
