@@ -33,3 +33,10 @@ sf::Texture& ResourceProvider::texture(const std::string& textureName) {
     }
     return m_textures[textureKey];
 }
+
+std::unique_ptr<Dummy::Core::GraphicMap>
+ResourceProvider::loadGraphicMap(const std::string& mapName) {
+    std::unique_ptr<Dummy::Core::GraphicMap> map =
+        std::make_unique<Dummy::Core::GraphicMap>(m_localProject, mapName);
+    return std::move(map);
+}

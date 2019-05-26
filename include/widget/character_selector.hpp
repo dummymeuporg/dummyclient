@@ -17,7 +17,7 @@ public:
     const CharactersList& characters() const {
         return m_characters;
     }
-    std::shared_ptr<const Dummy::Core::Character> selectedCharacter() const;
+    std::shared_ptr<Dummy::Core::Character> selectedCharacter() const;
 private:
     bool _onMouseMoved(const sf::Event&);
     bool _onMouseButtonPressed(const sf::Event&);

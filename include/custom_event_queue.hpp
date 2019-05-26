@@ -15,7 +15,9 @@ public:
         RightArrowPressed,
 
         // XXX: For now there is no reason
-        // to put this elsewhere:
+        // to put these elsewhere:
+        LoadMapFromFile,
+        MapFileLoaded,
         CharacterSelected,
 
         Count

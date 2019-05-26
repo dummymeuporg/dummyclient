@@ -32,4 +32,8 @@ void Screen::setModel(std::shared_ptr<Model::Model> model) {
     m_model->addScreen(self);
 }
 
+void Screen::loaded() {
+
+}
+
 } // namespace Screen

@@ -148,7 +148,7 @@ CharacterSelector::setCharacters(const CharactersList& charactersList)
 }
 
 
-std::shared_ptr<const Dummy::Core::Character>
+std::shared_ptr<Dummy::Core::Character>
 CharacterSelector::selectedCharacter() const {
     if (m_selectedCharacter >= 0 && m_selectedCharacter < m_characters.size())
     {

@@ -29,6 +29,7 @@ public:
     virtual void handleEvent(const sf::Event&) = 0;
     virtual void notify() = 0;
     virtual void draw() = 0;
+    virtual void loaded();
 
 protected:
     ::Game& m_game;

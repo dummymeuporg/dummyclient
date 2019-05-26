@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/graphic_map.hpp"
+#include "local_project.hpp"
 #include "utils/singleton.hpp"
 #include <SFML/Graphics.hpp>
 
@@ -28,8 +30,12 @@ public:
     sf::Font& font(const std::string&);
     sf::Texture& texture(const std::string&);
 
+    std::unique_ptr<Dummy::Core::GraphicMap>
+        loadGraphicMap(const std::string&);
+
 private:
     std::map<std::string, sf::Font> m_fonts;
     std::map<std::string, sf::Texture> m_textures;
+    ::LocalProject m_localProject;
 
 };

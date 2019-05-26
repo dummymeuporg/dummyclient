@@ -22,6 +22,12 @@ protected:
         return m_resourceProvider.texture(textureName);
     }
 
+    std::unique_ptr<Dummy::Core::GraphicMap> loadGraphicMap(
+        const std::string& mapName
+    ) {
+        return std::move(m_resourceProvider.loadGraphicMap(mapName));
+    }
+
     void pushEvent(const ::CustomEvent& event) {
         m_customEventQueue.pushEvent(event);
     }

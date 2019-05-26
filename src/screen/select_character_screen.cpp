@@ -108,15 +108,19 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
         );
         m_playButton->setEnabled(true);
     } else if (event.source() == m_playButton.get()) {
-
+        std::shared_ptr<Dummy::Core::Character> chr =
+            m_characterSelector->selectedCharacter();
         std::uint8_t request = 2;
         Dummy::Protocol::OutgoingPacket pkt;
         pkt << request;
-        pkt << m_characterSelector->selectedCharacter()->name();
+        pkt << chr->name();
         m_client.send(pkt);
 
         std::shared_ptr<LoadingScreen> screen =
-            std::make_shared<LoadingScreen>(m_game, m_client);
+            std::make_shared<LoadingScreen>(
+                m_game, m_client, chr->mapLocation()
+            );
+        m_client.setCharacter(chr);
         m_game.setScreen(screen);
     }
 }

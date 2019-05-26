@@ -55,4 +55,5 @@ void Game::setScreen(std::shared_ptr<Screen::Screen> screen) {
     std::cerr << "Change screen." << std::endl;
     m_currentScreen->detachFromModel();
     m_currentScreen = screen;
+    m_currentScreen->loaded();
 }

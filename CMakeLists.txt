@@ -7,6 +7,8 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
 set (CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -Wall")
 
+add_subdirectory("vendor/libdummy")
+
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 find_package(Boost COMPONENTS system REQUIRED)
 
@@ -17,6 +19,7 @@ add_executable(dummyclient ${SOURCES} ${HEADERS})
 
 
 target_link_libraries(dummyclient
+    boost_filesystem
     boost_system
     sfml-graphics
     sfml-network
