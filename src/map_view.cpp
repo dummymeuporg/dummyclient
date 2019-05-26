@@ -5,7 +5,7 @@
 
 MapView::MapView(std::unique_ptr<const Dummy::Core::GraphicMap> graphicMap)
     : m_graphicMap(std::move(graphicMap)),
-      m_chipset(texture(graphicMap->chipset()))
+      m_chipset(texture(m_graphicMap->chipset()))
 {
 
 }

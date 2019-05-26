@@ -15,6 +15,9 @@ LoadingState::LoadingState(::Client& client)
 
 void LoadingState::resume() {
     // What do we do?
+    //
+    // XXX: this sucks so much. I really need to figure it out.
+    //m_model
 }
 
 void LoadingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
@@ -23,6 +26,7 @@ void LoadingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     pkt >> answer;
     switch(answer) {
     case 1:
+        std::cerr << "Good for teleporting" << std::endl;
         break;
     default:
         break;

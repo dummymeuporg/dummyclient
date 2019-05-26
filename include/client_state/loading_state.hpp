@@ -9,6 +9,8 @@ public:
     LoadingState(::Client&);
     virtual void resume() override;
     virtual void onRead(Dummy::Protocol::IncomingPacket&) override;
+private:
+    
 };
 
 } // namespace LoadingState

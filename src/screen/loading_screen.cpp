@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "client.hpp"
 #include "screen/loading_screen.hpp"
 
 namespace Screen {
@@ -48,11 +49,10 @@ void LoadingScreen::notify() {
 void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
 {
     switch(event.type()) {
-    case CustomEvent::Type::LoadMapFromFile:
+    case CustomEvent::Type::LoadMapFromFile: {
         std::cerr << "Load map " << m_mapNameToLoad
             << " from file" << std::endl;
-        m_graphicMap = loadGraphicMap(m_mapNameToLoad);
-        std::cerr << "map " << m_mapNameToLoad << " loaded." << std::endl;
+        m_graphicMap = std::move(loadGraphicMap(m_mapNameToLoad));
         pushEvent(
             CustomEvent(
                 reinterpret_cast<void*>(shared_from_this().get()),
@@ -61,11 +61,19 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
             )
         );
         break;
-    case CustomEvent::Type::MapFileLoaded:
+    }
+    case CustomEvent::Type::MapFileLoaded: {
         std::cerr << "Load map view" << std::endl;
         m_mapView = std::make_shared<::MapView>(std::move(m_graphicMap));
         std::cerr << "Loaded map view. Switch to gamescreen." << std::endl;
-        break; 
+        Dummy::Protocol::OutgoingPacket pkt;
+        const std::pair<std::uint16_t, std::uint16_t>& position(
+            m_client.character()->position()
+        );
+        pkt << m_mapNameToLoad << position.first << position.second;
+        m_client.send(pkt);
+        break;
+    }
     default:
         break;
     }

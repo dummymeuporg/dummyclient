@@ -19,6 +19,7 @@ sf::Font& ResourceProvider::font(const std::string& fontName) {
 }
 
 sf::Texture& ResourceProvider::texture(const std::string& textureName) {
+    std::cerr << "Ask for texture " << textureName << std::endl;
     fs::path fullPath(std::move(fs::path("chipsets")) / textureName);
     const std::string& textureKey(fullPath.string());
     if (m_textures.find(textureKey) == std::end(m_textures))
@@ -38,5 +39,6 @@ std::unique_ptr<Dummy::Core::GraphicMap>
 ResourceProvider::loadGraphicMap(const std::string& mapName) {
     std::unique_ptr<Dummy::Core::GraphicMap> map =
         std::make_unique<Dummy::Core::GraphicMap>(m_localProject, mapName);
+    map->load();
     return std::move(map);
 }
