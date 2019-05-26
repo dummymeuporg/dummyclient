@@ -36,6 +36,7 @@ void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
         // The character has been selected.
         break;
     default:
+        // Something went wrong.
         break;
     }
 }

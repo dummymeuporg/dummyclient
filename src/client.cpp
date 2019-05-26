@@ -66,3 +66,7 @@ void Client::changeState(std::shared_ptr<ClientState::State> state) {
     m_state = state;
     m_state->resume();
 }
+
+void Client::setCharacter(std::shared_ptr<Dummy::Core::Character> character) {
+    m_character = character;
+}

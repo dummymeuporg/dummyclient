@@ -58,6 +58,12 @@ public:
         return m_credentials.account();
     }
 
+    std::shared_ptr<Dummy::Core::Character> character() const {
+        return m_character;
+    }
+
+    void setCharacter(std::shared_ptr<Dummy::Core::Character>);
+
 private:
     ::Game& m_game;
     sf::TcpSocket m_socket;
