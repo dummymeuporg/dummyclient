@@ -8,7 +8,7 @@
 
 Game::Game(const char* account, const char* sessionID) 
     : m_client(*this, Credentials(account, sessionID)),
-      m_window(sf::VideoMode(1024, 768), "DummyClient"),
+      m_window(sf::VideoMode(1280, 960), "DummyClient"),
       m_customEventQueue(CustomEventQueue::instance()),
       m_resourceProvider(ResourceProvider::instance()),
       m_currentScreen(std::make_shared<Screen::SelectCharacterScreen>(

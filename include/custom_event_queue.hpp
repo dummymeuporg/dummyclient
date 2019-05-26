@@ -19,6 +19,7 @@ public:
         LoadMapFromFile,
         MapFileLoaded,
         CharacterSelected,
+        MapViewLoaded,
 
         Count
     };

@@ -59,10 +59,11 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
         .setColor(sf::Color::White)
         .setFont("arial.ttf");
 
-    m_skinPreviewer->setPos(400, 400);
+    // 448 = (1280/2) - (24*4)
+    m_skinPreviewer->setPos(544, 150);
 
-    // 322 = (1024/2) - (width of character selector / 2)
-    m_characterSelector->setPos(322, 600);
+    // 450 = (1280/2) - (width of character selector / 2)
+    m_characterSelector->setPos(450, 850);
 
     addWidget(m_accountLabel);
     addWidget(m_playButton);
@@ -87,7 +88,7 @@ void SelectCharacterScreen::notify() {
     sf::FloatRect textRect = caption.getLocalBounds();
     caption.setOrigin(textRect.left + textRect.width/2.0f,
                       textRect.top  + textRect.height/2.0f);
-    caption.setPosition(1024/2, 768/2);
+    caption.setPosition(1280/2, 960/2);
 }
 
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)

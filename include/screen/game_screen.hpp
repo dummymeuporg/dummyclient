@@ -14,6 +14,7 @@ public:
     virtual void handleCustomEvent(const ::CustomEvent&);
     virtual void draw() override;
 private:
+    void _drawLayer(::Sprites&);
     std::unique_ptr<::MapView> m_mapView;
 };
 

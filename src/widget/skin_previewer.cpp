@@ -22,9 +22,9 @@ void SkinPreviewer::paint(sf::RenderWindow& window) {
     if (m_currentSkinIndex >= 0 && m_currentSkinIndex < m_skinList.size())
     {
         m_sprite.setTexture(texture(m_skinList[m_currentSkinIndex]));
-        m_sprite.setScale(4, 4);
+        m_sprite.setScale(8, 8);
         m_sprite.setTextureRect(sf::IntRect(24, 32 * 2, 24, 32));
-        m_sprite.setPosition(sf::Vector2f(m_origin.x + 70, m_origin.y));
+        m_sprite.setPosition(sf::Vector2f(m_origin.x, m_origin.y));
         window.draw(m_sprite);
     }
 }

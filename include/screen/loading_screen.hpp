@@ -18,7 +18,7 @@ private:
     std::string m_mapNameToLoad;
     std::shared_ptr<Widget::Label> m_label;
     std::unique_ptr<Dummy::Core::GraphicMap> m_graphicMap;
-    std::shared_ptr<::MapView> m_mapView;
+    std::unique_ptr<::MapView> m_mapView;
 };
 
 } // namespace Screen
