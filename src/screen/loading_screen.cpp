@@ -48,6 +48,7 @@ void LoadingScreen::notify() {
         std::dynamic_pointer_cast<Model::LoadingModel>(m_model);
     if (model->status() != 0) {
         std::cerr << "Can display map." << std::endl;
+        //std::shared_ptr<GameScreen> scee
     }
 }
 
