@@ -15,7 +15,9 @@ GameScreen::GameScreen(
     ::Client& client,
     std::unique_ptr<::MapView> mapView
 )
-    : UIScreen(game, client), m_mapView(std::move(mapView))
+    : UIScreen(game, client), m_mapView(std::move(mapView)),
+      m_originX((game.width() / 2) - 48),
+      m_originY((game.height() / 2) - 64)
 {
 }
 
@@ -31,6 +33,36 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
 
 }
 
+void GameScreen::handleEvent(const sf::Event& event)
+{
+    switch(event.type) {
+    case sf::Event::KeyPressed:
+        _onKeyPressed(event);
+        break;
+    default:
+        break;
+    }
+}
+
+void GameScreen::_onKeyPressed(const sf::Event& event) {
+    switch(event.key.code) {
+    case sf::Keyboard::Up:
+        m_client.moveUp(*m_mapView);
+        break;
+    case sf::Keyboard::Right:
+        m_client.moveRight(*m_mapView);
+        break;
+    case sf::Keyboard::Down:
+        m_client.moveDown(*m_mapView); 
+        break;
+    case sf::Keyboard::Left:
+        m_client.moveLeft(*m_mapView);
+        break;
+    default:
+        break;
+    }
+}
+
 void GameScreen::_drawLayer(::Sprites& sprites) {
     const std::pair<std::uint16_t, std::uint16_t>& position(
         m_client.pixelPosition()
@@ -40,9 +72,11 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
             std::size_t index = y * m_mapView->width() + x;
             sf::Sprite& sprite = sprites.at(index);
             sprite.setScale(4, 4);
-            sprite.setPosition(sf::Vector2f(
-                ((x * 64) - position.first) + (1280/2) - 32,
-                ((y * 64) - position.second) + (960/2) - 32)
+            sprite.setPosition(
+                sf::Vector2f(
+                    m_originX + ((x * 64) - position.first + 16),
+                    m_originY + ((y * 64) - position.second + 96)
+                )
             );
             m_game.window().draw(sprite);
         }
@@ -54,7 +88,11 @@ void GameScreen::_drawCharacter() {
     sprite.setTexture(texture(m_client.character()->skin()));
     sprite.setScale(4, 4);
     sprite.setTextureRect(sf::IntRect(24, 32 * 2, 24, 32));
-    sprite.setPosition(1280/2 - 12, 960/2 - 16);
+
+    sprite.setPosition(
+        m_originX,
+        m_originY
+    );
     m_game.window().draw(sprite);
 }
 

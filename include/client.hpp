@@ -30,6 +30,8 @@ public:
     }
 };
 
+class MapView;
+
 class Client {
 public:
     Client(::Game&, const Credentials&&);
@@ -65,6 +67,11 @@ public:
     const std::pair<std::uint16_t, std::uint16_t> pixelPosition() const {
         return m_pixelPosition;
     }
+
+    void moveLeft(const MapView&);
+    void moveUp(const MapView&);
+    void moveRight(const MapView&);
+    void moveDown(const MapView&);
 
     void setCharacter(std::shared_ptr<Dummy::Core::Character>);
 

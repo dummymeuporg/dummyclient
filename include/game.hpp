@@ -10,7 +10,7 @@
 class Game {
 public:
     static const int FPS = 60;
-    Game(const char*, const char*);
+    Game(const char*, const char*, std::size_t = 1280, std::size_t = 960);
     int run();
     void setScreen(std::shared_ptr<Screen::Screen> screen);
     sf::RenderWindow& window() {
@@ -23,10 +23,19 @@ public:
     std::shared_ptr<Screen::Screen> screen() {
         return m_currentScreen;
     }
+
+    std::size_t width() const {
+        return m_width;
+    }
+
+    std::size_t height() const {
+        return m_height;
+    }
 private:
     Client m_client;
     sf::RenderWindow m_window;
     ::CustomEventQueue& m_customEventQueue;
     ::ResourceProvider& m_resourceProvider;
     std::shared_ptr<Screen::Screen> m_currentScreen;
+    std::size_t m_width, m_height;
 };

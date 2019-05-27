@@ -1,6 +1,7 @@
 #include <cstring>
 #include <iostream>
 
+#include "map_view.hpp"
 #include "client.hpp"
 
 Client::Client(::Game& game, const Credentials&& credentials)
@@ -69,6 +70,31 @@ void Client::changeState(std::shared_ptr<ClientState::State> state) {
 
 void Client::setCharacter(std::shared_ptr<Dummy::Core::Character> character) {
     m_character = character;
+
     m_pixelPosition.first = character->position().first * 64;
     m_pixelPosition.second = character->position().second * 64;
+}
+
+void Client::moveLeft(const MapView& mapView) {
+    if (m_pixelPosition.first > 0) {
+        --m_pixelPosition.first;
+    }
+}
+
+void Client::moveUp(const MapView& mapView) {
+    if (m_pixelPosition.second > 0) {
+        --m_pixelPosition.second;
+    }
+}
+
+void Client::moveDown(const MapView& mapView) {
+    if (m_pixelPosition.second < (mapView.height() * 64 - 32)) {
+        ++m_pixelPosition.second;
+    }
+}
+
+void Client::moveRight(const MapView& mapView) {
+    if (m_pixelPosition.first < (mapView.width() * 64 - 64)) {
+        ++m_pixelPosition.first;
+    }
 }

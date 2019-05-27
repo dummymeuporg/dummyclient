@@ -6,13 +6,15 @@
 #include "screen/select_character_screen.hpp"
 #include "resource_provider.hpp"
 
-Game::Game(const char* account, const char* sessionID) 
+Game::Game(const char* account, const char* sessionID,
+           std::size_t width, std::size_t height) 
     : m_client(*this, Credentials(account, sessionID)),
-      m_window(sf::VideoMode(1280, 960), "DummyClient"),
+      m_window(sf::VideoMode(width, height), "DummyClient"),
       m_customEventQueue(CustomEventQueue::instance()),
       m_resourceProvider(ResourceProvider::instance()),
       m_currentScreen(std::make_shared<Screen::SelectCharacterScreen>(
-        *this, m_client))
+        *this, m_client)),
+      m_width(width), m_height(height)
 { }
 
 int Game::run()
