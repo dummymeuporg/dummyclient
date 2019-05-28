@@ -9,7 +9,7 @@ namespace Graphics {
 class Living : public Entity {
 public:
     enum Direction {
-        UP = 0, RIGHT, DOWN, LEFT
+        UP = 0, RIGHT = 1, DOWN = 2, LEFT = 3
     };
     Living(const std::string&,
            std::size_t,

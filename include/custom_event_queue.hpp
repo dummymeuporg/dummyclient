@@ -20,6 +20,8 @@ public:
         MapFileLoaded,
         CharacterSelected,
         MapViewLoaded,
+        MovementActive,
+        MovementInactive,
 
         Count
     };
