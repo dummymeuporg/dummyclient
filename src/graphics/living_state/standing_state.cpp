@@ -12,8 +12,6 @@ StandingState::StandingState(Graphics::Living& living) :
 
 void StandingState::draw(sf::RenderWindow& window) {
     sf::Sprite& sprite(m_living.sprite());
-    std::cerr << "position: " << m_living.x() << ","
-        << m_living.y() << std::endl;
     sprite.setTextureRect(sf::IntRect(
         m_living.w(), m_living.h() * m_living.direction(),
         m_living.w(), m_living.h()

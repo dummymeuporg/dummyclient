@@ -68,8 +68,15 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
     const std::pair<std::uint16_t, std::uint16_t>& position(
         m_client.pixelPosition()
     );
-    for(const auto x: boost::irange(m_mapView->width())) {
-        for (const auto y: boost::irange(m_mapView->height())) {
+    std::int16_t x(position.first / 64), y(position.second / 64);
+    std::int16_t xStart(std::max(0, x - 12)),
+                xEnd(std::min(static_cast<uint16_t>(x + 12),
+                              m_mapView->width())),
+                yStart(std::max(0, y - 8)),
+                yEnd(std::min(static_cast<uint16_t>(y + 8),
+                              m_mapView->height()));
+    for(const auto x: boost::irange(xStart, xEnd)) {
+        for (const auto y: boost::irange(yStart, yEnd)) {
             std::size_t index = y * m_mapView->width() + x;
             sf::Sprite& sprite = sprites.at(index);
             sprite.setScale(4, 4);
