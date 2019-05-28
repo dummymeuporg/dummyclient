@@ -17,7 +17,8 @@ GameScreen::GameScreen(
 )
     : UIScreen(game, client), m_mapView(std::move(mapView)),
       m_originX((game.width() / 2) - 48),
-      m_originY((game.height() / 2) - 64)
+      m_originY((game.height() / 2) - 64),
+      m_player(m_client, m_client.character()->skin(), m_originX, m_originY)
 {
 }
 
@@ -84,16 +85,7 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
 }
 
 void GameScreen::_drawCharacter() {
-    sf::Sprite sprite;
-    sprite.setTexture(texture(m_client.character()->skin()));
-    sprite.setScale(4, 4);
-    sprite.setTextureRect(sf::IntRect(24, 32 * 2, 24, 32));
-
-    sprite.setPosition(
-        m_originX,
-        m_originY
-    );
-    m_game.window().draw(sprite);
+    m_player.draw(m_game.window());
 }
 
 void GameScreen::draw() {

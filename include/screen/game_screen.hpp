@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "map_view.hpp"
+#include "graphics/player.hpp"
 #include "screen/ui_screen.hpp"
 
 namespace Screen {
@@ -20,6 +21,7 @@ private:
     void _onKeyPressed(const sf::Event& event);
     std::unique_ptr<::MapView> m_mapView;
     std::uint16_t m_originX, m_originY;
+    Graphics::Player m_player;
 };
 
 } // namespace Screen
