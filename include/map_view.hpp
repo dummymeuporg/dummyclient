@@ -33,6 +33,8 @@ public:
         return m_graphicMap->height();
     }
 
+    bool blocksAt(std::uint16_t x, std::uint16_t y) const; 
+
 private:
     void _load();
     void _loadLayer(const Dummy::Core::GraphicLayer&, Sprites&);

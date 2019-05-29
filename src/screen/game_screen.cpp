@@ -38,12 +38,10 @@ void GameScreen::notify() {
 void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
     case CustomEvent::Type::MovementActive:
-        std::cerr << "Movement active." << std::endl;
         m_player.changeState(
             std::make_unique<Graphics::LivingState::WalkingState>(m_player)
         );
         break;
-        std::cerr << "Movement inactive." << std::endl;
     case CustomEvent::Type::MovementInactive:
         m_player.changeState(
             std::make_unique<Graphics::LivingState::StandingState>(m_player)
@@ -163,7 +161,6 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
     const std::pair<std::uint16_t, std::uint16_t>& position(
         m_client.pixelPosition()
     );
-    std::cerr << position.first << ", " << position.second << std::endl;
     std::int16_t x(position.first / 64), y(position.second / 64);
     std::int16_t xStart(std::max(0, x - 12)),
                 xEnd(std::min(static_cast<uint16_t>(x + 12),
@@ -171,9 +168,6 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
                 yStart(std::max(0, y - 8)),
                 yEnd(std::min(static_cast<uint16_t>(y + 8),
                               m_mapView->height()));
-    std::cerr << "x: " << x << " y: " << y << std::endl;
-    std::cerr << "xStart: " << xStart << " -> " << xEnd << std::endl;
-    std::cerr << "yEnd: " << yStart << " -> " << yEnd << std::endl;
     for(const auto x: boost::irange(xStart, xEnd)) {
         for (const auto y: boost::irange(yStart, yEnd)) {
             std::size_t index = y * m_mapView->width() + x;

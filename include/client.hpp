@@ -76,6 +76,8 @@ public:
     void setCharacter(std::shared_ptr<Dummy::Core::Character>);
 
 private:
+    static std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
+        std::uint16_t, std::uint16_t);
     ::Game& m_game;
     sf::TcpSocket m_socket;
     std::uint16_t m_packetSize;

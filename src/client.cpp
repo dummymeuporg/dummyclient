@@ -77,24 +77,63 @@ void Client::setCharacter(std::shared_ptr<Dummy::Core::Character> character) {
 
 void Client::moveLeft(const MapView& mapView) {
     if (m_pixelPosition.first > 0) {
-        --m_pixelPosition.first;
+        std::pair<std::uint16_t, std::uint16_t> serv(
+            std::move(_translateCoordsToServ(m_pixelPosition.first - 1,
+                                             m_pixelPosition.second))
+        );
+        if (!mapView.blocksAt(serv.first, serv.second))
+        {
+            --m_pixelPosition.first;
+        }
     }
 }
 
 void Client::moveUp(const MapView& mapView) {
     if (m_pixelPosition.second > 0) {
-        --m_pixelPosition.second;
+        std::pair<std::uint16_t, std::uint16_t> serv(
+            std::move(_translateCoordsToServ(m_pixelPosition.first,
+                                             m_pixelPosition.second - 1))
+        );
+        if (!mapView.blocksAt(serv.first, serv.second) &&
+            !mapView.blocksAt(serv.first + 1, serv.second))
+        {
+            --m_pixelPosition.second;
+        }
     }
 }
 
 void Client::moveDown(const MapView& mapView) {
     if (m_pixelPosition.second < (mapView.height() * 64 - 32)) {
-        ++m_pixelPosition.second;
+        std::pair<std::uint16_t, std::uint16_t> serv(
+            std::move(_translateCoordsToServ(m_pixelPosition.first,
+                                             m_pixelPosition.second + 32 + 1))
+        );
+        if (!mapView.blocksAt(serv.first, serv.second) &&
+            !mapView.blocksAt(serv.first + 1, serv.second))
+        {
+            ++m_pixelPosition.second;
+        }
     }
 }
 
 void Client::moveRight(const MapView& mapView) {
     if (m_pixelPosition.first < (mapView.width() * 64 - 64)) {
-        ++m_pixelPosition.first;
+
+        std::pair<std::uint16_t, std::uint16_t> serv(
+            std::move(_translateCoordsToServ(m_pixelPosition.first + 64 + 1,
+                                             m_pixelPosition.second))
+        );
+        if (!mapView.blocksAt(serv.first, serv.second))
+        {
+            ++m_pixelPosition.first;
+        }
     }
+}
+
+std::pair<std::uint16_t, std::uint16_t>
+Client::_translateCoordsToServ(
+    std::uint16_t x,
+    std::uint16_t y
+) {
+    return std::pair<std::uint16_t, std::uint16_t>(x / 32, y / 32);
 }

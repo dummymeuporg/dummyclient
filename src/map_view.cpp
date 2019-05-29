@@ -47,4 +47,7 @@ MapView::_loadLayer(const Dummy::Core::GraphicLayer& layer, Sprites& sprites) {
     }
 }
 
+bool MapView::blocksAt(std::uint16_t x, std::uint16_t y) const {
+    return m_graphicMap->isBlocking(x, y);
+}
 
