@@ -47,6 +47,7 @@ int Game::run()
             m_window.display();
             clock.restart();
         }
+        m_currentScreen->tick();
         sf::sleep(sf::milliseconds(1));
     }
 

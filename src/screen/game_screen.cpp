@@ -22,7 +22,8 @@ GameScreen::GameScreen(
       m_originX((game.width() / 2) - 48),
       m_originY((game.height() / 2) - 64),
       m_player(m_client, m_client.character()->skin(), m_originX, m_originY),
-      m_isArrowPressed(false)
+      m_isArrowPressed(false),
+      m_direction(sf::Keyboard::Unknown)
 {
 }
 
@@ -37,10 +38,12 @@ void GameScreen::notify() {
 void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
     case CustomEvent::Type::MovementActive:
+        std::cerr << "Movement active." << std::endl;
         m_player.changeState(
             std::make_unique<Graphics::LivingState::WalkingState>(m_player)
         );
         break;
+        std::cerr << "Movement inactive." << std::endl;
     case CustomEvent::Type::MovementInactive:
         m_player.changeState(
             std::make_unique<Graphics::LivingState::StandingState>(m_player)
@@ -56,10 +59,10 @@ void GameScreen::handleEvent(const sf::Event& event)
 {
     switch(event.type) {
     case sf::Event::KeyPressed:
-        _onKeyPressed(event);
+        //_onKeyPressed(event);
         break;
     case sf::Event::KeyReleased:
-        _onKeyReleased(event);
+        //_onKeyReleased(event);
         break;
     default:
         break;
@@ -89,6 +92,29 @@ void GameScreen::_onArrowPressed() {
             )
         );
         m_isArrowPressed = true;
+    }
+}
+
+void GameScreen::_moveCharacter(sf::Keyboard::Key key) {
+    switch(key) {
+    case sf::Keyboard::Up:
+        m_player.setDirection(Graphics::Living::Direction::UP);
+        m_client.moveUp(*m_mapView);
+        break;
+    case sf::Keyboard::Right:
+        m_player.setDirection(Graphics::Living::Direction::RIGHT);
+        m_client.moveRight(*m_mapView);
+        break;
+    case sf::Keyboard::Down:
+        m_player.setDirection(Graphics::Living::Direction::DOWN);
+        m_client.moveDown(*m_mapView); 
+        break;
+    case sf::Keyboard::Left:
+        m_player.setDirection(Graphics::Living::Direction::LEFT);
+        m_client.moveLeft(*m_mapView);
+        break;
+    default:
+        break;
     }
 }
 
@@ -137,6 +163,7 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
     const std::pair<std::uint16_t, std::uint16_t>& position(
         m_client.pixelPosition()
     );
+    std::cerr << position.first << ", " << position.second << std::endl;
     std::int16_t x(position.first / 64), y(position.second / 64);
     std::int16_t xStart(std::max(0, x - 12)),
                 xEnd(std::min(static_cast<uint16_t>(x + 12),
@@ -144,6 +171,9 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
                 yStart(std::max(0, y - 8)),
                 yEnd(std::min(static_cast<uint16_t>(y + 8),
                               m_mapView->height()));
+    std::cerr << "x: " << x << " y: " << y << std::endl;
+    std::cerr << "xStart: " << xStart << " -> " << xEnd << std::endl;
+    std::cerr << "yEnd: " << yStart << " -> " << yEnd << std::endl;
     for(const auto x: boost::irange(xStart, xEnd)) {
         for (const auto y: boost::irange(yStart, yEnd)) {
             std::size_t index = y * m_mapView->width() + x;
@@ -173,6 +203,37 @@ void GameScreen::draw() {
     _drawLayer(m_mapView->fourthLayerSprites());
     // Draw widgets (HUD) if needed.
     UIScreen::draw();
+}
+
+void GameScreen::tick() {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        m_direction = sf::Keyboard::Up;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        m_direction = sf::Keyboard::Right;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        m_direction = sf::Keyboard::Down;
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        m_direction = sf::Keyboard::Left;
+    } else {
+        m_direction = sf::Keyboard::Unknown;
+    }
+
+    if (m_direction == sf::Keyboard::Unknown) {
+        if (m_isArrowPressed) {
+            _onArrowReleased();
+        }
+        return;
+    }
+
+    if (!m_isArrowPressed && m_direction != sf::Keyboard::Unknown) {
+        _onArrowPressed();
+        m_tickMove.restart();
+    } else {
+        if (m_tickMove.getElapsedTime().asMicroseconds() >= 1700) {
+            _moveCharacter(m_direction);
+            m_tickMove.restart();
+        }
+    } 
 }
 
 } // namespace Screen

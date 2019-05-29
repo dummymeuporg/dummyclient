@@ -15,6 +15,7 @@ public:
     virtual void handleEvent(const sf::Event&);
     virtual void handleCustomEvent(const ::CustomEvent&);
     virtual void draw() override;
+    virtual void tick() override;
 private:
     void _drawLayer(::Sprites&);
     void _drawCharacter();
@@ -22,10 +23,13 @@ private:
     void _onKeyReleased(const sf::Event&);
     void _onArrowPressed();
     void _onArrowReleased();
+    void _moveCharacter(sf::Keyboard::Key);
     std::unique_ptr<::MapView> m_mapView;
     std::uint16_t m_originX, m_originY;
     Graphics::Player m_player;
     bool m_isArrowPressed;
+    sf::Keyboard::Key m_direction;
+    sf::Clock m_tickMove;
 };
 
 } // namespace Screen

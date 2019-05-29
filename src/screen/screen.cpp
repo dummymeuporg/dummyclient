@@ -36,4 +36,8 @@ void Screen::loaded() {
 
 }
 
+void Screen::tick() {
+
+}
+
 } // namespace Screen
