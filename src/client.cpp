@@ -71,8 +71,11 @@ void Client::changeState(std::shared_ptr<ClientState::State> state) {
 void Client::setCharacter(std::shared_ptr<Dummy::Core::Character> character) {
     m_character = character;
 
-    m_pixelPosition.first = character->position().first * 64;
-    m_pixelPosition.second = character->position().second * 64;
+    m_pixelPosition.first = character->position().first * 32;
+    m_pixelPosition.second = character->position().second * 32;
+    
+    m_serverPosition.first = character->position().first;
+    m_serverPosition.second = character->position().second;
 }
 
 void Client::moveLeft(const MapView& mapView) {
@@ -84,6 +87,7 @@ void Client::moveLeft(const MapView& mapView) {
         if (!mapView.blocksAt(serv.first, serv.second))
         {
             --m_pixelPosition.first;
+            _updateServerPosition(serv);
         }
     }
 }
@@ -98,6 +102,7 @@ void Client::moveUp(const MapView& mapView) {
             !mapView.blocksAt(serv.first + 1, serv.second))
         {
             --m_pixelPosition.second;
+            _updateServerPosition(serv);
         }
     }
 }
@@ -112,6 +117,7 @@ void Client::moveDown(const MapView& mapView) {
             !mapView.blocksAt(serv.first + 1, serv.second))
         {
             ++m_pixelPosition.second;
+            _updateServerPosition(serv);
         }
     }
 }
@@ -126,6 +132,7 @@ void Client::moveRight(const MapView& mapView) {
         if (!mapView.blocksAt(serv.first, serv.second))
         {
             ++m_pixelPosition.first;
+            _updateServerPosition(serv);
         }
     }
 }
@@ -136,4 +143,19 @@ Client::_translateCoordsToServ(
     std::uint16_t y
 ) {
     return std::pair<std::uint16_t, std::uint16_t>(x / 32, y / 32);
+}
+
+
+void Client::_updateServerPosition(
+    const std::pair<std::uint16_t, std::uint16_t>& position
+) {
+    if (position != m_serverPosition) {
+        Dummy::Protocol::OutgoingPacket pkt;
+        std::uint16_t command = 1; /* Move */
+        pkt << command << position.first << position.second;
+        std::cerr << "Update position to " << position.first << ","
+            << position.second << std::endl;
+        send(pkt);
+        m_serverPosition = position;
+    }
 }

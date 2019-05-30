@@ -74,6 +74,7 @@ public:
     void moveDown(const MapView&);
 
     void setCharacter(std::shared_ptr<Dummy::Core::Character>);
+    void _updateServerPosition(const std::pair<std::uint16_t, std::uint16_t>&);
 
 private:
     static std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
@@ -85,4 +86,5 @@ private:
     std::shared_ptr<ClientState::State> m_state;
     std::shared_ptr<Dummy::Core::Character> m_character;
     std::pair<std::uint16_t, std::uint16_t> m_pixelPosition;
+    std::pair<std::uint16_t, std::uint16_t> m_serverPosition;
 };
