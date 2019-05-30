@@ -18,6 +18,7 @@ public:
         // to put these elsewhere:
         LoadMapFromFile,
         MapFileLoaded,
+        CharacterCreated,
         CharacterSelected,
         MapViewLoaded,
         MovementActive,

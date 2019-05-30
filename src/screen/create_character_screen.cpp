@@ -145,6 +145,9 @@ void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
     case ::CustomEvent::Type::ButtonClicked:
         _handleButtonClicked(event);
         break;
+    case ::CustomEvent::Type::CharacterCreated:
+        _back();
+        break;
     default:
         UIScreen::handleCustomEvent(event);
         break;
@@ -156,6 +159,9 @@ void CreateCharacterScreen::_back() {
     std::shared_ptr<SelectCharacterScreen> screen =
         std::make_shared<SelectCharacterScreen>(m_game, m_client);
     screen->setModel(m_model);
+
+    // XXX: ugly
+    m_model->update();
     m_game.setScreen(screen);
 }
 
@@ -163,11 +169,17 @@ void CreateCharacterScreen::notify() {
     // Get the characters count from model
     const Model::CharactersListModel* model = 
         reinterpret_cast<const Model::CharactersListModel*>(m_model.get());
-    int charactersCount = model->characters().size();
+    std::size_t charactersCount = model->characters().size();
 
     if (m_initialCharactersCount < charactersCount) {
         // There is a new character so the creation succeeded.
-        _back();
+        pushEvent(
+            ::CustomEvent(
+                reinterpret_cast<void*>(shared_from_this().get()),
+                CustomEvent::CharacterCreated,
+                reinterpret_cast<void*>(shared_from_this().get())
+            )
+        );
     }
 }
 

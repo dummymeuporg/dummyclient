@@ -17,7 +17,7 @@ private:
     void _handleButtonClicked(const ::CustomEvent&);
     void _onCreateCharacterButton();
     void _back();
-    int m_initialCharactersCount;
+    std::size_t m_initialCharactersCount;
     std::shared_ptr<Widget::Label> m_characterNameLabel; 
     std::shared_ptr<Widget::Textbox> m_characterNameTextbox;
     std::shared_ptr<Widget::Label> m_characterSkinLabel; 
