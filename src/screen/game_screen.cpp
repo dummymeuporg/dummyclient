@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 
 #include <boost/range/irange.hpp>
@@ -43,32 +44,45 @@ void GameScreen::notify() {
     std::shared_ptr<Model::PlayingModel> model =
         std::dynamic_pointer_cast<Model::PlayingModel>(m_model);
 
-    if (model != nullptr) {
-        std::cerr << "[GameScreen] Updates." << std::endl;
+    const std::pair<std::uint16_t, std::uint16_t>& position(
+        m_client.pixelPosition()
+    );
 
+    if (model != nullptr) {
 
         // Synchronize local livings with the model
         for (const auto [name, living]: m_livings) {
             if (model->livings().find(name) == std::end(model->livings())) {
-                std::cerr << "Bye bye " << name << std::endl;
                 m_livings.erase(name);
             }
         }
 
         for(const auto [name, living]: model->livings()) {
-            std::cerr << name << " at "
-                << living->x() << ", " << living->y() << std::endl;
             if (m_livings.find(name) == std::end(m_livings)) {
                 m_livings[name] = std::make_shared<Graphics::Living>(*living);
-                std::cerr << "New living at " << m_livings[name]->x() << ", "
-                    << m_livings[name]->y() << std::endl;
+                m_livings[name]->setPixelPosition(
+                    m_originX + m_livings[name]->x() * 32 - position.first,
+                    m_originY + m_livings[name]->y() * 32 - position.second
+                );
             } else {
                 // If the living already exists, check the position and
                 // set the walking state if needed.
-                std::cerr << "Move living at " << living->x() << ", "
-                    << living->y() << std::endl;
-                m_livings[name]->moveTowards(living->x(), living->y());
+
+                if (m_livings[name]->x() != living->x() ||
+                    m_livings[name]->y() == living->y())
+                {
+                    // Need to move.
+                    // Update the model pixel pos.
+                    m_livings[name]->setPixelPosition(
+                        m_originX + living->x() * 32 - position.first,
+                        m_originY + living->y() * 32 - position.second
+                    );
+                    
+                    // Animate the charater.
+                    m_livings[name]->moveTowards(living->x(), living->y());
+                }
             }
+
         }
     }
         
@@ -209,11 +223,6 @@ void GameScreen::_drawLivings() {
         m_client.pixelPosition()
     );
     for (auto [name, living]: m_livings) {
-        // translate pos according to the player
-        living->setPixelPosition(
-            m_originX + living->x() * 32 - position.first,
-            m_originY + living->y() * 32 - position.second
-        );
         living->draw(m_game.window());
     }
 }
@@ -231,15 +240,49 @@ void GameScreen::draw() {
 }
 
 void GameScreen::_syncLivings() {
-    for(const auto [name, living]: m_livings) {
+
+    const std::pair<std::uint16_t, std::uint16_t>& position(
+        m_client.pixelPosition()
+    );
+    std::shared_ptr<Model::PlayingModel> model =
+        std::dynamic_pointer_cast<Model::PlayingModel>(m_model);
+    for(auto [name, living]: m_livings) {
+        if (model->livings().find(name) != std::end(model->livings())) {
+            std::shared_ptr<const Graphics::Living> modelLiving =
+                model->getLiving(name);
+
+            int dstPixelX =
+                m_originX + modelLiving->pixelX() - position.first;
+            int dstPixelY =
+                m_originY + modelLiving->pixelY() - position.second;
+
+            // Update pixel position.
+            if (living->pixelX() != dstPixelX) {
+                living->setPixelX(
+                    living->pixelX() + 2 * (living->pixelX() < dstPixelX) - 1
+                );
+            }
+            if (living->pixelY() != dstPixelY) {
+                living->setPixelY(
+                    living->pixelY() + 2 * (living->pixelY() < dstPixelY) - 1
+                );
+            }
+
+            // If the pixel positions are equal, sync server positions.
+            if (living->pixelX() == dstPixelX &&
+                living->pixelY() == dstPixelY)
+            {
+                // Sync server position.
+                living->setX(modelLiving->x());
+                living->setY(modelLiving->y());
+            }
+        }
     }
 }
 
 void GameScreen::tick() {
 
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 300) {
-        std::cerr << "Ping! " << m_client.serverPosition().first << ", "
-            << m_client.serverPosition().second << std::endl;
         m_client.ping();
         m_pingClock.restart();
     }

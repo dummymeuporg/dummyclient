@@ -40,6 +40,13 @@ void Entity::setPixelPosition(int x, int y) {
     m_pixelX = x;
     m_pixelY = y;
 }
+void Entity::setPixelX(int x) {
+    m_pixelX = x;
+}
+
+void Entity::setPixelY(int y) {
+    m_pixelY = y;
+}
 
 void Entity::setPixelPosition(const std::pair<int, int>& pair) {
     setPixelPosition(pair.first, pair.second);

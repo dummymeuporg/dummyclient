@@ -56,6 +56,8 @@ public:
     void setY(std::size_t y);
     void setPixelPosition(int x, int y);
     void setPixelPosition(const std::pair<int, int>&);
+    void setPixelX(int);
+    void setPixelY(int);
     void setChipsetName(const std::string&);
 
     virtual void draw(sf::RenderWindow&) = 0;

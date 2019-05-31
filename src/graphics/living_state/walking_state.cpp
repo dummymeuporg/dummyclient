@@ -41,13 +41,13 @@ void WalkingState::moveTowards(std::uint16_t x, std::uint16_t y) {
         );
     } else {
         if (m_living.y() < y) {
-            m_living.setDirection(Dummy::Core::Character::Direction::UP);
-        } else if(m_living.y() >= y) {
             m_living.setDirection(Dummy::Core::Character::Direction::DOWN);
+        } else if(m_living.y() > y) {
+            m_living.setDirection(Dummy::Core::Character::Direction::UP);
         } else if (m_living.x() < x) {
-            m_living.setDirection(Dummy::Core::Character::Direction::LEFT);
-        } else {
             m_living.setDirection(Dummy::Core::Character::Direction::RIGHT);
+        } else if (m_living.x() > x) {
+            m_living.setDirection(Dummy::Core::Character::Direction::LEFT);
         }
     }
 }

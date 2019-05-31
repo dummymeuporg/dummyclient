@@ -40,11 +40,8 @@ void Client::checkData() {
     status = m_socket.receive(reinterpret_cast<void*>(buffer.data()),
                               m_packetSize,
                               receivedBytes);
-    std::cerr << "Packet size: " << m_packetSize << std::endl;
-    std::cerr << "ReceivedBytes: " << receivedBytes << std::endl;
     if (m_packetSize == receivedBytes) {
         // Everything is fine. Reset the packet size and handle the data.
-        std::cerr << "I got data! " << buffer.size() << std::endl;
         Dummy::Protocol::IncomingPacket pkt(buffer);
         m_state->onRead(pkt);
         m_packetSize = 0;
