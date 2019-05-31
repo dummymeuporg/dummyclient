@@ -1,4 +1,5 @@
 #include <iostream>
+#include "camera.hpp"
 #include "graphics/living.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
@@ -13,7 +14,8 @@ WalkingState::WalkingState(Graphics::Living& living) :
     m_clock.restart();
 }
 
-void WalkingState::draw(sf::RenderWindow& window) {
+void WalkingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
+    const sf::Vector2u& windowSize(window.getSize());
     static const int FRAMES[] = {1, 2, 1, 0};
     if (m_clock.getElapsedTime().asMilliseconds() >= 140) {
         ++m_currentFrame;
@@ -29,7 +31,12 @@ void WalkingState::draw(sf::RenderWindow& window) {
         m_living.w(),
         m_living.h()
     ));
-    sprite.setPosition(m_living.pixelX(), m_living.pixelY());
+    sprite.setPosition(
+        (windowSize.x / 2) +
+            m_living.pixelX() - camera.centerX(),
+        (windowSize.y / 2) +
+            m_living.pixelY() - camera.centerY()
+    );
     window.draw(sprite);
 }
 

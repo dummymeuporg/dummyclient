@@ -1,4 +1,5 @@
 #include <iostream>
+#include "camera.hpp"
 #include "graphics/living.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
@@ -11,7 +12,8 @@ StandingState::StandingState(Graphics::Living& living) :
 {
 }
 
-void StandingState::draw(sf::RenderWindow& window) {
+void StandingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
+    const sf::Vector2u& windowSize(window.getSize());
     sf::Sprite& sprite(m_living.sprite());
     sprite.setTextureRect(sf::IntRect(
         m_living.w(),
@@ -19,7 +21,12 @@ void StandingState::draw(sf::RenderWindow& window) {
         m_living.w(),
         m_living.h()
     ));
-    sprite.setPosition(m_living.pixelX(), m_living.pixelY());
+    sprite.setPosition(
+        (windowSize.x / 2) +
+            m_living.pixelX() - static_cast<int>(camera.centerX()),
+        (windowSize.y / 2) +
+            m_living.pixelY() - static_cast<int>(camera.centerY())
+    );
     window.draw(sprite);
 }
 

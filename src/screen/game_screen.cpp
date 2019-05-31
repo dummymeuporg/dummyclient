@@ -20,19 +20,25 @@ GameScreen::GameScreen(
     std::unique_ptr<::MapView> mapView
 )
     : UIScreen(game, client), m_mapView(std::move(mapView)),
-      m_originX((game.width() / 2) - 48),
-      m_originY((game.height() / 2) - 64),
+      m_camera(m_client.pixelPosition().first + 48,
+               m_client.pixelPosition().second + 64),
       m_player(
           m_client,
           m_client.character()->skin(),
           m_client.character()->name(),
-          m_originX,
-          m_originY,
+          m_client.character()->position().first,
+          m_client.character()->position().second,
           m_client.character()->direction()
       ),
       m_isArrowPressed(false),
       m_direction(sf::Keyboard::Unknown)
 {
+    m_player.setPixelX(m_client.pixelPosition().first);
+    m_player.setPixelY(m_client.pixelPosition().second);
+
+    std::cerr << "Position: " << 
+          m_client.character()->position().first << ", " <<
+          m_client.character()->position().second << std::endl;
 }
 
 void GameScreen::loaded() {
@@ -61,8 +67,8 @@ void GameScreen::notify() {
             if (m_livings.find(name) == std::end(m_livings)) {
                 m_livings[name] = std::make_shared<Graphics::Living>(*living);
                 m_livings[name]->setPixelPosition(
-                    m_originX + m_livings[name]->x() * 32 - position.first,
-                    m_originY + m_livings[name]->y() * 32 - position.second
+                    m_livings[name]->x() * 32 - position.first,
+                    m_livings[name]->y() * 32 - position.second
                 );
             } else {
                 // If the living already exists, check the position and
@@ -74,8 +80,8 @@ void GameScreen::notify() {
                     // Need to move.
                     // Update the model pixel pos.
                     m_livings[name]->setPixelPosition(
-                        m_originX + living->x() * 32 - position.first,
-                        m_originY + living->y() * 32 - position.second
+                        living->x() * 32 - position.first,
+                        living->y() * 32 - position.second
                     );
                     
                     // Animate the charater.
@@ -167,6 +173,8 @@ void GameScreen::_moveCharacter(sf::Keyboard::Key key) {
     default:
         break;
     }
+    m_camera.setCenter(m_client.pixelPosition().first + 48,
+                       m_client.pixelPosition().second + 64);
 }
 
 void GameScreen::_onKeyPressed(const sf::Event& event) {
@@ -187,35 +195,40 @@ void GameScreen::_onKeyReleased(const sf::Event& event) {
 }
 
 void GameScreen::_drawLayer(::Sprites& sprites) {
-    const std::pair<std::uint16_t, std::uint16_t>& position(
-        m_client.pixelPosition()
+    const sf::Vector2u& windowSize(
+        m_game.window().getSize()
     );
-    std::int16_t x(position.first / 64), y(position.second / 64);
-    std::int16_t xStart(std::max(0, x - 12)),
+    std::int16_t x(static_cast<int>(m_camera.centerX()) / 64),
+                 y(static_cast<int>(m_camera.centerY()) / 64);
+    std::int16_t xStart(std::max(0, static_cast<int>(x - 12))),
                 xEnd(std::min(static_cast<uint16_t>(x + 12),
                               m_mapView->width())),
-                yStart(std::max(0, y - 8)),
-                yEnd(std::min(static_cast<uint16_t>(y + 8),
+                yStart(std::max(0, static_cast<int>(y - 9))),
+                yEnd(std::min(static_cast<uint16_t>(y + 9),
                               m_mapView->height()));
     for(const auto x: boost::irange(xStart, xEnd)) {
         for (const auto y: boost::irange(yStart, yEnd)) {
             std::size_t index = y * m_mapView->width() + x;
             sf::Sprite& sprite = sprites.at(index);
             sprite.setScale(4, 4);
-            sprite.setPosition(
-                sf::Vector2f(
-                    m_originX + ((x * 64) - position.first + 16),
-                    m_originY + ((y * 64) - position.second + 96)
-                )
-            );
+            int windowX = ((x * 64)) + 16 +
+                ((windowSize.x / 2) - static_cast<int>(m_camera.centerX()));
+            int windowY = ((y * 64)) + 96 +
+                ((windowSize.y / 2) - static_cast<int>(m_camera.centerY()));
+            sprite.setPosition(sf::Vector2f(windowX, windowY));
             m_game.window().draw(sprite);
         }
     }
 }
 
 void GameScreen::_drawCharacter() {
-    m_player.setPixelPosition(m_originX, m_originY);
-    m_player.draw(m_game.window());
+    //m_player.setPixelPosition(m_originX, m_originY);
+    std::cerr << "server pos: " << m_client.serverPosition().first << ", " <<
+        m_client.serverPosition().second << std::endl;
+    std::cerr << "pixel pos: " << m_client.pixelPosition().first << ", " <<
+        m_client.pixelPosition().second << std::endl;
+    m_player.setPixelPosition(m_client.pixelPosition());
+    m_player.draw(m_game.window(), m_camera);
 }
 
 void GameScreen::_drawLivings() {
@@ -223,7 +236,7 @@ void GameScreen::_drawLivings() {
         m_client.pixelPosition()
     );
     for (auto [name, living]: m_livings) {
-        living->draw(m_game.window());
+        living->draw(m_game.window(), m_camera);
     }
 }
 
@@ -252,9 +265,9 @@ void GameScreen::_syncLivings() {
                 model->getLiving(name);
 
             int dstPixelX =
-                m_originX + modelLiving->pixelX() - position.first;
+                m_camera.centerX() + modelLiving->pixelX() - position.first;
             int dstPixelY =
-                m_originY + modelLiving->pixelY() - position.second;
+                m_camera.centerY() + modelLiving->pixelY() - position.second;
 
             // Update pixel position.
             if (living->pixelX() != dstPixelX) {

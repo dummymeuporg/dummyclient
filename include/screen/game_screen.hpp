@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "camera.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
 #include "screen/ui_screen.hpp"
@@ -30,7 +31,7 @@ private:
 
     /* Private attributes. */
     std::unique_ptr<::MapView> m_mapView;
-    std::uint16_t m_originX, m_originY;
+    Camera m_camera;
     Graphics::Player m_player;
     std::map<std::string, std::shared_ptr<Graphics::Living>> m_livings;
     bool m_isArrowPressed;

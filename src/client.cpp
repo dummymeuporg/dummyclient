@@ -82,6 +82,7 @@ void Client::moveLeft(const MapView& mapView) {
                                              m_pixelPosition.second))
         );
         if (!mapView.blocksAt(serv.first, serv.second))
+        if (!mapView.blocksAt(serv.first, serv.second))
         {
             --m_pixelPosition.first;
             _updateServerPosition(serv);

@@ -21,7 +21,7 @@ public:
            std::size_t,
            Direction = Direction::DOWN);
     Living(const Living&);
-    virtual void draw(sf::RenderWindow&) override;
+    virtual void draw(sf::RenderWindow&, const ::Camera&) override;
     const Dummy::Core::Character::Direction& direction() const {
         return m_direction;
     }

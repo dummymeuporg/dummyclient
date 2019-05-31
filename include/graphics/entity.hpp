@@ -6,6 +6,8 @@
 
 #include "game_element.hpp"
 
+class Camera;
+
 namespace Graphics {
 
 class Entity : public ::GameElement {
@@ -60,7 +62,7 @@ public:
     void setPixelY(int);
     void setChipsetName(const std::string&);
 
-    virtual void draw(sf::RenderWindow&) = 0;
+    virtual void draw(sf::RenderWindow&, const ::Camera&) = 0;
 protected:
     const sf::Texture& m_chipset;
     sf::Sprite m_sprite;

@@ -1,3 +1,4 @@
+#include "camera.hpp"
 #include "graphics/living.hpp"
 #include "graphics/living_state/standing_state.hpp"
 
@@ -42,8 +43,8 @@ Living& Living::changeState(std::shared_ptr<LivingState::State> state) {
     return *this;
 }
 
-void Living::draw(sf::RenderWindow& window) {
-    m_state->draw(window);
+void Living::draw(sf::RenderWindow& window, const ::Camera& camera) {
+    m_state->draw(window, camera);
 }
 
 void Living::moveTowards(std::uint16_t x, std::uint16_t y) {
