@@ -33,7 +33,7 @@ void PlayingState::resume() {
 }
 
 void PlayingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
-    std::cerr << "Read playing state." << std::endl;
+    //std::cerr << "Read playing state." << std::endl;
     std::uint8_t answer;
     pkt >> answer;
     switch(answer) {
@@ -48,11 +48,11 @@ void PlayingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
 void PlayingState::_parseMapUpdates(Dummy::Protocol::IncomingPacket& pkt) {
     std::uint16_t count;
     pkt >> count;
-    std::cerr << "Map updates count: " << count << std::endl;
+    //std::cerr << "Map updates count: " << count << std::endl;
     for (const auto& i: boost::irange(count)) {
         UpdateCode c;
         pkt >> reinterpret_cast<std::uint16_t&>(c);
-        std::cerr << "Code: " << static_cast<int>(c) << std::endl;
+        //std::cerr << "Code: " << static_cast<int>(c) << std::endl;
         switch(c) {
         case UpdateCode::CHARACTER_POSITION:
             _handleCharacterPosition(pkt);
@@ -76,7 +76,7 @@ PlayingState::_handleCharacterPosition(Dummy::Protocol::IncomingPacket& pkt) {
     std::string chipset;
     Dummy::Core::Character::Direction direction;
 
-    std::cerr << "Character position." << std::endl;
+    //std::cerr << "Character position." << std::endl;
 
     // Read info
     pkt >> x >> y >> name >> chipset 
@@ -96,10 +96,10 @@ PlayingState::_handleCharacterPosition(Dummy::Protocol::IncomingPacket& pkt) {
                 chipset, name, 24, 32, x, y, direction
             );
         m_model->addLiving(name, living);
-        std::cerr << "Added living " << name << std::endl;
+        //std::cerr << "Added living " << name << std::endl;
     } else {
         living = m_model->getLiving(name);
-        std::cerr << "Found living " << name << std::endl;
+        //std::cerr << "Found living " << name << std::endl;
 
         // Update living info.
         living->setPosition(x, y);

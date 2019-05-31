@@ -21,12 +21,13 @@ void StandingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
         m_living.w(),
         m_living.h()
     ));
-    sprite.setPosition(
-        (windowSize.x / 2) +
-            m_living.pixelX() - static_cast<int>(camera.centerX()),
-        (windowSize.y / 2) +
-            m_living.pixelY() - static_cast<int>(camera.centerY())
-    );
+
+    int xPos = static_cast<int>(windowSize.x / 2) +
+        m_living.pixelX() - camera.centerX();
+    int yPos = static_cast<int>(windowSize.y / 2) +
+        m_living.pixelY() - camera.centerY();
+
+    sprite.setPosition(xPos, yPos);
     window.draw(sprite);
 }
 

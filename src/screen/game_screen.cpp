@@ -36,9 +36,11 @@ GameScreen::GameScreen(
     m_player.setPixelX(m_client.pixelPosition().first);
     m_player.setPixelY(m_client.pixelPosition().second);
 
+    /*
     std::cerr << "Position: " << 
           m_client.character()->position().first << ", " <<
           m_client.character()->position().second << std::endl;
+    */
 }
 
 void GameScreen::loaded() {
@@ -67,21 +69,27 @@ void GameScreen::notify() {
             if (m_livings.find(name) == std::end(m_livings)) {
                 m_livings[name] = std::make_shared<Graphics::Living>(*living);
                 m_livings[name]->setPixelPosition(
-                    m_livings[name]->x() * 32 - position.first,
-                    m_livings[name]->y() * 32 - position.second
+                    m_livings[name]->x() * 32,
+                    m_livings[name]->y() * 32
                 );
+                std::cerr << "Found " << name << " at " <<
+                    m_livings[name]->x() << ", " << m_livings[name]->y()
+                    << std::endl;
             } else {
                 // If the living already exists, check the position and
                 // set the walking state if needed.
+                std::cerr << name << " is at " << living->x() << ", "
+                    << living->y() << std::endl;
 
                 if (m_livings[name]->x() != living->x() ||
-                    m_livings[name]->y() == living->y())
+                    m_livings[name]->y() != living->y())
                 {
+                    std::cerr << "Need to move!" << std::endl;
                     // Need to move.
                     // Update the model pixel pos.
-                    m_livings[name]->setPixelPosition(
-                        living->x() * 32 - position.first,
-                        living->y() * 32 - position.second
+                    living->setPixelPosition(
+                        living->x() * 32,
+                        living->y() * 32
                     );
                     
                     // Animate the charater.
@@ -223,10 +231,12 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
 
 void GameScreen::_drawCharacter() {
     //m_player.setPixelPosition(m_originX, m_originY);
+    /*
     std::cerr << "server pos: " << m_client.serverPosition().first << ", " <<
         m_client.serverPosition().second << std::endl;
     std::cerr << "pixel pos: " << m_client.pixelPosition().first << ", " <<
         m_client.pixelPosition().second << std::endl;
+    */
     m_player.setPixelPosition(m_client.pixelPosition());
     m_player.draw(m_game.window(), m_camera);
 }
@@ -236,6 +246,11 @@ void GameScreen::_drawLivings() {
         m_client.pixelPosition()
     );
     for (auto [name, living]: m_livings) {
+        /*
+        std::cerr << "Draw " << name << " at " <<
+            living->pixelX() << "," <<
+            living->pixelY() << std::endl;
+        */
         living->draw(m_game.window(), m_camera);
     }
 }
@@ -264,10 +279,8 @@ void GameScreen::_syncLivings() {
             std::shared_ptr<const Graphics::Living> modelLiving =
                 model->getLiving(name);
 
-            int dstPixelX =
-                m_camera.centerX() + modelLiving->pixelX() - position.first;
-            int dstPixelY =
-                m_camera.centerY() + modelLiving->pixelY() - position.second;
+            int dstPixelX = modelLiving->pixelX();
+            int dstPixelY = modelLiving->pixelY();
 
             // Update pixel position.
             if (living->pixelX() != dstPixelX) {
@@ -325,7 +338,7 @@ void GameScreen::tick() {
     } else {
         if (m_tickMove.getElapsedTime().asMicroseconds() >= 1700) {
             _moveCharacter(m_direction);
-            _syncLivings();
+            //_syncLivings();
             m_tickMove.restart();
         }
     }
