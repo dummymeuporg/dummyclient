@@ -33,7 +33,7 @@ void StandingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
 
 void StandingState::moveTowards(std::uint16_t x, std::uint16_t y) {
     auto self(shared_from_this());
-    if (m_living.x() != x || m_living.y() != y) {
+    if (m_living.pixelX() != x || m_living.pixelY() != y) {
         m_living.changeState(
             std::make_shared<LivingState::WalkingState>(m_living)
         );

@@ -42,18 +42,18 @@ void WalkingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
 
 void WalkingState::moveTowards(std::uint16_t x, std::uint16_t y) {
     auto self(shared_from_this());
-    if (m_living.x() == x && m_living.y() == y) {
+    if (m_living.pixelX() == x && m_living.pixelY() == y) {
         m_living.changeState(
             std::make_shared<LivingState::StandingState>(m_living)
         );
     } else {
-        if (m_living.y() < y) {
+        if (m_living.pixelY() < y) {
             m_living.setDirection(Dummy::Core::Character::Direction::DOWN);
-        } else if(m_living.y() > y) {
+        } else if(m_living.pixelY() > y) {
             m_living.setDirection(Dummy::Core::Character::Direction::UP);
-        } else if (m_living.x() < x) {
+        } else if (m_living.pixelX() < x) {
             m_living.setDirection(Dummy::Core::Character::Direction::RIGHT);
-        } else if (m_living.x() > x) {
+        } else if (m_living.pixelX() > x) {
             m_living.setDirection(Dummy::Core::Character::Direction::LEFT);
         }
     }

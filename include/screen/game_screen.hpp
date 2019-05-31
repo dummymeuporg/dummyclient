@@ -38,6 +38,7 @@ private:
     sf::Keyboard::Key m_direction;
     sf::Clock m_tickMove;
     sf::Clock m_pingClock;
+    sf::Clock m_syncLivingsClock;
 };
 
 } // namespace Screen
