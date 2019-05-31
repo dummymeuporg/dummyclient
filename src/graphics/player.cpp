@@ -5,8 +5,10 @@ namespace Graphics {
 
 Player::Player(::Client& client,
                const std::string& chipset,
-               std::size_t x, std::size_t y)
-    : Living(chipset, 24, 32, x, y), m_client(client)
+               const std::string& name,
+               std::size_t x, std::size_t y,
+               Direction direction)
+    : Living(chipset, name, 24, 32, x, y, direction), m_client(client)
 {
 
 }

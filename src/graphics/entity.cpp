@@ -22,4 +22,8 @@ void Entity::setY(std::size_t y) {
     m_y = y;
 }
 
+void Entity::setChipsetName(const std::string& chipsetName) {
+    m_chipsetName = chipsetName;
+}
+
 } // namespace Graphics

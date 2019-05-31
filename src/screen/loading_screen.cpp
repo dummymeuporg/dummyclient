@@ -2,7 +2,9 @@
 
 #include "game.hpp"
 #include "client.hpp"
+#include "client_state/playing_state.hpp"
 #include "model/loading_model.hpp"
+#include "model/playing_model.hpp"
 #include "screen/game_screen.hpp"
 #include "screen/loading_screen.hpp"
 
@@ -94,7 +96,13 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
         std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
             m_game, m_client, std::move(m_mapView)
         );
+        std::shared_ptr<Model::PlayingModel> model =
+            std::make_shared<Model::PlayingModel>();
+        screen->setModel(model);
         m_game.setScreen(screen);
+        m_client.changeState(
+            std::make_shared<ClientState::PlayingState>(m_client)
+        );
     }
     default:
         break;

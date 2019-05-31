@@ -24,7 +24,7 @@ void WalkingState::draw(sf::RenderWindow& window) {
     sf::Sprite& sprite(m_living.sprite());
     sprite.setTextureRect(sf::IntRect(
         FRAMES[m_currentFrame] * m_living.w(),
-        m_living.h() * m_living.direction(),
+        m_living.h() * static_cast<std::uint8_t>(m_living.direction()),
         m_living.w(),
         m_living.h()
     ));

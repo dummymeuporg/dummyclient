@@ -11,6 +11,7 @@ public:
     virtual void resume() override;
     virtual void onRead(Dummy::Protocol::IncomingPacket&) override;
 private:
+    void _answerAndPlay(const Dummy::Protocol::OutgoingPacket& pkt);
     std::shared_ptr<Model::LoadingModel> m_model;
     
 };

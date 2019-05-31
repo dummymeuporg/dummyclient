@@ -7,7 +7,7 @@
 #include "graphics/living.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
-#include "model/loading_model.hpp"
+#include "model/playing_model.hpp"
 
 #include "screen/game_screen.hpp"
 
@@ -21,7 +21,14 @@ GameScreen::GameScreen(
     : UIScreen(game, client), m_mapView(std::move(mapView)),
       m_originX((game.width() / 2) - 48),
       m_originY((game.height() / 2) - 64),
-      m_player(m_client, m_client.character()->skin(), m_originX, m_originY),
+      m_player(
+          m_client,
+          m_client.character()->skin(),
+          m_client.character()->name(),
+          m_originX,
+          m_originY,
+          m_client.character()->direction()
+      ),
       m_isArrowPressed(false),
       m_direction(sf::Keyboard::Unknown)
 {
@@ -32,7 +39,13 @@ void GameScreen::loaded() {
 }
 
 void GameScreen::notify() {
+    std::shared_ptr<Model::PlayingModel> model =
+        std::dynamic_pointer_cast<Model::PlayingModel>(m_model);
 
+    if (model != nullptr) {
+        std::cerr << "[GameScreen] Updates." << std::endl;
+    }
+        
 }
 
 void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
@@ -96,19 +109,19 @@ void GameScreen::_onArrowPressed() {
 void GameScreen::_moveCharacter(sf::Keyboard::Key key) {
     switch(key) {
     case sf::Keyboard::Up:
-        m_player.setDirection(Graphics::Living::Direction::UP);
+        m_player.setDirection(Dummy::Core::Character::Direction::UP);
         m_client.moveUp(*m_mapView);
         break;
     case sf::Keyboard::Right:
-        m_player.setDirection(Graphics::Living::Direction::RIGHT);
+        m_player.setDirection(Dummy::Core::Character::Direction::RIGHT);
         m_client.moveRight(*m_mapView);
         break;
     case sf::Keyboard::Down:
-        m_player.setDirection(Graphics::Living::Direction::DOWN);
+        m_player.setDirection(Dummy::Core::Character::Direction::DOWN);
         m_client.moveDown(*m_mapView); 
         break;
     case sf::Keyboard::Left:
-        m_player.setDirection(Graphics::Living::Direction::LEFT);
+        m_player.setDirection(Dummy::Core::Character::Direction::LEFT);
         m_client.moveLeft(*m_mapView);
         break;
     default:
@@ -117,30 +130,6 @@ void GameScreen::_moveCharacter(sf::Keyboard::Key key) {
 }
 
 void GameScreen::_onKeyPressed(const sf::Event& event) {
-    switch(event.key.code) {
-    case sf::Keyboard::Up:
-        m_player.setDirection(Graphics::Living::Direction::UP);
-        m_client.moveUp(*m_mapView);
-        _onArrowPressed();
-        break;
-    case sf::Keyboard::Right:
-        m_player.setDirection(Graphics::Living::Direction::RIGHT);
-        m_client.moveRight(*m_mapView);
-        _onArrowPressed();
-        break;
-    case sf::Keyboard::Down:
-        m_player.setDirection(Graphics::Living::Direction::DOWN);
-        m_client.moveDown(*m_mapView); 
-        _onArrowPressed();
-        break;
-    case sf::Keyboard::Left:
-        m_player.setDirection(Graphics::Living::Direction::LEFT);
-        m_client.moveLeft(*m_mapView);
-        _onArrowPressed();
-        break;
-    default:
-        break;
-    }
 }
 
 void GameScreen::_onKeyReleased(const sf::Event& event) {

@@ -13,8 +13,10 @@ StandingState::StandingState(Graphics::Living& living) :
 void StandingState::draw(sf::RenderWindow& window) {
     sf::Sprite& sprite(m_living.sprite());
     sprite.setTextureRect(sf::IntRect(
-        m_living.w(), m_living.h() * m_living.direction(),
-        m_living.w(), m_living.h()
+        m_living.w(),
+        m_living.h() * static_cast<std::uint8_t>(m_living.direction()),
+        m_living.w(),
+        m_living.h()
     ));
     sprite.setPosition(m_living.x(), m_living.y());
     window.draw(sprite);

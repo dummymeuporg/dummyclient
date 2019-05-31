@@ -45,6 +45,7 @@ public:
 
     void setX(std::size_t x);
     void setY(std::size_t y);
+    void setChipsetName(const std::string&);
 
     virtual void draw(sf::RenderWindow&) = 0;
 protected:
