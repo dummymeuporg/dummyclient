@@ -12,6 +12,7 @@ class StandingState : public State {
 public:
     StandingState(Graphics::Living&);
     virtual void draw(sf::RenderWindow&) override;
+    virtual void moveTowards(std::uint16_t x, std::uint16_t y) override;
 };
 
 } // namespace LivingState

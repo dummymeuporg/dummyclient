@@ -9,5 +9,6 @@ State::State(Graphics::Living& living) :
 {
 }
 
+
 } // namespace LivingState
 } // namespace Graphics

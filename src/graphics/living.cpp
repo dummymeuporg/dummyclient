@@ -16,6 +16,16 @@ Living::Living(const std::string& chipset,
       m_state(std::make_unique<LivingState::StandingState>(*this))
 {}
 
+Living::Living(const Living& living)
+    : Entity(living.m_chipsetName, living.m_w, living.m_h, living.m_x,
+             living.m_y),
+             m_name(living.m_name),
+             m_direction(living.m_direction),
+             m_state(std::make_unique<LivingState::StandingState>(*this))
+{
+}
+
+
 Living& Living::setPosition(std::uint16_t x, std::uint16_t y) {
     m_x = x;
     m_y = y;
@@ -27,13 +37,17 @@ Living& Living::setDirection(Direction direction) {
     return *this;
 }
 
-Living& Living::changeState(std::unique_ptr<LivingState::State> state) {
-    m_state = std::move(state);
+Living& Living::changeState(std::shared_ptr<LivingState::State> state) {
+    m_state = state;
     return *this;
 }
 
 void Living::draw(sf::RenderWindow& window) {
     m_state->draw(window);
+}
+
+void Living::moveTowards(std::uint16_t x, std::uint16_t y) {
+    m_state->moveTowards(x, y);
 }
 
 } // namespace Graphics

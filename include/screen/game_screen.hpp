@@ -17,6 +17,7 @@ public:
     virtual void draw() override;
     virtual void tick() override;
 private:
+    /* Private methods. */
     void _drawLayer(::Sprites&);
     void _drawCharacter();
     void _onKeyPressed(const sf::Event&);
@@ -24,12 +25,18 @@ private:
     void _onArrowPressed();
     void _onArrowReleased();
     void _moveCharacter(sf::Keyboard::Key);
+    void _drawLivings();
+    void _syncLivings();
+
+    /* Private attributes. */
     std::unique_ptr<::MapView> m_mapView;
     std::uint16_t m_originX, m_originY;
     Graphics::Player m_player;
+    std::map<std::string, std::shared_ptr<Graphics::Living>> m_livings;
     bool m_isArrowPressed;
     sf::Keyboard::Key m_direction;
     sf::Clock m_tickMove;
+    sf::Clock m_pingClock;
 };
 
 } // namespace Screen

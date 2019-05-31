@@ -35,7 +35,8 @@ GameScreen::GameScreen(
 }
 
 void GameScreen::loaded() {
-
+    m_client.ping();
+    m_pingClock.restart();
 }
 
 void GameScreen::notify() {
@@ -45,9 +46,29 @@ void GameScreen::notify() {
     if (model != nullptr) {
         std::cerr << "[GameScreen] Updates." << std::endl;
 
+
+        // Synchronize local livings with the model
+        for (const auto [name, living]: m_livings) {
+            if (model->livings().find(name) == std::end(model->livings())) {
+                std::cerr << "Bye bye " << name << std::endl;
+                m_livings.erase(name);
+            }
+        }
+
         for(const auto [name, living]: model->livings()) {
             std::cerr << name << " at "
                 << living->x() << ", " << living->y() << std::endl;
+            if (m_livings.find(name) == std::end(m_livings)) {
+                m_livings[name] = std::make_shared<Graphics::Living>(*living);
+                std::cerr << "New living at " << m_livings[name]->x() << ", "
+                    << m_livings[name]->y() << std::endl;
+            } else {
+                // If the living already exists, check the position and
+                // set the walking state if needed.
+                std::cerr << "Move living at " << living->x() << ", "
+                    << living->y() << std::endl;
+                m_livings[name]->moveTowards(living->x(), living->y());
+            }
         }
     }
         
@@ -57,12 +78,12 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
     case CustomEvent::Type::MovementActive:
         m_player.changeState(
-            std::make_unique<Graphics::LivingState::WalkingState>(m_player)
+            std::make_shared<Graphics::LivingState::WalkingState>(m_player)
         );
         break;
     case CustomEvent::Type::MovementInactive:
         m_player.changeState(
-            std::make_unique<Graphics::LivingState::StandingState>(m_player)
+            std::make_shared<Graphics::LivingState::StandingState>(m_player)
         );
         break;
     default:
@@ -179,13 +200,29 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
 }
 
 void GameScreen::_drawCharacter() {
+    m_player.setPixelPosition(m_originX, m_originY);
     m_player.draw(m_game.window());
+}
+
+void GameScreen::_drawLivings() {
+    const std::pair<std::uint16_t, std::uint16_t>& position(
+        m_client.pixelPosition()
+    );
+    for (auto [name, living]: m_livings) {
+        // translate pos according to the player
+        living->setPixelPosition(
+            m_originX + living->x() * 32 - position.first,
+            m_originY + living->y() * 32 - position.second
+        );
+        living->draw(m_game.window());
+    }
 }
 
 void GameScreen::draw() {
     // Draw the map
     _drawLayer(m_mapView->firstLayerSprites());
     _drawLayer(m_mapView->secondLayerSprites());
+    _drawLivings();
     _drawCharacter();
     _drawLayer(m_mapView->thirdLayerSprites());
     _drawLayer(m_mapView->fourthLayerSprites());
@@ -193,7 +230,20 @@ void GameScreen::draw() {
     UIScreen::draw();
 }
 
+void GameScreen::_syncLivings() {
+    for(const auto [name, living]: m_livings) {
+    }
+}
+
 void GameScreen::tick() {
+
+    if (m_pingClock.getElapsedTime().asMilliseconds() >= 300) {
+        std::cerr << "Ping! " << m_client.serverPosition().first << ", "
+            << m_client.serverPosition().second << std::endl;
+        m_client.ping();
+        m_pingClock.restart();
+    }
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         m_direction = sf::Keyboard::Up;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
@@ -219,9 +269,10 @@ void GameScreen::tick() {
     } else {
         if (m_tickMove.getElapsedTime().asMicroseconds() >= 1700) {
             _moveCharacter(m_direction);
+            _syncLivings();
             m_tickMove.restart();
         }
-    } 
+    }
 }
 
 } // namespace Screen

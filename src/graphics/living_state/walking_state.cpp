@@ -1,5 +1,6 @@
 #include <iostream>
 #include "graphics/living.hpp"
+#include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
 
 namespace Graphics {
@@ -28,8 +29,27 @@ void WalkingState::draw(sf::RenderWindow& window) {
         m_living.w(),
         m_living.h()
     ));
-    sprite.setPosition(m_living.x(), m_living.y());
+    sprite.setPosition(m_living.pixelX(), m_living.pixelY());
     window.draw(sprite);
+}
+
+void WalkingState::moveTowards(std::uint16_t x, std::uint16_t y) {
+    auto self(shared_from_this());
+    if (m_living.x() == x && m_living.y() == y) {
+        m_living.changeState(
+            std::make_shared<LivingState::StandingState>(m_living)
+        );
+    } else {
+        if (m_living.y() < y) {
+            m_living.setDirection(Dummy::Core::Character::Direction::UP);
+        } else if(m_living.y() >= y) {
+            m_living.setDirection(Dummy::Core::Character::Direction::DOWN);
+        } else if (m_living.x() < x) {
+            m_living.setDirection(Dummy::Core::Character::Direction::LEFT);
+        } else {
+            m_living.setDirection(Dummy::Core::Character::Direction::RIGHT);
+        }
+    }
 }
 
 } // namespace LivingState

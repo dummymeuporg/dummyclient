@@ -49,6 +49,7 @@ public:
     void authenticate();
     void changeState(std::shared_ptr<ClientState::State>);
     void update();
+    void ping();
     void send(const std::uint8_t*, std::size_t);
     void send(const Dummy::Protocol::OutgoingPacket&);
 
@@ -66,6 +67,10 @@ public:
 
     const std::pair<std::uint16_t, std::uint16_t> pixelPosition() const {
         return m_pixelPosition;
+    }
+
+    const std::pair<std::uint16_t, std::uint16_t> serverPosition() const {
+        return m_serverPosition;
     }
 
     void moveLeft(const MapView&);

@@ -145,6 +145,12 @@ Client::_translateCoordsToServ(
     return std::pair<std::uint16_t, std::uint16_t>(x / 32, y / 32);
 }
 
+void Client::ping() {
+    Dummy::Protocol::OutgoingPacket pkt;
+    std::uint16_t command = 2; /* Ping. */
+    pkt << command;
+    send(pkt);
+}
 
 void Client::_updateServerPosition(
     const std::pair<std::uint16_t, std::uint16_t>& position

@@ -8,10 +8,24 @@ Entity::Entity(const std::string& chipset,
                std::size_t x,
                std::size_t y)
     : m_chipset(texture(chipset)), m_chipsetName(chipset), m_w(w), m_h(h),
-      m_x(x), m_y(y)
+      m_x(x), m_y(y), m_pixelX(0), m_pixelY(0)
 {
     m_sprite.setTexture(m_chipset);
     m_sprite.setScale(4, 4);
+}
+
+Entity::Entity(const Entity& entity) :
+    m_chipset(texture(entity.m_chipsetName)),
+    m_chipsetName(entity.m_chipsetName),
+    m_w(entity.m_w),
+    m_h(entity.m_h),
+    m_x(entity.m_x),
+    m_y(entity.m_y),
+    m_pixelX(entity.m_pixelX),
+    m_pixelY(entity.m_pixelY)
+
+{
+
 }
 
 void Entity::setX(std::size_t x) {
@@ -20,6 +34,15 @@ void Entity::setX(std::size_t x) {
 
 void Entity::setY(std::size_t y) {
     m_y = y;
+}
+
+void Entity::setPixelPosition(int x, int y) {
+    m_pixelX = x;
+    m_pixelY = y;
+}
+
+void Entity::setPixelPosition(const std::pair<int, int>& pair) {
+    setPixelPosition(pair.first, pair.second);
 }
 
 void Entity::setChipsetName(const std::string& chipsetName) {

@@ -16,6 +16,7 @@ public:
            std::size_t,
            std::size_t
     );
+    Entity(const Entity&);
     const sf::Texture& chipset() const {
         return m_chipset;
     }
@@ -43,8 +44,18 @@ public:
         return m_y;
     }
 
+    int pixelX() const {
+        return m_pixelX;
+    }
+
+    int pixelY() const {
+        return m_pixelY;
+    }
+
     void setX(std::size_t x);
     void setY(std::size_t y);
+    void setPixelPosition(int x, int y);
+    void setPixelPosition(const std::pair<int, int>&);
     void setChipsetName(const std::string&);
 
     virtual void draw(sf::RenderWindow&) = 0;
@@ -53,6 +64,7 @@ protected:
     sf::Sprite m_sprite;
     std::string m_chipsetName;
     std::size_t m_w, m_h, m_x, m_y;
+    int m_pixelX, m_pixelY;
 
 };
 

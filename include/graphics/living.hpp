@@ -20,6 +20,7 @@ public:
            std::size_t,
            std::size_t,
            Direction = Direction::DOWN);
+    Living(const Living&);
     virtual void draw(sf::RenderWindow&) override;
     const Dummy::Core::Character::Direction& direction() const {
         return m_direction;
@@ -27,11 +28,13 @@ public:
 
     Living& setPosition(std::uint16_t, std::uint16_t);
     Living& setDirection(Direction);
-    Living& changeState(std::unique_ptr<LivingState::State>);
+    Living& changeState(std::shared_ptr<LivingState::State>);
+
+    void moveTowards(std::uint16_t, std::uint16_t);
 protected:
     std::string m_name;
     Direction m_direction;
-    std::unique_ptr<LivingState::State> m_state;
+    std::shared_ptr<LivingState::State> m_state;
 };
 
 } // namespace Graphics
