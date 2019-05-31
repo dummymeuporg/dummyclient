@@ -29,12 +29,19 @@ public:
     Living& setPosition(std::uint16_t, std::uint16_t);
     Living& setDirection(Direction);
     Living& changeState(std::shared_ptr<LivingState::State>);
+    sf::Text& displayName() {
+        return m_displayName;
+    }
 
     void moveTowards(std::uint16_t, std::uint16_t);
 protected:
     std::string m_name;
     Direction m_direction;
     std::shared_ptr<LivingState::State> m_state;
+    sf::Text m_displayName;
+
+private:
+    void _setDisplayName();
 };
 
 } // namespace Graphics
