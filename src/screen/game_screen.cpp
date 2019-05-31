@@ -44,6 +44,11 @@ void GameScreen::notify() {
 
     if (model != nullptr) {
         std::cerr << "[GameScreen] Updates." << std::endl;
+
+        for(const auto [name, living]: model->livings()) {
+            std::cerr << name << " at "
+                << living->x() << ", " << living->y() << std::endl;
+        }
     }
         
 }
