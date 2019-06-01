@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <SFML/Graphics.hpp>
-
+#include "config.hpp"
 #include "game.hpp"
 
 int main(int argc, char* argv[])
@@ -12,7 +12,8 @@ int main(int argc, char* argv[])
             << std::endl;
         exit(EXIT_FAILURE);
     }
-    Game game(argv[1], argv[2]);
+    ::Config config("dummyclient.ini");
+    ::Game game(argv[1], argv[2], config);
 
     return game.run();
 }

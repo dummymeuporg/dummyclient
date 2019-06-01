@@ -1,14 +1,18 @@
 #include <cstdlib>
 
+#include "config.hpp"
 #include "custom_event_queue.hpp"
 #include "game.hpp"
 #include "screen/create_character_screen.hpp"
 #include "screen/select_character_screen.hpp"
 #include "resource_provider.hpp"
 
-Game::Game(const char* account, const char* sessionID,
+Game::Game(const char* account,
+           const char* sessionID,
+           Config& config,
            std::size_t width, std::size_t height) 
     : m_client(*this, Credentials(account, sessionID)),
+      m_config(config),
       m_window(sf::VideoMode(width, height), "DummyClient"),
       m_customEventQueue(CustomEventQueue::instance()),
       m_resourceProvider(ResourceProvider::instance()),
@@ -19,7 +23,7 @@ Game::Game(const char* account, const char* sessionID,
 
 int Game::run()
 {
-    m_client.connect("127.0.0.1", 6612);
+    m_client.connect(m_config.host().c_str(), m_config.port());
     sf::Clock clock;
     m_window.setKeyRepeatEnabled(false);
     m_window.setFramerateLimit(Game::FPS);
