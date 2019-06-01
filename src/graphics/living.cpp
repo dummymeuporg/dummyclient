@@ -56,12 +56,7 @@ Living& Living::changeState(std::shared_ptr<LivingState::State> state) {
 void Living::draw(sf::RenderWindow& window, const ::Camera& camera) {
     const sf::Vector2u& windowSize(window.getSize());
     m_state->draw(window, camera);
-    std::cerr << "DRAW " << m_name << std::endl;
-    /*
-    std::cerr << "POSITIONS: " <<
-        static_cast<int>(windowSize.x / 2) + pixelX() + camera.centerX() << " , " <<
-        static_cast<int>(windowSize.y / 2) + pixelY() + camera.centerY();
-    */
+
     sf::FloatRect textRect = m_displayName.getLocalBounds();
     m_displayName.setOrigin(
         textRect.left + textRect.width / 2.0f,
