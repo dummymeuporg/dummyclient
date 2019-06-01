@@ -73,6 +73,10 @@ public:
         return m_serverPosition;
     }
 
+    std::shared_ptr<ClientState::State> state() const {
+        return m_state;
+    }
+
     void moveLeft(const MapView&);
     void moveUp(const MapView&);
     void moveRight(const MapView&);

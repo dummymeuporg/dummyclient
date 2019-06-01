@@ -65,6 +65,7 @@ void LoadingScreen::notify() {
 
 void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
 {
+	auto self(shared_from_this());
     switch(event.type()) {
     case CustomEvent::Type::LoadMapFromFile: {
         std::cerr << "Load map " << m_mapNameToLoad

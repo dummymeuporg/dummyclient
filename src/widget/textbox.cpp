@@ -149,7 +149,7 @@ bool Textbox::_onMouseButtonPressed(const sf::Event& event) {
 
     // Do not handle the event if the textbox is not hovered but focused,
     // release the handle.
-    if(!m_isHovered and m_isFocused) {
+    if(!m_isHovered && m_isFocused) {
         std::cerr << "Release for focus." << std::endl;
         pushEvent(
             ::CustomEvent(

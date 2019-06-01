@@ -61,6 +61,7 @@ void Client::send(const Dummy::Protocol::OutgoingPacket& packet) {
 }
 
 void Client::changeState(std::shared_ptr<ClientState::State> state) {
+	auto selfState(m_state->shared_from_this());
     m_state = state;
     m_state->resume();
 }
