@@ -19,12 +19,25 @@ file(GLOB_RECURSE HEADERS "include/*.hpp")
 
 add_executable(dummyclient ${SOURCES} ${HEADERS})
 
-target_include_directories(dummyclient PUBLIC ${Boost_INCLUDE_DIRS})
-target_link_libraries(dummyclient
+set(CLIENT_LINK_LIBRARIES
     ${Boost_LIBRARIES}
     sfml-graphics
     sfml-network
     sfml-system
-    sfml-window
     dummy
+)
+
+# On Linux, explicitly pass libraries.
+if (UNIX)
+    set(CLIENT_LINK_LIBRARIES
+        ${CLIENT_LINK_LIBRARIES}
+        boost_filesystem
+        stdc++fs
+    )
+endif (UNIX)
+
+
+target_include_directories(dummyclient PUBLIC ${Boost_INCLUDE_DIRS})
+target_link_libraries(dummyclient
+    ${CLIENT_LINK_LIBRARIES}
 )
