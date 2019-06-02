@@ -21,8 +21,6 @@ file(GLOB_RECURSE HEADERS "include/*.hpp")
 source_group("src" FILES ${HEADERS} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
 source_group("include" FILES ${SOURCES} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(dummyclient ${SOURCES} ${HEADERS})
-
 set(CLIENT_LINK_LIBRARIES
     ${Boost_LIBRARIES}
     sfml-graphics
@@ -38,9 +36,11 @@ if (UNIX)
         boost_filesystem
         stdc++fs
     )
+    add_executable(dummyclient ${SOURCES} ${HEADERS})
 endif (UNIX)
 
 IF (WIN32)
+    add_executable(dummyclient WIN32 ${SOURCES} ${HEADERS})
     SET_TARGET_PROPERTIES (dummyclient
         PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:console"
     )
