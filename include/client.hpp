@@ -77,10 +77,7 @@ public:
         return m_state;
     }
 
-    void moveLeft(const MapView&);
-    void moveUp(const MapView&);
-    void moveRight(const MapView&);
-    void moveDown(const MapView&);
+	void move(int, int, const MapView&);
 
     void setCharacter(std::shared_ptr<Dummy::Core::Character>);
     void _updateServerPosition(const std::pair<std::uint16_t, std::uint16_t>&);

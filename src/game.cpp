@@ -13,7 +13,9 @@ Game::Game(const char* account,
            std::size_t width, std::size_t height) 
     : m_client(*this, Credentials(account, sessionID)),
       m_config(config),
-      m_window(sf::VideoMode(width, height), "DummyClient"),
+      m_window(sf::VideoMode(width, height),
+		       "DummyClient",
+		       sf::Style::Titlebar | sf::Style::Close),
       m_customEventQueue(CustomEventQueue::instance()),
       m_resourceProvider(ResourceProvider::instance()),
       m_currentScreen(std::make_shared<Screen::SelectCharacterScreen>(

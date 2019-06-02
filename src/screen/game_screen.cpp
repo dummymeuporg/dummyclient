@@ -31,7 +31,9 @@ GameScreen::GameScreen(
           m_client.character()->direction()
       ),
       m_isArrowPressed(false),
-      m_direction(sf::Keyboard::Unknown)
+      m_direction(sf::Keyboard::Unknown),
+	  m_characterDirection(DIRECTION_NONE),
+	  m_isMoving(false)
 {
     m_player.setPixelX(m_client.pixelPosition().first);
     m_player.setPixelY(m_client.pixelPosition().second);
@@ -125,10 +127,10 @@ void GameScreen::handleEvent(const sf::Event& event)
 {
     switch(event.type) {
     case sf::Event::KeyPressed:
-        //_onKeyPressed(event);
+        _onKeyPressed(event);
         break;
     case sf::Event::KeyReleased:
-        //_onKeyReleased(event);
+        _onKeyReleased(event);
         break;
     default:
         break;
@@ -136,7 +138,12 @@ void GameScreen::handleEvent(const sf::Event& event)
 }
 
 void GameScreen::_onArrowReleased() {
-    if (m_isArrowPressed) {
+	
+	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
+		!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
+		!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
+		!sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	{
         pushEvent(
             CustomEvent(
                 reinterpret_cast<void*>(shared_from_this().get()),
@@ -145,6 +152,7 @@ void GameScreen::_onArrowReleased() {
             )
         );
         m_isArrowPressed = false;
+		m_direction = sf::Keyboard::Unknown;
     }
 }
 
@@ -162,45 +170,92 @@ void GameScreen::_onArrowPressed() {
 }
 
 void GameScreen::_moveCharacter(sf::Keyboard::Key key) {
-    switch(key) {
-    case sf::Keyboard::Up:
-        m_player.setDirection(Dummy::Core::Character::Direction::UP);
-        m_client.moveUp(*m_mapView);
-        break;
-    case sf::Keyboard::Right:
-        m_player.setDirection(Dummy::Core::Character::Direction::RIGHT);
-        m_client.moveRight(*m_mapView);
-        break;
-    case sf::Keyboard::Down:
-        m_player.setDirection(Dummy::Core::Character::Direction::DOWN);
-        m_client.moveDown(*m_mapView); 
-        break;
-    case sf::Keyboard::Left:
-        m_player.setDirection(Dummy::Core::Character::Direction::LEFT);
-        m_client.moveLeft(*m_mapView);
-        break;
-    default:
-        break;
-    }
+
+	int xVector = 0;
+	int yVector = 0;
+
+	if (m_characterDirection & DIRECTION_RIGHT) {
+		++xVector;
+	}
+
+	if (m_characterDirection & DIRECTION_LEFT) {
+		--xVector;
+	}
+
+	if (m_characterDirection & DIRECTION_UP) {
+		--yVector;
+	}
+
+	if (m_characterDirection & DIRECTION_DOWN) {
+		++yVector;
+	}
+
+	if (yVector < 0) {
+		m_player.setDirection(Dummy::Core::Character::Direction::UP);
+	} else if (yVector > 0) {
+		m_player.setDirection(Dummy::Core::Character::Direction::DOWN);
+	} else if (xVector < 0) {
+		m_player.setDirection(Dummy::Core::Character::Direction::LEFT);
+	} else if (xVector > 0) {
+		m_player.setDirection(Dummy::Core::Character::Direction::RIGHT);
+	}
+
+	m_client.move(xVector, yVector, *m_mapView);
+
     m_camera.setCenter(m_client.pixelPosition().first + 48,
                        m_client.pixelPosition().second + 64);
 }
 
 void GameScreen::_onKeyPressed(const sf::Event& event) {
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		m_characterDirection |= DIRECTION_UP;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		m_characterDirection |= DIRECTION_RIGHT;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		m_characterDirection |= DIRECTION_DOWN;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		m_characterDirection |= DIRECTION_LEFT;
+	}
+
+	if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
+		pushEvent(
+			CustomEvent(
+				reinterpret_cast<void*>(shared_from_this().get()),
+				CustomEvent::MovementActive,
+				reinterpret_cast<void*>(shared_from_this().get())
+			)
+		);
+		m_isMoving = true;
+	}
 }
 
 void GameScreen::_onKeyReleased(const sf::Event& event) {
-    switch(event.key.code) {
-    case sf::Keyboard::Up:
-    case sf::Keyboard::Right:
-    case sf::Keyboard::Down:
-    case sf::Keyboard::Left:
-        _onArrowReleased();
-        break;
-    default:
-        break;
-    }
+	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_UP);
+	}
+	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_RIGHT);
+	}
+	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_DOWN);
+	}
+	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_LEFT);
+	}
 
+	if (m_characterDirection == DIRECTION_NONE && m_isMoving) {
+		pushEvent(
+			CustomEvent(
+				reinterpret_cast<void*>(shared_from_this().get()),
+				CustomEvent::MovementInactive,
+				reinterpret_cast<void*>(shared_from_this().get())
+			)
+		);
+		m_isMoving = false;
+	}
 }
 
 void GameScreen::_drawLayer(::Sprites& sprites) {
@@ -292,7 +347,10 @@ void GameScreen::_syncLivings() {
 }
 
 void GameScreen::tick() {
-
+	/*
+	std::cerr << m_client.serverPosition().first <<
+		", " << m_client.serverPosition().second << std::endl;
+		*/
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
         m_client.ping();
         m_pingClock.restart();
@@ -302,30 +360,11 @@ void GameScreen::tick() {
         m_syncLivingsClock.restart();
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        m_direction = sf::Keyboard::Up;
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        m_direction = sf::Keyboard::Right;
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        m_direction = sf::Keyboard::Down;
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        m_direction = sf::Keyboard::Left;
-    } else {
-        m_direction = sf::Keyboard::Unknown;
-    }
-
-    if (m_direction == sf::Keyboard::Unknown) {
-        if (m_isArrowPressed) {
-            _onArrowReleased();
-        }
-        return;
-    }
-
     if (!m_isArrowPressed && m_direction != sf::Keyboard::Unknown) {
         _onArrowPressed();
         m_tickMove.restart();
     } else {
-        if (m_tickMove.getElapsedTime().asMicroseconds() >= 1700) {
+        if (m_tickMove.getElapsedTime().asMicroseconds() >= 1000) {
             _moveCharacter(m_direction);
             m_tickMove.restart();
         }

@@ -10,6 +10,13 @@ namespace Screen {
 
 class GameScreen : public UIScreen {
 public:
+	static const int DIRECTION_NONE = 0x00;
+	static const int DIRECTION_UP = 0x01;
+	static const int DIRECTION_RIGHT = 0x02;
+	static const int DIRECTION_DOWN = 0x04;
+	static const int DIRECTION_LEFT = 0x08;
+	static const int DIRECTION_ALL = 0x0f;
+
     GameScreen(::Game&, ::Client&, std::unique_ptr<::MapView>);
     virtual void notify() override;
     virtual void loaded() override;
@@ -39,6 +46,8 @@ private:
     sf::Clock m_tickMove;
     sf::Clock m_pingClock;
     sf::Clock m_syncLivingsClock;
+	unsigned int m_characterDirection;
+	bool m_isMoving;
 };
 
 } // namespace Screen

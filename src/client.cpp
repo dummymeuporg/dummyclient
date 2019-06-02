@@ -76,64 +76,101 @@ void Client::setCharacter(std::shared_ptr<Dummy::Core::Character> character) {
     m_serverPosition.second = character->position().second;
 }
 
-void Client::moveLeft(const MapView& mapView) {
-    if (m_pixelPosition.first > 0) {
-        std::pair<std::uint16_t, std::uint16_t> serv(
-            std::move(_translateCoordsToServ(m_pixelPosition.first - 1,
-                                             m_pixelPosition.second))
-        );
-        if (!mapView.blocksAt(serv.first, serv.second))
-        if (!mapView.blocksAt(serv.first, serv.second))
-        {
-            --m_pixelPosition.first;
-            _updateServerPosition(serv);
-        }
-    }
-}
+void Client::move(int xVector, int yVector, const MapView& mapView) {
+	std::pair<std::uint16_t, std::uint16_t> servCoords;
 
-void Client::moveUp(const MapView& mapView) {
-    if (m_pixelPosition.second > 0) {
-        std::pair<std::uint16_t, std::uint16_t> serv(
-            std::move(_translateCoordsToServ(m_pixelPosition.first,
-                                             m_pixelPosition.second - 1))
-        );
-        if (!mapView.blocksAt(serv.first, serv.second) &&
-            !mapView.blocksAt(serv.first + 1, serv.second))
-        {
-            --m_pixelPosition.second;
-            _updateServerPosition(serv);
-        }
-    }
-}
+	if (xVector == 1) {
+		/* Cancel the movement if out of bounds */
+		if (m_pixelPosition.first == (mapView.width() * 64 - 64 - 1)) {
+			xVector = 0;
+		} else {
+			/* Moving towards right */
+			servCoords = std::move(
+				_translateCoordsToServ(
+					m_pixelPosition.first + 64 + 1,
+					m_pixelPosition.second
+				)
+			);
+			if (mapView.blocksAt(servCoords.first, servCoords.second))
+			{
+				xVector = 0; /* Cancel the movement */
+			}
+		}
+	}
+	else if (xVector == -1) {
+		/* Cancel the movement if out of bounds */
+		if (m_pixelPosition.first == 0) {
+			xVector = 0;
+		}
+		else {
+			/* Moving towards left */
+			servCoords = std::move(
+				_translateCoordsToServ(
+					m_pixelPosition.first - 1,
+					m_pixelPosition.second
+				)
+			);
+			if (mapView.blocksAt(servCoords.first, servCoords.second))
+			{
+				xVector = 0; /* Cancel the movement */
+			}
+		}
+	}
 
-void Client::moveDown(const MapView& mapView) {
-    if (m_pixelPosition.second < (mapView.height() * 64 - 32)) {
-        std::pair<std::uint16_t, std::uint16_t> serv(
-            std::move(_translateCoordsToServ(m_pixelPosition.first,
-                                             m_pixelPosition.second + 32 + 1))
-        );
-        if (!mapView.blocksAt(serv.first, serv.second) &&
-            !mapView.blocksAt(serv.first + 1, serv.second))
-        {
-            ++m_pixelPosition.second;
-            _updateServerPosition(serv);
-        }
-    }
-}
+	if (yVector == 1) {
+		/* Cancel the movement if out of bounds */
+		if (m_pixelPosition.second == (mapView.height() * 64 - 32 - 1)) {
+			yVector = 0;
+		}
+		else {
+			/* Moving towards bottom */
+			servCoords = std::move(
+				_translateCoordsToServ(
+					m_pixelPosition.first,
+					m_pixelPosition.second + 32 + 1
+				)
+			);
+			if (mapView.blocksAt(servCoords.first, servCoords.second) ||
+				mapView.blocksAt(servCoords.first + 1, servCoords.second))
+			{
+				yVector = 0; /* Cancel the movement */
+			}
+		}
+	}
+	else if (yVector == -1) {
+		/* Cancel the movement if out of bounds */
+		if (m_pixelPosition.second == 0) {
+			yVector = 0;
+		}
+		else {
+			/* Moving towards top */
+			servCoords = std::move(
+				_translateCoordsToServ(
+					m_pixelPosition.first,
+					m_pixelPosition.second - 1
+				)
+			);
 
-void Client::moveRight(const MapView& mapView) {
-    if (m_pixelPosition.first < (mapView.width() * 64 - 64)) {
+			if (mapView.blocksAt(servCoords.first, servCoords.second) ||
+				mapView.blocksAt(servCoords.first + 1, servCoords.second))
+			{
+				yVector = 0; /* Cancel the movement */
+			}
+		}
+	}
 
-        std::pair<std::uint16_t, std::uint16_t> serv(
-            std::move(_translateCoordsToServ(m_pixelPosition.first + 64 + 1,
-                                             m_pixelPosition.second))
-        );
-        if (!mapView.blocksAt(serv.first, serv.second))
-        {
-            ++m_pixelPosition.first;
-            _updateServerPosition(serv);
-        }
-    }
+	/* From here the vectors has been cleaned. Update position. */
+	m_pixelPosition.first += xVector;
+	m_pixelPosition.second += yVector;
+
+	servCoords = std::move(
+		_translateCoordsToServ(
+			m_pixelPosition.first,
+			m_pixelPosition.second
+		)
+	);
+
+	_updateServerPosition(servCoords);
 }
 
 std::pair<std::uint16_t, std::uint16_t>
