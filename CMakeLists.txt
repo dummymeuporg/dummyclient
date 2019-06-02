@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10.0)
 project(dummyclient)
 include_directories(include vendor/libdummy/include)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
 	-L${CMAKE_CURRENT_SOURCE_DIR}/vendor/libdummy/build")
 
@@ -16,6 +17,9 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.hpp")
+
+source_group("src" FILES ${HEADERS} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
+source_group("include" FILES ${SOURCES} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(dummyclient ${SOURCES} ${HEADERS})
 
