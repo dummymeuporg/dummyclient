@@ -21,7 +21,7 @@ file(GLOB_RECURSE HEADERS "include/*.hpp")
 source_group("src" FILES ${HEADERS} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
 source_group("include" FILES ${SOURCES} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(dummyclient WIN32 ${SOURCES} ${HEADERS})
+add_executable(dummyclient ${SOURCES} ${HEADERS})
 
 set(CLIENT_LINK_LIBRARIES
     ${Boost_LIBRARIES}
@@ -38,7 +38,6 @@ if (UNIX)
         boost_filesystem
         stdc++fs
     )
-    add_executable(dummyclient WIN32 ${SOURCES} ${HEADERS})
 endif (UNIX)
 
 IF (WIN32)
