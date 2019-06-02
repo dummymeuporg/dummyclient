@@ -355,7 +355,7 @@ void GameScreen::tick() {
         m_client.ping();
         m_pingClock.restart();
     }
-    if (m_syncLivingsClock.getElapsedTime().asMicroseconds() >= 2500) {
+    if (m_syncLivingsClock.getElapsedTime().asMicroseconds() >= 2000) {
 		_syncLivings();
         m_syncLivingsClock.restart();
     }
