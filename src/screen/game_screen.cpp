@@ -364,7 +364,7 @@ void GameScreen::tick() {
         _onArrowPressed();
         m_tickMove.restart();
     } else {
-        if (m_tickMove.getElapsedTime().asMicroseconds() >= 1000) {
+        if (m_tickMove.getElapsedTime().asMicroseconds() >= 1700) {
             _moveCharacter(m_direction);
             m_tickMove.restart();
         }
