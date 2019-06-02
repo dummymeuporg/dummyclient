@@ -21,7 +21,7 @@ file(GLOB_RECURSE HEADERS "include/*.hpp")
 source_group("src" FILES ${HEADERS} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
 source_group("include" FILES ${SOURCES} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(dummyclient ${SOURCES} ${HEADERS})
+add_executable(dummyclient WIN32 ${SOURCES} ${HEADERS})
 
 set(CLIENT_LINK_LIBRARIES
     ${Boost_LIBRARIES}
@@ -38,7 +38,26 @@ if (UNIX)
         boost_filesystem
         stdc++fs
     )
+    add_executable(dummyclient WIN32 ${SOURCES} ${HEADERS})
 endif (UNIX)
+
+IF (WIN32)
+    SET_TARGET_PROPERTIES (dummyclient
+        PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:console"
+    )
+    SET_TARGET_PROPERTIES (dummyclient
+        PROPERTIES LINK_FLAGS_RELEASE
+        "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+    )
+    SET_TARGET_PROPERTIES (dummyclient
+        PROPERTIES LINK_FLAGS_MINSIZEREL
+        "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+    )
+    SET_TARGET_PROPERTIES (dummyclient
+        PROPERTIES LINK_FLAGS_RELWITHDEBINFO
+        "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+    )
+ENDIF (WIN32)
 
 
 target_include_directories(dummyclient PUBLIC ${Boost_INCLUDE_DIRS})
