@@ -4,6 +4,7 @@
 #include "camera.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
+#include "model/playing_model.hpp"
 #include "screen/ui_screen.hpp"
 
 namespace Screen {
@@ -24,6 +25,14 @@ public:
     virtual void handleCustomEvent(const ::CustomEvent&);
     virtual void draw() override;
     virtual void tick() override;
+
+    void syncWithModel(std::shared_ptr<Model::PlayingModel> model);
+
+    virtual void accept(std::shared_ptr<Model::Model> model) override {
+        model->visit(
+            std::reinterpret_pointer_cast<GameScreen>(shared_from_this())
+        );
+    }
 private:
     /* Private methods. */
     void _drawLayer(::Sprites&);

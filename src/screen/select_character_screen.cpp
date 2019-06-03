@@ -131,4 +131,24 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
     }
 }
 
+void
+SelectCharacterScreen::setCharacters(
+    const Model::CharactersListModel::CharactersList& charactersList
+) {
+    std::stringstream ss;
+    m_charactersCount = charactersList.size();
+    ss << "You have " << m_charactersCount << " characters";
+
+    m_charactersCountLabel->setCaption(ss.str());
+    m_characterSelector->setCharacters(charactersList);
+
+    // Center the label
+    sf::Text& caption(m_charactersCountLabel->caption());
+    sf::FloatRect textRect = caption.getLocalBounds();
+    caption.setOrigin(textRect.left + textRect.width/2.0f,
+                      textRect.top  + textRect.height/2.0f);
+    caption.setPosition(1280/2, 960/2);
+
+}
+
 } // namespace Screen

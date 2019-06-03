@@ -2,10 +2,12 @@
 
 #include <cstdint>
 
+#include "model/characters_list_model.hpp"
 #include "screen/ui_screen.hpp"
 #include "widget/button.hpp"
 #include "widget/label.hpp"
 #include "widget/character_selector.hpp"
+#include "widget/skin_previewer.hpp"
 
 namespace Screen {
 
@@ -14,6 +16,17 @@ public:
     SelectCharacterScreen(::Game&, ::Client&);
     virtual void notify() override;
     virtual void handleCustomEvent(const ::CustomEvent&) override;
+    virtual void accept(std::shared_ptr<Model::Model> model) override {
+        model->visit(
+            std::reinterpret_pointer_cast<SelectCharacterScreen>(
+                shared_from_this()
+            )
+        );
+    }
+    void
+    setCharacters(
+        const Model::CharactersListModel::CharactersList& charactersList
+    );
 private:
     std::int16_t m_charactersCount;
     std::shared_ptr<Widget::Button> m_createCharacterButton;

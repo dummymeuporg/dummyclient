@@ -1,6 +1,8 @@
 #include <iostream>
 #include <memory>
 
+#include "screen/create_character_screen.hpp"
+#include "screen/select_character_screen.hpp"
 #include "model/characters_list_model.hpp"
 
 namespace Model {
@@ -27,7 +29,32 @@ CharactersListModel::addCharacter(
 
     m_characters.push_back(character);
     std::cerr << "New size: " << m_characters.size() << std::endl;
-    update();
+}
+
+
+void
+CharactersListModel::visit(
+    std::shared_ptr<Screen::SelectCharacterScreen> screen
+) {
+    screen->setCharacters(m_characters);
+}
+
+void
+CharactersListModel::visit(
+    std::shared_ptr<Screen::CreateCharacterScreen> screen
+)
+{
+    if (screen->initialCharactersCount() < m_characters.size()) {
+        // There is a new character so the creation succeeded.
+        pushEvent(
+            ::CustomEvent(
+                reinterpret_cast<void*>(shared_from_this().get()),
+                CustomEvent::CharacterCreated,
+                reinterpret_cast<void*>(screen.get())
+            )
+        );
+    }
+
 }
 
 }

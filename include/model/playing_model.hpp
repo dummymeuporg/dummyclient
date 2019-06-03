@@ -8,6 +8,10 @@ namespace Graphics {
     class Living;
 }
 
+namespace Screen {
+    class GameScreen;
+}
+
 namespace Model {
 
 class PlayingModel : public Model {
@@ -26,6 +30,9 @@ public:
     getLiving(const std::string& name) {
         return m_livings[name];
     }
+
+    virtual void
+    visit(std::shared_ptr<Screen::GameScreen>) override;
 private:
     Livings m_livings;
 };

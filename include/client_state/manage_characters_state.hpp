@@ -10,7 +10,8 @@ namespace ClientState {
 
 class ManageCharactersState : public State {
 public:
-    ManageCharactersState(::Client&);
+    ManageCharactersState(::Client&,
+                          std::shared_ptr<Model::CharactersListModel>);
     virtual void resume() override;
     virtual void onRead(Dummy::Protocol::IncomingPacket&) override;
 private:

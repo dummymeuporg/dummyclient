@@ -37,7 +37,7 @@ void PlayingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     std::uint8_t answer;
     pkt >> answer;
     switch(answer) {
-    case 1: /* O.K. */
+    case 2: /* O.K. */
         _parseMapUpdates(pkt);
         break;
     default: /* N.O.K. */

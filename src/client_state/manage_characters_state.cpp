@@ -9,16 +9,13 @@
 
 namespace ClientState {
 
-ManageCharactersState::ManageCharactersState(::Client& client)
-    : State(client)
+ManageCharactersState::ManageCharactersState(
+    ::Client& client, std::shared_ptr<Model::CharactersListModel> model)
+    : State(client), m_model(model)
 {
 }
 
 void ManageCharactersState::resume() {
-    // So ugly.
-    m_model = std::dynamic_pointer_cast<Model::CharactersListModel>(
-        m_client.game().screen()->model()
-    );
 }
 
 void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
@@ -32,6 +29,12 @@ void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
         chr = std::make_shared<Dummy::Core::Character>();
         pkt >> *chr;
         m_model->addCharacter(chr);
+        // XXX: ugly.
+        m_model->visit(
+            std::reinterpret_pointer_cast<Screen::CreateCharacterScreen>(
+                m_client.game().screen()
+            )
+        );
         break;
     case 2:
         // The character has been selected. Switch to loading state.

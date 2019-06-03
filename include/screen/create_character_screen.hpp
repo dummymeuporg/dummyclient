@@ -1,5 +1,6 @@
 #pragma once
 
+#include "model/model.hpp"
 #include "screen/ui_screen.hpp"
 #include "widget/button.hpp"
 #include "widget/label.hpp"
@@ -13,6 +14,16 @@ public:
     CreateCharacterScreen(::Game&, ::Client&);
     virtual void notify() override;
     virtual void handleCustomEvent(const ::CustomEvent&) override;
+    virtual void accept(std::shared_ptr<Model::Model> model) override {
+        model->visit(
+            std::reinterpret_pointer_cast<CreateCharacterScreen>(
+                shared_from_this()
+            )
+        );
+    }
+    std::size_t initialCharactersCount() const {
+        return m_initialCharactersCount;
+    }
 private:
     void _handleButtonClicked(const ::CustomEvent&);
     void _onCreateCharacterButton();

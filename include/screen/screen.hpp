@@ -31,6 +31,7 @@ public:
     virtual void draw() = 0;
     virtual void tick();
     virtual void loaded();
+    virtual void accept(std::shared_ptr<Model::Model> model) = 0;
 
 protected:
     ::Game& m_game;

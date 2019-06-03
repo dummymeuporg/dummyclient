@@ -45,6 +45,60 @@ void GameScreen::loaded() {
     m_syncLivingsClock.restart();
 }
 
+
+void GameScreen::syncWithModel(std::shared_ptr<Model::PlayingModel> model) {
+    const std::pair<std::uint16_t, std::uint16_t>& position(
+        m_client.pixelPosition()
+    );
+    // Synchronize local livings with the model
+    std::vector<std::string> removal;
+    for (const auto [name, living]: m_livings) {
+        if (model->livings().find(name) == std::end(model->livings())) {
+            removal.push_back(name);
+        }
+    }
+
+    std::for_each(removal.begin(),
+                  removal.end(),
+                  [this](const std::string& name) {
+                       m_livings.erase(name);
+                  }
+    );
+
+    for(const auto [name, living]: model->livings()) {
+        if (m_livings.find(name) == std::end(m_livings)) {
+            m_livings[name] = std::make_shared<Graphics::Living>(*living);
+            m_livings[name]->setPixelPosition(
+                m_livings[name]->x() * 32,
+                m_livings[name]->y() * 32
+            );
+            living->setPixelPosition(
+                living->x() * 32,
+                living->y() * 32
+            );
+        } else {
+            // If the living already exists, check the position and
+            // set the walking state if needed.
+
+            if (m_livings[name]->x() != living->x() ||
+                m_livings[name]->y() != living->y())
+            {
+                // Need to move.
+                // Update the model pixel pos.
+                living->setPixelPosition(
+                    living->x() * 32,
+                    living->y() * 32
+                );
+                
+            }
+            // Animate the charater.
+            m_livings[name]->moveTowards(
+                living->pixelX(), living->pixelY()
+            );
+        }
+    }
+}
+
 void GameScreen::notify() {
     std::shared_ptr<Model::PlayingModel> model =
         std::dynamic_pointer_cast<Model::PlayingModel>(m_model);

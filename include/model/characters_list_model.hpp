@@ -18,6 +18,11 @@ public:
     const CharactersList& characters() const {
         return m_characters;
     }
+
+    virtual void
+    visit(std::shared_ptr<Screen::SelectCharacterScreen>) override;
+    virtual void
+    visit(std::shared_ptr<Screen::CreateCharacterScreen>) override;
 private:
     CharactersList m_characters;
     std::shared_ptr<Dummy::Core::Character> m_selectedCharacter;
