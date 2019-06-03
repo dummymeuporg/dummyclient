@@ -9,7 +9,7 @@
 namespace ClientState {
 
 LoadingState::LoadingState(::Client& client)
-    : State(client), m_model(nullptr)
+    : State(client), m_model(std::make_shared<Model::LoadingModel>())
 {
 
 }
@@ -17,11 +17,6 @@ LoadingState::LoadingState(::Client& client)
 void LoadingState::resume() {
     std::cerr << "[LoadingState]" << std::endl;
     // What do we do?
-    //
-    // XXX: this sucks so much. I really need to figure it out.
-    m_model = std::dynamic_pointer_cast<Model::LoadingModel>(
-        m_client.game().screen()->model()
-    );
 }
 
 void LoadingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
@@ -32,7 +27,11 @@ void LoadingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     case 1:
         std::cerr << "Good for teleporting" << std::endl;
         m_model->setStatus(1);
-        m_model->update();
+        m_model->visit(
+            std::reinterpret_pointer_cast<Screen::LoadingScreen>(
+                m_client.game().screen()
+            )
+        );
         /*
          * XXX: Do not change the state here, unfortunately.
         m_client.changeState(

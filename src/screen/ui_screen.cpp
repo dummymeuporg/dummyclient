@@ -10,6 +10,10 @@ UIScreen::UIScreen(::Game& game, ::Client& client)
 {
 }
 
+UIScreen::~UIScreen() {
+
+}
+
 UIScreen& UIScreen::addWidget(std::shared_ptr<Widget::Abstract::Widget> widget)
 {
     m_widgets.push_back(widget);
@@ -38,11 +42,6 @@ void UIScreen::handleCustomEvent(const ::CustomEvent& event) {
             break;
         }
     }
-}
-
-void UIScreen::notify()
-{
-
 }
 
 } // namespace Screen

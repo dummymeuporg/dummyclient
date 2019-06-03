@@ -73,23 +73,8 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     addWidget(m_characterSelector);
 }
 
-void SelectCharacterScreen::notify() {
-    std::shared_ptr<Model::CharactersListModel> model = 
-        std::dynamic_pointer_cast<Model::CharactersListModel>(m_model);
-    std::stringstream ss;
-    m_charactersCount = model->characters().size();
-    ss << "You have " << m_charactersCount << " characters";
-
-    m_charactersCountLabel->setCaption(ss.str());
-    m_characterSelector->setCharacters(model->characters());
-
-    // Center the label
-    sf::Text& caption(m_charactersCountLabel->caption());
-    sf::FloatRect textRect = caption.getLocalBounds();
-    caption.setOrigin(textRect.left + textRect.width/2.0f,
-                      textRect.top  + textRect.height/2.0f);
-    caption.setPosition(1280/2, 960/2);
-}
+SelectCharacterScreen::~SelectCharacterScreen()
+{}
 
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
 {
@@ -97,8 +82,11 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
     if (event.source() == m_createCharacterButton.get()) {
         std::cerr << "Create character please." << std::endl;
         std::shared_ptr<CreateCharacterScreen> screen =
-            std::make_shared<CreateCharacterScreen>(m_game, m_client);
-        screen->setModel(m_model);
+            std::make_shared<CreateCharacterScreen>(
+                m_game,
+                m_client,
+                m_characterSelector->characters().size() // XXX
+            );
         m_game.setScreen(screen);
     } else if (event.source() == m_characterSelector.get()) {
         std::shared_ptr<const Dummy::Core::Character> character =
@@ -125,7 +113,6 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
             std::make_shared<LoadingScreen>(
                 m_game, m_client, chr->mapLocation()
             );
-        screen->setModel(model);
         m_client.setCharacter(chr);
         m_game.setScreen(screen);
     }

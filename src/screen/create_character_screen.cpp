@@ -8,10 +8,10 @@
 
 namespace Screen {
 
-CreateCharacterScreen::CreateCharacterScreen(::Game& game,
-                                             ::Client& client)
+CreateCharacterScreen::CreateCharacterScreen(
+    ::Game& game, ::Client& client, std::size_t initialCharactersCount)
     : UIScreen(game, client),
-      m_initialCharactersCount(0),
+      m_initialCharactersCount(initialCharactersCount),
       m_characterNameLabel(std::make_shared<Widget::Label>()),
       m_characterNameTextbox(std::make_shared<Widget::Textbox>()),
       m_characterSkinLabel(std::make_shared<Widget::Label>()),
@@ -108,6 +108,8 @@ CreateCharacterScreen::CreateCharacterScreen(::Game& game,
     addWidget(m_cancelButton);
 }
 
+CreateCharacterScreen::~CreateCharacterScreen() { }
+
 void CreateCharacterScreen::_handleButtonClicked(const ::CustomEvent& event) {
     if (event.source() == m_leftSkinButton.get()) {
         m_skinPreviewer->showPreviousSkin();
@@ -121,10 +123,6 @@ void CreateCharacterScreen::_handleButtonClicked(const ::CustomEvent& event) {
 }
 
 void CreateCharacterScreen::_onCreateCharacterButton() {
-    // Memorize the characters count from model first.
-    const Model::CharactersListModel* model = 
-        reinterpret_cast<const Model::CharactersListModel*>(m_model.get());
-    m_initialCharactersCount = model->characters().size();
     const std::string& characterName(m_characterNameTextbox->content());
     const std::string& skin(m_skinPreviewer->skin());
     std::cerr << "Name: " << m_characterNameTextbox->content()
@@ -158,29 +156,7 @@ void CreateCharacterScreen::_back() {
     auto self(shared_from_this());
     std::shared_ptr<SelectCharacterScreen> screen =
         std::make_shared<SelectCharacterScreen>(m_game, m_client);
-    screen->setModel(m_model);
-
-    // XXX: ugly
-    m_model->update();
     m_game.setScreen(screen);
-}
-
-void CreateCharacterScreen::notify() {
-    // Get the characters count from model
-    const Model::CharactersListModel* model = 
-        reinterpret_cast<const Model::CharactersListModel*>(m_model.get());
-    std::size_t charactersCount = model->characters().size();
-
-    if (m_initialCharactersCount < charactersCount) {
-        // There is a new character so the creation succeeded.
-        pushEvent(
-            ::CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
-                CustomEvent::CharacterCreated,
-                reinterpret_cast<void*>(shared_from_this().get())
-            )
-        );
-    }
 }
 
 } // namespace Screen

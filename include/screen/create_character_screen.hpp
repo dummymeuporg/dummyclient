@@ -11,8 +11,8 @@ namespace Screen {
 
 class CreateCharacterScreen : public UIScreen {
 public:
-    CreateCharacterScreen(::Game&, ::Client&);
-    virtual void notify() override;
+    CreateCharacterScreen(::Game&, ::Client&, std::size_t);
+    virtual ~CreateCharacterScreen();
     virtual void handleCustomEvent(const ::CustomEvent&) override;
     virtual void accept(std::shared_ptr<Model::Model> model) override {
         model->visit(

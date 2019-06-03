@@ -11,7 +11,7 @@ namespace Screen {
 class LoadingScreen : public UIScreen {
 public:
     LoadingScreen(::Game&, ::Client&, const std::string&);
-    virtual void notify() override;
+    virtual ~LoadingScreen();
     virtual void loaded() override;
     virtual void handleCustomEvent(const ::CustomEvent&) override;
     virtual void accept(std::shared_ptr<Model::Model> model) override {

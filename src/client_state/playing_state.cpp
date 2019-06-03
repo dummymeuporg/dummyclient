@@ -19,17 +19,13 @@ using UpdateCode = Dummy::Protocol::MapUpdateManager::Code;
 
 namespace ClientState {
 
-PlayingState::PlayingState(::Client& client)
-    : State(client), m_model(nullptr)
+PlayingState::PlayingState(::Client& client,
+                           std::shared_ptr<Model::PlayingModel> model)
+    : State(client), m_model(model)
 {}
 
 void PlayingState::resume() {
     std::cerr << "[PlayingState]" << std::endl;
-    // XXX: still ugly.
-    m_model = std::dynamic_pointer_cast<Model::PlayingModel>(
-        m_client.game().screen()->model()
-    );
-    std::cerr << "model = " << m_model << std::endl;
 }
 
 void PlayingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
@@ -56,11 +52,23 @@ void PlayingState::_parseMapUpdates(Dummy::Protocol::IncomingPacket& pkt) {
         switch(c) {
         case UpdateCode::CHARACTER_POSITION:
             _handleCharacterPosition(pkt);
-            m_model->update();
+            //m_model->update();
+            // XXX: ugly
+            m_model->visit(
+                std::reinterpret_pointer_cast<Screen::GameScreen>(
+                    m_client.game().screen()
+                )
+            );
             break;
         case UpdateCode::CHARACTER_OFF:
             _handleCharacterOff(pkt);
-            m_model->update();
+            //m_model->update();
+            /// XXX: ugly
+            m_model->visit(
+                std::reinterpret_pointer_cast<Screen::GameScreen>(
+                    m_client.game().screen()
+                )
+            );
             break;
         default:
             // XXX: error?

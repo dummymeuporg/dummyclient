@@ -18,8 +18,11 @@ public:
 	static const int DIRECTION_LEFT = 0x08;
 	static const int DIRECTION_ALL = 0x0f;
 
-    GameScreen(::Game&, ::Client&, std::unique_ptr<::MapView>);
-    virtual void notify() override;
+    GameScreen(::Game&,
+               ::Client&,
+               std::unique_ptr<::MapView>,
+               std::shared_ptr<Model::PlayingModel> model);
+    virtual ~GameScreen();
     virtual void loaded() override;
     virtual void handleEvent(const sf::Event&);
     virtual void handleCustomEvent(const ::CustomEvent&);
@@ -57,6 +60,7 @@ private:
     sf::Clock m_syncLivingsClock;
 	unsigned int m_characterDirection;
 	bool m_isMoving;
+    std::shared_ptr<Model::PlayingModel> m_model;
 };
 
 } // namespace Screen

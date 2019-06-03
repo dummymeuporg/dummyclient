@@ -37,6 +37,10 @@ LoadingScreen::LoadingScreen(
     addWidget(m_label);
 }
 
+LoadingScreen::~LoadingScreen() {
+
+}
+
 void LoadingScreen::loaded() {
     pushEvent(
         CustomEvent(
@@ -45,22 +49,6 @@ void LoadingScreen::loaded() {
             reinterpret_cast<void*>(shared_from_this().get())
         )
     );
-}
-
-void LoadingScreen::notify() {
-    auto self(shared_from_this());
-    std::shared_ptr<Model::LoadingModel> model = 
-        std::dynamic_pointer_cast<Model::LoadingModel>(m_model);
-    if (model->status() != 0) {
-        pushEvent(
-            CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
-                CustomEvent::MapViewLoaded,
-                reinterpret_cast<void*>(shared_from_this().get())
-            )
-        );
-
-    }
 }
 
 void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
@@ -94,15 +82,14 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
     }
     case CustomEvent::Type::MapViewLoaded: {
         std::cerr << "Can display map." << std::endl;
-        std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
-            m_game, m_client, std::move(m_mapView)
-        );
         std::shared_ptr<Model::PlayingModel> model =
             std::make_shared<Model::PlayingModel>();
-        screen->setModel(model);
+        std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
+            m_game, m_client, std::move(m_mapView), model
+        );
         m_game.setScreen(screen);
         m_client.changeState(
-            std::make_shared<ClientState::PlayingState>(m_client)
+            std::make_shared<ClientState::PlayingState>(m_client, model)
         );
     }
     default:

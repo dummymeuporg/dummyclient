@@ -11,7 +11,7 @@ namespace ClientState {
 
 class PlayingState : public State {
 public:
-    PlayingState(::Client&);
+    PlayingState(::Client&, std::shared_ptr<Model::PlayingModel>);
     virtual void resume() override;
     virtual void onRead(Dummy::Protocol::IncomingPacket&) override;
 private:

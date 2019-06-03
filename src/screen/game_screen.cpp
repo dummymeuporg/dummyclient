@@ -17,7 +17,8 @@ namespace Screen {
 GameScreen::GameScreen(
     ::Game& game,
     ::Client& client,
-    std::unique_ptr<::MapView> mapView
+    std::unique_ptr<::MapView> mapView,
+    std::shared_ptr<Model::PlayingModel> model
 )
     : UIScreen(game, client), m_mapView(std::move(mapView)),
       m_camera(m_client.pixelPosition().first + 48,
@@ -33,10 +34,14 @@ GameScreen::GameScreen(
       m_isArrowPressed(false),
       m_direction(sf::Keyboard::Unknown),
 	  m_characterDirection(DIRECTION_NONE),
-	  m_isMoving(false)
+	  m_isMoving(false),
+      m_model(model)
 {
     m_player.setPixelX(m_client.pixelPosition().first);
     m_player.setPixelY(m_client.pixelPosition().second);
+}
+
+GameScreen::~GameScreen() {
 }
 
 void GameScreen::loaded() {
@@ -95,66 +100,6 @@ void GameScreen::syncWithModel(std::shared_ptr<Model::PlayingModel> model) {
             m_livings[name]->moveTowards(
                 living->pixelX(), living->pixelY()
             );
-        }
-    }
-}
-
-void GameScreen::notify() {
-    std::shared_ptr<Model::PlayingModel> model =
-        std::dynamic_pointer_cast<Model::PlayingModel>(m_model);
-
-    const std::pair<std::uint16_t, std::uint16_t>& position(
-        m_client.pixelPosition()
-    );
-
-    if (model != nullptr) {
-
-        // Synchronize local livings with the model
-        std::vector<std::string> removal;
-        for (const auto [name, living]: m_livings) {
-            if (model->livings().find(name) == std::end(model->livings())) {
-                removal.push_back(name);
-            }
-        }
-
-        std::for_each(removal.begin(),
-                      removal.end(),
-                      [this](const std::string& name) {
-                           m_livings.erase(name);
-                      }
-        );
-
-        for(const auto [name, living]: model->livings()) {
-            if (m_livings.find(name) == std::end(m_livings)) {
-                m_livings[name] = std::make_shared<Graphics::Living>(*living);
-                m_livings[name]->setPixelPosition(
-                    m_livings[name]->x() * 32,
-                    m_livings[name]->y() * 32
-                );
-                living->setPixelPosition(
-                    living->x() * 32,
-                    living->y() * 32
-                );
-            } else {
-                // If the living already exists, check the position and
-                // set the walking state if needed.
-
-                if (m_livings[name]->x() != living->x() ||
-                    m_livings[name]->y() != living->y())
-                {
-                    // Need to move.
-                    // Update the model pixel pos.
-                    living->setPixelPosition(
-                        living->x() * 32,
-                        living->y() * 32
-                    );
-                    
-                }
-                // Animate the charater.
-                m_livings[name]->moveTowards(
-                    living->pixelX(), living->pixelY()
-                );
-            }
         }
     }
 }

@@ -21,9 +21,6 @@ class Model : public std::enable_shared_from_this<Model>,
 public:
     Model();
     virtual ~Model();
-    void update();
-    void addScreen(std::shared_ptr<Screen::Screen>);
-    void removeScreen(std::shared_ptr<Screen::Screen>);
 
     virtual void visit(std::shared_ptr<Screen::CreateCharacterScreen>) {
         throw ScreenNotHandled();
