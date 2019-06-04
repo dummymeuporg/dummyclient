@@ -19,6 +19,7 @@ public:
            std::size_t,
            std::size_t,
            std::size_t,
+           std::size_t,
            Direction = Direction::DOWN);
     Living(const Living&);
     virtual void draw(sf::RenderWindow&, const ::Camera&) override;

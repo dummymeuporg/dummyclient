@@ -10,8 +10,9 @@ Living::Living(const std::string& chipset,
                std::size_t h,
                std::size_t x,
                std::size_t y,
+               std::size_t scaleFactor,
                Direction direction)
-    : Entity(chipset, w, h, x, y),
+    : Entity(chipset, w, h, x, y, scaleFactor),
       m_name(name),
       m_direction(direction),
       m_state(std::make_unique<LivingState::StandingState>(*this))
@@ -21,7 +22,7 @@ Living::Living(const std::string& chipset,
 
 Living::Living(const Living& living)
     : Entity(living.m_chipsetName, living.m_w, living.m_h, living.m_x,
-             living.m_y),
+             living.m_y, living.m_scaleFactor),
              m_name(living.m_name),
              m_direction(living.m_direction),
              m_state(std::make_unique<LivingState::StandingState>(*this))

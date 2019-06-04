@@ -101,7 +101,8 @@ PlayingState::_handleCharacterPosition(Dummy::Protocol::IncomingPacket& pkt) {
         // Not found? Add it.
         living =
             std::make_shared<Graphics::Living>(
-                chipset, name, 24, 32, x, y, direction
+                chipset, name, 24, 32, x, y, m_client.game().scaleFactor(),
+                direction
             );
         m_model->addLiving(name, living);
         //std::cerr << "Added living " << name << std::endl;

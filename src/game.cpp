@@ -10,7 +10,8 @@
 Game::Game(const char* account,
            const char* sessionID,
            Config& config,
-           std::size_t width, std::size_t height) 
+           std::size_t width, std::size_t height,
+           std::size_t scaleFactor) 
     : m_client(*this, Credentials(account, sessionID)),
       m_config(config),
       m_window(sf::VideoMode(width, height),
@@ -20,7 +21,7 @@ Game::Game(const char* account,
       m_resourceProvider(ResourceProvider::instance()),
       m_currentScreen(std::make_shared<Screen::SelectCharacterScreen>(
         *this, m_client)),
-      m_width(width), m_height(height)
+      m_width(width), m_height(height), m_scaleFactor(scaleFactor)
 { }
 
 int Game::run()
