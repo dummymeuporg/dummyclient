@@ -33,7 +33,7 @@ Living::Living(const Living& living)
 void Living::_setDisplayName() {
     m_displayName.setString(m_name);
     m_displayName.setColor(sf::Color::White);
-    m_displayName.setCharacterSize(30);
+    m_displayName.setCharacterSize(15);
     m_displayName.setFont(font("arial.ttf"));
     m_displayName.setStyle(sf::Text::Bold);
 }
@@ -66,9 +66,9 @@ void Living::draw(sf::RenderWindow& window, const ::Camera& camera) {
     m_displayName.setPosition(
 
         static_cast<int>(windowSize.x / 2) + pixelX() - camera.centerX() +
-        w() * 2,
+        w() * 1,
         static_cast<int>(windowSize.y / 2) + pixelY() - camera.centerY() +
-        h() * 4
+        h() * 2
     );
     window.draw(m_displayName);
 }
