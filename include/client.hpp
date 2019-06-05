@@ -83,7 +83,7 @@ public:
     void _updateServerPosition(const std::pair<std::uint16_t, std::uint16_t>&);
 
 private:
-    static std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
+    std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
         std::uint16_t, std::uint16_t);
     ::Game& m_game;
     sf::TcpSocket m_socket;

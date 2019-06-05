@@ -25,7 +25,7 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     m_skinPreviewer(std::make_shared<Widget::SkinPreviewer>()),
     m_characterSelector(std::make_shared<Widget::CharacterSelector>())
 {
-    m_playButton->setPos(880, 730);
+    m_playButton->setPos(300, 200);
     m_playButton
         ->setBackgroundColor(sf::Color(183, 109, 44))
         .setBorderColor(sf::Color(94, 47, 6))
@@ -63,7 +63,7 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     m_skinPreviewer->setPos(544, 150);
 
     // 450 = (1280/2) - (width of character selector / 2)
-    m_characterSelector->setPos(450, 850);
+    m_characterSelector->setPos(450, 500);
 
     addWidget(m_accountLabel);
     addWidget(m_playButton);

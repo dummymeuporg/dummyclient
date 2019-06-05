@@ -15,8 +15,9 @@ public:
     Game(const char*,
          const char*,
          Config&,
-         std::size_t = 1280,
-         std::size_t = 960);
+         std::size_t = 960,
+         std::size_t = 720,
+         std::size_t = 2);
     int run();
     void setScreen(std::shared_ptr<Screen::Screen> screen);
     sf::RenderWindow& window() {
@@ -37,6 +38,10 @@ public:
     std::size_t height() const {
         return m_height;
     }
+    
+    std::size_t scaleFactor() const {
+        return m_scaleFactor;
+    }
 private:
     Client m_client;
     Config& m_config;
@@ -45,4 +50,5 @@ private:
     ::ResourceProvider& m_resourceProvider;
     std::shared_ptr<Screen::Screen> m_currentScreen;
     std::size_t m_width, m_height;
+    std::size_t m_scaleFactor;
 };

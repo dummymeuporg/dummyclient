@@ -16,6 +16,7 @@ public:
            std::size_t,
            std::size_t,
            std::size_t,
+           std::size_t,
            std::size_t
     );
     Entity(const Entity&);
@@ -67,7 +68,7 @@ protected:
     const sf::Texture& m_chipset;
     sf::Sprite m_sprite;
     std::string m_chipsetName;
-    std::size_t m_w, m_h, m_x, m_y;
+    std::size_t m_w, m_h, m_x, m_y, m_scaleFactor;
     int m_pixelX, m_pixelY;
 
 };

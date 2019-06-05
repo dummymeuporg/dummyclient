@@ -1,6 +1,7 @@
 #include <cstring>
 #include <iostream>
 
+#include "game.hpp"
 #include "map_view.hpp"
 #include "client.hpp"
 
@@ -69,8 +70,10 @@ void Client::changeState(std::shared_ptr<ClientState::State> state) {
 void Client::setCharacter(std::shared_ptr<Dummy::Core::Character> character) {
     m_character = character;
 
-    m_pixelPosition.first = character->position().first * 32;
-    m_pixelPosition.second = character->position().second * 32;
+    m_pixelPosition.first = character->position().first
+        * 8 * m_game.scaleFactor();
+    m_pixelPosition.second = character->position().second
+        * 8 * m_game.scaleFactor();
     
     m_serverPosition.first = character->position().first;
     m_serverPosition.second = character->position().second;
@@ -80,14 +83,20 @@ void Client::move(int xVector, int yVector, const MapView& mapView) {
 	std::pair<std::uint16_t, std::uint16_t> servCoords;
 
 	if (xVector == 1) {
+        std::size_t edge(
+            mapView.width() * 16 * m_game.scaleFactor()
+            - 16 * m_game.scaleFactor() - 1
+        );
 		/* Cancel the movement if out of bounds */
-		if (m_pixelPosition.first == (mapView.width() * 64 - 64 - 1)) {
+		if (m_pixelPosition.first == edge) {
 			xVector = 0;
 		} else {
 			/* Moving towards right */
 			servCoords = std::move(
 				_translateCoordsToServ(
-					m_pixelPosition.first + 64 + 1,
+					m_pixelPosition.first
+                    + 16 * m_game.scaleFactor()
+                    + 1,
 					m_pixelPosition.second
 				)
 			);
@@ -118,8 +127,12 @@ void Client::move(int xVector, int yVector, const MapView& mapView) {
 	}
 
 	if (yVector == 1) {
+        std::size_t edge(
+            mapView.width() * 16 * m_game.scaleFactor()
+            - 8 * m_game.scaleFactor() - 1
+        );
 		/* Cancel the movement if out of bounds */
-		if (m_pixelPosition.second == (mapView.height() * 64 - 32 - 1)) {
+		if (m_pixelPosition.second == edge) {
 			yVector = 0;
 		}
 		else {
@@ -127,7 +140,9 @@ void Client::move(int xVector, int yVector, const MapView& mapView) {
 			servCoords = std::move(
 				_translateCoordsToServ(
 					m_pixelPosition.first,
-					m_pixelPosition.second + 32 + 1
+					m_pixelPosition.second
+                    + 8 * m_game.scaleFactor()
+                    + 1
 				)
 			);
 			if (mapView.blocksAt(servCoords.first, servCoords.second) ||
@@ -178,7 +193,10 @@ Client::_translateCoordsToServ(
     std::uint16_t x,
     std::uint16_t y
 ) {
-    return std::pair<std::uint16_t, std::uint16_t>(x / 32, y / 32);
+    return std::pair<std::uint16_t, std::uint16_t>(
+        x / (8 * m_game.scaleFactor()),
+        y / (8 * m_game.scaleFactor())
+    );
 }
 
 void Client::ping() {
