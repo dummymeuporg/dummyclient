@@ -31,6 +31,7 @@ public:
     virtual void draw() = 0;
     virtual void tick();
     virtual void loaded();
+    virtual void returned();
     virtual void
     onResponse(const Dummy::Server::Response::Response& response) = 0;
 

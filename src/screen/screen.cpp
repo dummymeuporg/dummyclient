@@ -21,4 +21,8 @@ void Screen::tick() {
 
 }
 
+void Screen::returned() {
+
+}
+
 } // namespace Screen

@@ -90,6 +90,11 @@ void SelectCharacterScreen::loaded() {
     m_client.sendCommand(cmd);
 }
 
+
+void SelectCharacterScreen::returned() {
+    _refreshCharactersList();
+}
+
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
 {
     auto self(shared_from_this());
@@ -151,10 +156,7 @@ void SelectCharacterScreen::visitResponse(
     }
 }
 
-void SelectCharacterScreen::visitResponse(
-    const Dummy::Server::Response::CharactersListResponse& response
-) {
-    m_characters = std::move(response.charactersList());
+void SelectCharacterScreen::_refreshCharactersList() {
     std::cerr << "Got characters list." << std::endl;
     std::stringstream ss;
     ss << "You have " << m_characters.size() << " characters";
@@ -168,6 +170,13 @@ void SelectCharacterScreen::visitResponse(
     caption.setOrigin(textRect.left + textRect.width/2.0f,
                       textRect.top  + textRect.height/2.0f);
     caption.setPosition(m_game.width()/2, m_game.height()/2);
+}
+
+void SelectCharacterScreen::visitResponse(
+    const Dummy::Server::Response::CharactersListResponse& response
+) {
+    m_characters = std::move(response.charactersList());
+    _refreshCharactersList();
 }
 
 } // namespace Screen

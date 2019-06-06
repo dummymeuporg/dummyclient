@@ -245,5 +245,6 @@ void Client::returnToPreviousScreen() {
     if (m_previousScreens.size() > 0) {
         m_currentScreen = m_previousScreens.back();
         m_previousScreens.pop_back();
+        m_currentScreen->returned();
     }
 }
