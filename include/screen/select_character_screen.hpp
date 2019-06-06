@@ -47,9 +47,15 @@ public:
         const Dummy::Server::Response::CharactersListResponse&
     ) override;
 
+    virtual void
+    visitResponse(
+        const Dummy::Server::Response::SelectCharacter&
+    ) override;
+
 private:
     void _refreshCharactersList();
     std::vector<std::shared_ptr<Dummy::Core::Character>> m_characters;
+    std::shared_ptr<Dummy::Core::Character> m_selectedCharacter;
     std::shared_ptr<Widget::Button> m_createCharacterButton;
     std::shared_ptr<Widget::Button> m_playButton;
     std::shared_ptr<Widget::Label> m_accountLabel;

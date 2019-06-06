@@ -6,8 +6,10 @@
 
 #include "server/command/connect_command.hpp"
 #include "server/command/get_primary_info_command.hpp"
+#include "server/command/select_character.hpp"
 #include "server/response/connect_response.hpp"
 #include "server/response/characters_list_response.hpp"
+#include "server/response/select_character.hpp"
 
 #include "protocol/outgoing_packet.hpp"
 
@@ -23,6 +25,7 @@ namespace Screen {
 SelectCharacterScreen::SelectCharacterScreen(::Game& game,
                                              ::Client& client)
     : UIScreen(game, client),
+      m_selectedCharacter(nullptr),
       m_createCharacterButton(std::make_shared<Widget::Button>()),
       m_playButton(std::make_shared<Widget::Button>()),
       m_accountLabel(std::make_shared<Widget::Label>()),
@@ -117,23 +120,14 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
         );
         m_playButton->setEnabled(true);
     } else if (event.source() == m_playButton.get()) {
-        std::shared_ptr<Dummy::Core::Character> chr =
+        m_selectedCharacter = 
             m_characterSelector->selectedCharacter();
-        std::uint8_t request = 2;
-        Dummy::Protocol::OutgoingPacket pkt;
-        pkt << request;
-        pkt << chr->name();
-        m_client.send(pkt);
 
-        std::shared_ptr<Model::LoadingModel> model =
-            std::make_shared<Model::LoadingModel>();
+        Dummy::Server::Command::SelectCharacter selectCharacter(
+            m_selectedCharacter->name()
+        );
 
-        std::shared_ptr<LoadingScreen> screen =
-            std::make_shared<LoadingScreen>(
-                m_game, m_client, chr->mapLocation()
-            );
-        m_client.setCharacter(chr);
-        m_client.setScreen(screen);
+        m_client.sendCommand(selectCharacter);
     }
 }
 
@@ -177,6 +171,20 @@ void SelectCharacterScreen::visitResponse(
 ) {
     m_characters = std::move(response.charactersList());
     _refreshCharactersList();
+}
+
+
+void SelectCharacterScreen::visitResponse(
+    const Dummy::Server::Response::SelectCharacter&
+) {
+
+    auto self(shared_from_this());
+    std::shared_ptr<LoadingScreen> screen = std::make_shared<LoadingScreen>(
+        m_game, m_client, m_selectedCharacter->mapLocation()
+    );
+    m_client.setCharacter(m_selectedCharacter);
+    m_client.setScreen(screen);
+
 }
 
 } // namespace Screen
