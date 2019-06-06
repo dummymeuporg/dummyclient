@@ -129,4 +129,10 @@ void PlayingState::_handleCharacterOff(Dummy::Protocol::IncomingPacket& pkt) {
     
 }
 
+
+void
+PlayingState::onResponse(const Dummy::Server::Response::Response& response) {
+
+}
+
 }

@@ -48,4 +48,11 @@ void ManageCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     }
 }
 
+void
+ManageCharactersState::onResponse(
+    const Dummy::Server::Response::Response& response
+) {
+
+}
+
 } // namespace ClientState

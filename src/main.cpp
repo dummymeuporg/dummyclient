@@ -27,6 +27,7 @@ int main(int argc, char* argv[])
     std::string connectorType(argv[1]);
     if (connectorType == "standalone") {
         ::LocalGameServer server(argv[2], argv[3]);
+        server.run(); // create the account
         std::shared_ptr<Dummy::Server::GameSession> session =
             server.buildGameSession();
         Connector::LocalConnector connector(*session);

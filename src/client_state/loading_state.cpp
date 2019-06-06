@@ -44,4 +44,10 @@ void LoadingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     }
 }
 
+
+void
+LoadingState::onResponse(const Dummy::Server::Response::Response& response) {
+
+}
+
 } // namespace ClienState

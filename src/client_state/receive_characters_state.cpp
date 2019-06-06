@@ -57,4 +57,12 @@ void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     );
 }
 
+void
+ReceiveCharactersState::onResponse(
+    const Dummy::Server::Response::Response& response
+)
+{
+
+}
+
 } // namespace ClientState
