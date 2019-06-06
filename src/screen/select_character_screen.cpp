@@ -38,7 +38,7 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     m_playButton->setCaption("Play");
     m_playButton->setEnabled(false);
 
-    m_createCharacterButton->setPos(950, 730);
+    m_createCharacterButton->setPos(500, 500);
     m_createCharacterButton
         ->setBackgroundColor(sf::Color(183, 109, 44))
         .setBorderColor(sf::Color(94, 47, 6))
@@ -141,7 +141,7 @@ SelectCharacterScreen::setCharacters(
     sf::FloatRect textRect = caption.getLocalBounds();
     caption.setOrigin(textRect.left + textRect.width/2.0f,
                       textRect.top  + textRect.height/2.0f);
-    caption.setPosition(1280/2, 960/2);
+    caption.setPosition(m_game.width()/2, m_game.height()/2);
 
 }
 

@@ -76,7 +76,6 @@ void ReceiveCharactersState::visitResponse(
     const Dummy::Server::Response::CharactersListResponse& response
 )
 {
-    std::cerr << "CharactersListResponse." << std::endl;
     for (const auto character: response.charactersList()) {
         m_model->addCharacter(character);
     }
