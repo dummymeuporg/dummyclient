@@ -16,7 +16,7 @@ LocalConnector::sendCommand(const Dummy::Server::Command::Command& command) {
 std::unique_ptr<const Dummy::Server::Response::Response>
 LocalConnector::getResponse() {
     if (m_responses.size() > 0) {
-        std::unique_ptr<Dummy::Server::Response::Response> r(
+        std::unique_ptr<const Dummy::Server::Response::Response> r(
             std::move(m_responses.front())
         );
         m_responses.pop();

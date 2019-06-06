@@ -4,6 +4,8 @@
 #include "client.hpp"
 #include "game.hpp"
 
+#include "server/command/get_primary_info_command.hpp"
+
 #include "protocol/outgoing_packet.hpp"
 
 #include "model/characters_list_model.hpp"
@@ -75,6 +77,11 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
 
 SelectCharacterScreen::~SelectCharacterScreen()
 {}
+
+void SelectCharacterScreen::loaded() {
+    std::cerr << "Send command for primary info" << std::endl;
+    m_client.sendCommand(Dummy::Server::Command::GetPrimaryInfoCommand());
+}
 
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
 {

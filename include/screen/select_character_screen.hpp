@@ -16,6 +16,7 @@ public:
     SelectCharacterScreen(::Game&, ::Client&);
     virtual ~SelectCharacterScreen();
     virtual void handleCustomEvent(const ::CustomEvent&) override;
+    virtual void loaded();
     virtual void accept(std::shared_ptr<Model::Model> model) override {
         model->visit(
             std::reinterpret_pointer_cast<SelectCharacterScreen>(

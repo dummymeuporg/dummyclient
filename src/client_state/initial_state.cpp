@@ -34,6 +34,7 @@ void InitialState::resume() {
 }
 
 void InitialState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
+    /*
     auto self(shared_from_this());
     std::cerr << "Will read data." << std::endl;
     std::uint8_t status;
@@ -47,12 +48,24 @@ void InitialState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
         std::cerr << "wrong credentials." << std::endl;
         ::exit(-1);
     }
+    */
 }
 
 
 void
 InitialState::onResponse(const Dummy::Server::Response::Response& response) {
-
+    auto self(shared_from_this());
+    std::cerr << "GOT RESPONSE! status = "
+        << static_cast<int>(response.status()) << std::endl;
+    switch(response.status()) {
+    case 0: /* O.K. */
+        m_client.changeState(
+            std::make_shared<ClientState::ReceiveCharactersState>(m_client)
+        );
+        break;
+    default: /* N.O.K. */
+        break;
+    }
 }
 
 } // namespace ClientState

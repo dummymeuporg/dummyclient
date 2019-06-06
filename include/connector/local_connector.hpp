@@ -24,7 +24,7 @@ public:
     getResponse() override;
 private:
     Dummy::Server::GameSession& m_gameSession;
-    std::queue<std::unique_ptr<Dummy::Server::Response::Response>>
+    std::queue<std::unique_ptr<const Dummy::Server::Response::Response>>
         m_responses;
 };
 
