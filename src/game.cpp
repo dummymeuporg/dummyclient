@@ -28,6 +28,7 @@ Game::Game(const char* account,
 int Game::run()
 {
     //m_client.connect(m_config.host().c_str(), m_config.port());
+    m_client.start();
     sf::Clock clock;
     m_window.setKeyRepeatEnabled(false);
     m_window.setFramerateLimit(Game::FPS);
@@ -40,7 +41,8 @@ int Game::run()
                 m_window.close();
         }
 
-        m_client.checkData();
+        //m_client.checkData();
+        m_client.checkResponse();
         m_window.clear();
         m_currentScreen->handleEvent(event);
 

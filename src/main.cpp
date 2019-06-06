@@ -30,6 +30,7 @@ int main(int argc, char* argv[])
         server.run(); // create the account
         std::shared_ptr<Dummy::Server::GameSession> session =
             server.buildGameSession();
+        session->start();
         Connector::LocalConnector connector(*session);
         ::Game game(argv[4], argv[5], connector, config);
         return game.run();

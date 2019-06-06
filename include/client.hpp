@@ -53,6 +53,7 @@ public:
     void start();
 
     void checkData();
+    void checkResponse();
     void connect(const char* host, unsigned short port);
     void authenticate();
     void changeState(std::shared_ptr<ClientState::State>);

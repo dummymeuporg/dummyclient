@@ -8,11 +8,14 @@
 #include "client_state/initial_state.hpp"
 #include "client_state/receive_characters_state.hpp"
 
+#include "server/command/connect_command.hpp"
+
 namespace ClientState {
 
 InitialState::InitialState(::Client& client) : State(client) {}
 
 void InitialState::resume() {
+    /*
     const ::Credentials& creds(m_client.credentials());
     const std::string& account(creds.account());
     const std::string sessionID(creds.sessionID());
@@ -22,7 +25,12 @@ void InitialState::resume() {
 
     // Send the packet.
     m_client.send(pkt);
-
+    */
+    Dummy::Server::Command::ConnectCommand cmd(
+        m_client.credentials().account(),
+        m_client.credentials().sessionID()
+    );
+    m_client.sendCommand(cmd);
 }
 
 void InitialState::onRead(Dummy::Protocol::IncomingPacket& pkt) {

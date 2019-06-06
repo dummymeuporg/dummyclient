@@ -2,7 +2,6 @@
 #include <iostream>
 
 #include "connector/connector.hpp"
-#include "server/command/connect_command.hpp"
 
 #include "game.hpp"
 #include "map_view.hpp"
@@ -17,12 +16,19 @@ Client::Client(Connector::Connector& connector,
 }
 
 void Client::start() {
-    Dummy::Server::Command::ConnectCommand cmd(
-        m_credentials.account(), m_credentials.sessionID()
-    );
-    sendCommand(cmd);
-    //m_state = std::make_shared<Client::InitialState>(*this);
+    std::cerr << "Start." << std::endl;
+    m_state = std::make_shared<ClientState::InitialState>(*this);
+    m_state->resume();
 
+}
+
+void Client::checkResponse() {
+    std::unique_ptr<const Dummy::Server::Response::Response> response =
+        std::move(m_connector.getResponse());
+
+    if (nullptr != response) {
+        m_state->onResponse(*response);
+    }
 }
 
 void Client::connect(const char* host, unsigned short port) {
