@@ -22,7 +22,7 @@ namespace Screen {
 
 SelectCharacterScreen::SelectCharacterScreen(::Game& game,
                                              ::Client& client)
-    : UIScreen(game, client), m_charactersCount(-1),
+    : UIScreen(game, client),
       m_createCharacterButton(std::make_shared<Widget::Button>()),
       m_playButton(std::make_shared<Widget::Button>()),
       m_accountLabel(std::make_shared<Widget::Label>()),
@@ -99,7 +99,7 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
             std::make_shared<CreateCharacterScreen>(
                 m_game,
                 m_client,
-                m_characterSelector->characters().size() // XXX
+                m_characters
             );
         m_client.setScreen(screen, true);
     } else if (event.source() == m_characterSelector.get()) {
@@ -154,16 +154,13 @@ void SelectCharacterScreen::visitResponse(
 void SelectCharacterScreen::visitResponse(
     const Dummy::Server::Response::CharactersListResponse& response
 ) {
-    const std::vector<std::shared_ptr<Dummy::Core::Character>> charactersList(
-        response.charactersList()
-    );
+    m_characters = std::move(response.charactersList());
     std::cerr << "Got characters list." << std::endl;
     std::stringstream ss;
-    m_charactersCount = charactersList.size();
-    ss << "You have " << m_charactersCount << " characters";
+    ss << "You have " << m_characters.size() << " characters";
 
     m_charactersCountLabel->setCaption(ss.str());
-    m_characterSelector->setCharacters(charactersList);
+    m_characterSelector->setCharacters(m_characters);
 
     // Center the label
     sf::Text& caption(m_charactersCountLabel->caption());

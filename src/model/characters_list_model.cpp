@@ -44,6 +44,7 @@ CharactersListModel::visit(
     std::shared_ptr<Screen::CreateCharacterScreen> screen
 )
 {
+    /*
     if (screen->initialCharactersCount() < m_characters.size()) {
         // There is a new character so the creation succeeded.
         pushEvent(
@@ -54,6 +55,7 @@ CharactersListModel::visit(
             )
         );
     }
+    */
 
 }
 

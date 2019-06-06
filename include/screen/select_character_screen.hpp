@@ -11,6 +11,9 @@
 
 
 namespace Dummy {
+namespace Core {
+class Character;
+} // namespace Core
 namespace Server {
 namespace Response {
 class ConnectResponse;
@@ -44,7 +47,7 @@ public:
     ) override;
 
 private:
-    std::int16_t m_charactersCount;
+    std::vector<std::shared_ptr<Dummy::Core::Character>> m_characters;
     std::shared_ptr<Widget::Button> m_createCharacterButton;
     std::shared_ptr<Widget::Button> m_playButton;
     std::shared_ptr<Widget::Label> m_accountLabel;

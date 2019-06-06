@@ -1,4 +1,9 @@
 #include <iostream>
+
+#include "core/character.hpp"
+#include "server/command/create_character.hpp"
+#include "server/response/create_character.hpp"
+
 #include "client.hpp"
 #include "game.hpp"
 #include "model/characters_list_model.hpp"
@@ -9,9 +14,11 @@
 namespace Screen {
 
 CreateCharacterScreen::CreateCharacterScreen(
-    ::Game& game, ::Client& client, std::size_t initialCharactersCount)
+    ::Game& game, ::Client& client,
+    std::vector<std::shared_ptr<Dummy::Core::Character>>& characters
+    )
     : UIScreen(game, client),
-      m_initialCharactersCount(initialCharactersCount),
+      m_characters(characters),
       m_characterNameLabel(std::make_shared<Widget::Label>()),
       m_characterNameTextbox(std::make_shared<Widget::Textbox>()),
       m_characterSkinLabel(std::make_shared<Widget::Label>()),
@@ -130,11 +137,8 @@ void CreateCharacterScreen::_onCreateCharacterButton() {
     std::cerr << "Chipset: " << m_skinPreviewer->skin()
         << std::endl;
 
-    Dummy::Protocol::OutgoingPacket pkt;
-    std::uint8_t command = 1; // create_character
-
-    pkt << command << characterName << skin;
-    m_client.send(pkt);
+    Dummy::Server::Command::CreateCharacter create(characterName, skin);
+    m_client.sendCommand(create);
 
 }
 
@@ -162,6 +166,20 @@ void CreateCharacterScreen::onResponse(
     const Dummy::Server::Response::Response& response
 ) {
     response.accept(*this);
+}
+
+
+void CreateCharacterScreen::visitResponse(
+    const Dummy::Server::Response::CreateCharacter& createCharacter
+) {
+    m_characters.push_back(createCharacter.character());
+    pushEvent(
+        ::CustomEvent(
+            reinterpret_cast<void*>(shared_from_this().get()),
+            CustomEvent::CharacterCreated,
+            reinterpret_cast<void*>(shared_from_this().get())
+        )
+    );
 }
 
 } // namespace Screen
