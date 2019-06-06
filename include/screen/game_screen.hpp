@@ -31,11 +31,10 @@ public:
 
     void syncWithModel(std::shared_ptr<Model::PlayingModel> model);
 
-    virtual void accept(std::shared_ptr<Model::Model> model) override {
-        model->visit(
-            std::reinterpret_pointer_cast<GameScreen>(shared_from_this())
-        );
-    }
+    virtual void
+    onResponse(const Dummy::Server::Response::Response& response)
+    override;
+
 private:
     /* Private methods. */
     void _drawLayer(::Sprites&);

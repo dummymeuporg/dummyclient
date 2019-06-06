@@ -4,7 +4,10 @@
 #include "client.hpp"
 #include "game.hpp"
 
+#include "server/command/connect_command.hpp"
 #include "server/command/get_primary_info_command.hpp"
+#include "server/response/connect_response.hpp"
+#include "server/response/characters_list_response.hpp"
 
 #include "protocol/outgoing_packet.hpp"
 
@@ -80,7 +83,11 @@ SelectCharacterScreen::~SelectCharacterScreen()
 
 void SelectCharacterScreen::loaded() {
     std::cerr << "Send command for primary info" << std::endl;
-    m_client.sendCommand(Dummy::Server::Command::GetPrimaryInfoCommand());
+    Dummy::Server::Command::ConnectCommand cmd(
+        m_client.credentials().account(),
+        m_client.credentials().sessionID()
+    );
+    m_client.sendCommand(cmd);
 }
 
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
@@ -94,7 +101,7 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
                 m_client,
                 m_characterSelector->characters().size() // XXX
             );
-        m_game.setScreen(screen);
+        m_client.setScreen(screen, true);
     } else if (event.source() == m_characterSelector.get()) {
         std::shared_ptr<const Dummy::Core::Character> character =
             m_characterSelector->selectedCharacter();
@@ -121,14 +128,36 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
                 m_game, m_client, chr->mapLocation()
             );
         m_client.setCharacter(chr);
-        m_game.setScreen(screen);
+        m_client.setScreen(screen);
     }
 }
 
-void
-SelectCharacterScreen::setCharacters(
-    const Model::CharactersListModel::CharactersList& charactersList
+void SelectCharacterScreen::onResponse(
+    const Dummy::Server::Response::Response& response
 ) {
+    response.accept(*this);
+}
+
+void SelectCharacterScreen::visitResponse(
+    const Dummy::Server::Response::ConnectResponse& response
+) {
+    std::cerr << "Got connect response." << std::endl;
+    switch(response.status()) {
+    case 0: /* O.K. */
+        m_client.sendCommand(Dummy::Server::Command::GetPrimaryInfoCommand());
+        break;
+    default: /* Quit the program */
+        break;
+    }
+}
+
+void SelectCharacterScreen::visitResponse(
+    const Dummy::Server::Response::CharactersListResponse& response
+) {
+    const std::vector<std::shared_ptr<Dummy::Core::Character>> charactersList(
+        response.charactersList()
+    );
+    std::cerr << "Got characters list." << std::endl;
     std::stringstream ss;
     m_charactersCount = charactersList.size();
     ss << "You have " << m_charactersCount << " characters";
@@ -142,7 +171,6 @@ SelectCharacterScreen::setCharacters(
     caption.setOrigin(textRect.left + textRect.width/2.0f,
                       textRect.top  + textRect.height/2.0f);
     caption.setPosition(m_game.width()/2, m_game.height()/2);
-
 }
 
 } // namespace Screen

@@ -59,9 +59,11 @@ InitialState::onResponse(const Dummy::Server::Response::Response& response) {
         << static_cast<int>(response.status()) << std::endl;
     switch(response.status()) {
     case 0: /* O.K. */
+        /*
         m_client.changeState(
             std::make_shared<ClientState::ReceiveCharactersState>(m_client)
         );
+        */
         break;
     default: /* N.O.K. */
         break;

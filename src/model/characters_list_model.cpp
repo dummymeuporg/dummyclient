@@ -36,7 +36,7 @@ void
 CharactersListModel::visit(
     std::shared_ptr<Screen::SelectCharacterScreen> screen
 ) {
-    screen->setCharacters(m_characters);
+    //screen->setCharacters(m_characters);
 }
 
 void

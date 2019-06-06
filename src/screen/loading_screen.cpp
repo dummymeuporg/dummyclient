@@ -87,14 +87,22 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
         std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
             m_game, m_client, std::move(m_mapView), model
         );
-        m_game.setScreen(screen);
+        m_client.setScreen(screen);
+        /*
         m_client.changeState(
             std::make_shared<ClientState::PlayingState>(m_client, model)
         );
+        */
     }
     default:
         break;
     }
+}
+
+void LoadingScreen::onResponse(
+    const Dummy::Server::Response::Response& response
+) {
+    response.accept(*this);
 }
 
 } // namespace Screen

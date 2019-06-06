@@ -27,11 +27,13 @@ void LoadingState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     case 1:
         std::cerr << "Good for teleporting" << std::endl;
         m_model->setStatus(1);
+        /*
         m_model->visit(
             std::reinterpret_pointer_cast<Screen::LoadingScreen>(
                 m_client.game().screen()
             )
         );
+        */
         /*
          * XXX: Do not change the state here, unfortunately.
         m_client.changeState(

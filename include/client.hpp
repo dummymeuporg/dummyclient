@@ -41,7 +41,9 @@ class MapView;
 
 class Client {
 public:
-    Client(Connector::Connector&, ::Game&, const Credentials&&);
+    Client(Connector::Connector&,
+           ::Game&,
+           const Credentials&&);
 
     const Credentials& credentials() const {
         return m_credentials;
@@ -50,13 +52,10 @@ public:
     sf::TcpSocket& socket() {
         return m_socket;
     }
-    void start();
-
     void checkData();
     void checkResponse();
     void connect(const char* host, unsigned short port);
     void authenticate();
-    void changeState(std::shared_ptr<ClientState::State>);
     void update();
     void ping();
     void send(const std::uint8_t*, std::size_t);
@@ -82,10 +81,6 @@ public:
         return m_serverPosition;
     }
 
-    std::shared_ptr<ClientState::State> state() const {
-        return m_state;
-    }
-
     void sendCommand(const Dummy::Server::Command::Command&);
     void onResponse(const Dummy::Server::Response::Response&);
 
@@ -94,15 +89,22 @@ public:
     void setCharacter(std::shared_ptr<Dummy::Core::Character>);
     void _updateServerPosition(const std::pair<std::uint16_t, std::uint16_t>&);
 
+    void setScreen(std::shared_ptr<Screen::Screen>, bool = false);
+    void returnToPreviousScreen();
+    std::shared_ptr<Screen::Screen> screen() {
+        return m_currentScreen;
+    }
+
 private:
     std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
         std::uint16_t, std::uint16_t);
     Connector::Connector& m_connector;
     ::Game& m_game;
+    std::shared_ptr<Screen::Screen> m_currentScreen;
+    std::vector<std::shared_ptr<Screen::Screen>> m_previousScreens;
     sf::TcpSocket m_socket;
     std::uint16_t m_packetSize;
     Credentials m_credentials;
-    std::shared_ptr<ClientState::State> m_state;
     std::shared_ptr<Dummy::Core::Character> m_character;
     std::pair<std::uint16_t, std::uint16_t> m_pixelPosition;
     std::pair<std::uint16_t, std::uint16_t> m_serverPosition;

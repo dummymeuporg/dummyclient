@@ -19,7 +19,7 @@ ReceiveCharactersState::ReceiveCharactersState(::Client& client)
 void ReceiveCharactersState::resume() {
     // Nothing to do for now.
     // The client will select the character later on.
-    m_client.game().screen()->loaded();
+    //m_client.game().screen()->loaded();
     m_model = std::make_shared<Model::CharactersListModel>();
     //m_client.game().screen()->setModel(m_model);
     //m_model->update();
@@ -51,6 +51,7 @@ void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
         m_model->addCharacter(chr);
     }
     // XXX: Ugly
+    /*
     m_model->visit(
         std::reinterpret_pointer_cast<Screen::SelectCharacterScreen>(
             m_client.game().screen()
@@ -59,6 +60,7 @@ void ReceiveCharactersState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
     m_client.changeState(
         std::make_shared<ManageCharactersState>(m_client, m_model)
     );
+    */
 }
 
 void
@@ -76,6 +78,7 @@ void ReceiveCharactersState::visitResponse(
     const Dummy::Server::Response::CharactersListResponse& response
 )
 {
+    /*
     for (const auto character: response.charactersList()) {
         m_model->addCharacter(character);
     }
@@ -88,6 +91,7 @@ void ReceiveCharactersState::visitResponse(
     m_client.changeState(
         std::make_shared<ManageCharactersState>(m_client, m_model)
     );
+    */
 }
 
 } // namespace ClientState

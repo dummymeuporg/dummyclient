@@ -14,16 +14,12 @@ public:
     CreateCharacterScreen(::Game&, ::Client&, std::size_t);
     virtual ~CreateCharacterScreen();
     virtual void handleCustomEvent(const ::CustomEvent&) override;
-    virtual void accept(std::shared_ptr<Model::Model> model) override {
-        model->visit(
-            std::reinterpret_pointer_cast<CreateCharacterScreen>(
-                shared_from_this()
-            )
-        );
-    }
     std::size_t initialCharactersCount() const {
         return m_initialCharactersCount;
     }
+
+    virtual void
+    onResponse(const Dummy::Server::Response::Response& response) override;
 private:
     void _handleButtonClicked(const ::CustomEvent&);
     void _onCreateCharacterButton();

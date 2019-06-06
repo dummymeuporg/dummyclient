@@ -14,11 +14,9 @@ public:
     virtual ~LoadingScreen();
     virtual void loaded() override;
     virtual void handleCustomEvent(const ::CustomEvent&) override;
-    virtual void accept(std::shared_ptr<Model::Model> model) override {
-        model->visit(
-            std::reinterpret_pointer_cast<LoadingScreen>(shared_from_this())
-        );
-    }
+
+    virtual void
+    onResponse(const Dummy::Server::Response::Response& response) override;
 private:
     std::string m_mapNameToLoad;
     std::shared_ptr<Widget::Label> m_label;

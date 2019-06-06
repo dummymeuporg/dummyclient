@@ -9,6 +9,16 @@
 #include "widget/character_selector.hpp"
 #include "widget/skin_previewer.hpp"
 
+
+namespace Dummy {
+namespace Server {
+namespace Response {
+class ConnectResponse;
+class CharactersListResponse;
+} // namespace Response
+} // namespace Server
+} // namespace Dummy
+
 namespace Screen {
 
 class SelectCharacterScreen : public UIScreen {
@@ -17,17 +27,22 @@ public:
     virtual ~SelectCharacterScreen();
     virtual void handleCustomEvent(const ::CustomEvent&) override;
     virtual void loaded();
-    virtual void accept(std::shared_ptr<Model::Model> model) override {
-        model->visit(
-            std::reinterpret_pointer_cast<SelectCharacterScreen>(
-                shared_from_this()
-            )
-        );
-    }
-    void
-    setCharacters(
-        const Model::CharactersListModel::CharactersList& charactersList
-    );
+
+    virtual void
+    onResponse(const Dummy::Server::Response::Response& response)
+    override;
+
+
+    virtual void
+    visitResponse(
+        const Dummy::Server::Response::ConnectResponse&
+    ) override;
+
+    virtual void
+    visitResponse(
+        const Dummy::Server::Response::CharactersListResponse&
+    ) override;
+
 private:
     std::int16_t m_charactersCount;
     std::shared_ptr<Widget::Button> m_createCharacterButton;

@@ -3,20 +3,26 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 
+#include "server/response/response_visitor.hpp"
 #include "game_element.hpp"
 
 class CustomEvent;
 class Client;
 class Game;
 
-namespace Model {
-    class Model;
-}
+namespace Dummy {
+namespace Server {
+namespace Response {
+class Response;
+} // namespace Response
+} // namespace Server
+} // namespace Dummy
 
 namespace Screen {
 
 class Screen : public std::enable_shared_from_this<Screen>,
-               public ::GameElement
+               public ::GameElement,
+               public Dummy::Server::Response::ResponseVisitor
 {
 public:
     Screen(::Game&, ::Client&);
@@ -25,7 +31,8 @@ public:
     virtual void draw() = 0;
     virtual void tick();
     virtual void loaded();
-    virtual void accept(std::shared_ptr<Model::Model> model) = 0;
+    virtual void
+    onResponse(const Dummy::Server::Response::Response& response) = 0;
 
 protected:
     ::Game& m_game;

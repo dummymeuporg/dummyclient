@@ -54,21 +54,25 @@ void PlayingState::_parseMapUpdates(Dummy::Protocol::IncomingPacket& pkt) {
             _handleCharacterPosition(pkt);
             //m_model->update();
             // XXX: ugly
+            /*
             m_model->visit(
                 std::reinterpret_pointer_cast<Screen::GameScreen>(
                     m_client.game().screen()
                 )
             );
+            */
             break;
         case UpdateCode::CHARACTER_OFF:
             _handleCharacterOff(pkt);
             //m_model->update();
             /// XXX: ugly
+            /*
             m_model->visit(
                 std::reinterpret_pointer_cast<Screen::GameScreen>(
                     m_client.game().screen()
                 )
             );
+            */
             break;
         default:
             // XXX: error?

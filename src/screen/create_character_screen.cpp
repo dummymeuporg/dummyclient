@@ -154,9 +154,14 @@ void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
 
 void CreateCharacterScreen::_back() {
     auto self(shared_from_this());
-    std::shared_ptr<SelectCharacterScreen> screen =
-        std::make_shared<SelectCharacterScreen>(m_game, m_client);
-    m_game.setScreen(screen);
+    m_client.returnToPreviousScreen();
+}
+
+
+void CreateCharacterScreen::onResponse(
+    const Dummy::Server::Response::Response& response
+) {
+    response.accept(*this);
 }
 
 } // namespace Screen

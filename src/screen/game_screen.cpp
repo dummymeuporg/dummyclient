@@ -390,4 +390,11 @@ void GameScreen::tick() {
     }
 }
 
+
+void GameScreen::onResponse(
+    const Dummy::Server::Response::Response& response
+) {
+    response.accept(*this);
+}
+
 } // namespace Screen
