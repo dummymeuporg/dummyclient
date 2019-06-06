@@ -12,6 +12,9 @@
 #include "credentials.hpp"
 #include "screen/screen.hpp"
 
+#include "server/command/command.hpp"
+#include "server/response/response.hpp"
+
 class ClientError : public std::exception {
 
 };
@@ -30,11 +33,15 @@ public:
     }
 };
 
+namespace Connector {
+class Connector;
+}
+
 class MapView;
 
 class Client {
 public:
-    Client(::Game&, const Credentials&&);
+    Client(Connector::Connector&, ::Game&, const Credentials&&);
 
     const Credentials& credentials() const {
         return m_credentials;
@@ -43,6 +50,7 @@ public:
     sf::TcpSocket& socket() {
         return m_socket;
     }
+    void start();
 
     void checkData();
     void connect(const char* host, unsigned short port);
@@ -77,6 +85,9 @@ public:
         return m_state;
     }
 
+    void sendCommand(const Dummy::Server::Command::Command&);
+    void onResponse(const Dummy::Server::Response::Response&);
+
 	void move(int, int, const MapView&);
 
     void setCharacter(std::shared_ptr<Dummy::Core::Character>);
@@ -85,6 +96,7 @@ public:
 private:
     std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
         std::uint16_t, std::uint16_t);
+    Connector::Connector& m_connector;
     ::Game& m_game;
     sf::TcpSocket m_socket;
     std::uint16_t m_packetSize;

@@ -14,6 +14,7 @@ public:
     static const int FPS = 60;
     Game(const char*,
          const char*,
+         Connector::Connector&,
          Config&,
          std::size_t = 960,
          std::size_t = 720,

@@ -3,8 +3,6 @@
 #include <cstdint>
 #include <string>
 
-#include <boost/uuid/uuid.hpp>
-
 class Credentials {
 public:
     Credentials(const std::string&, const std::string&); 
@@ -13,11 +11,11 @@ public:
         return m_account;
     }
 
-    const std::uint8_t* sessionID() const {
-        return m_sessionID.data;
+    const std::string& sessionID() const {
+        return m_sessionID;
     }
 
 private:
     std::string m_account;
-    boost::uuids::uuid m_sessionID;
+    std::string m_sessionID;
 };

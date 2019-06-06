@@ -9,10 +9,11 @@
 
 Game::Game(const char* account,
            const char* sessionID,
+           Connector::Connector& connector,
            Config& config,
            std::size_t width, std::size_t height,
            std::size_t scaleFactor) 
-    : m_client(*this, Credentials(account, sessionID)),
+    : m_client(connector, *this, Credentials(account, sessionID)),
       m_config(config),
       m_window(sf::VideoMode(width, height),
 		       "DummyClient",
@@ -26,7 +27,7 @@ Game::Game(const char* account,
 
 int Game::run()
 {
-    m_client.connect(m_config.host().c_str(), m_config.port());
+    //m_client.connect(m_config.host().c_str(), m_config.port());
     sf::Clock clock;
     m_window.setKeyRepeatEnabled(false);
     m_window.setFramerateLimit(Game::FPS);

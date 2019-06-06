@@ -15,14 +15,10 @@ InitialState::InitialState(::Client& client) : State(client) {}
 void InitialState::resume() {
     const ::Credentials& creds(m_client.credentials());
     const std::string& account(creds.account());
-    const std::uint8_t* sessionID(creds.sessionID());
-
-    std::array<std::uint8_t, 16> sessionIDArray;
-
-    std::copy(sessionID, sessionID + 16, sessionIDArray.data());
+    const std::string sessionID(creds.sessionID());
 
     Dummy::Protocol::OutgoingPacket pkt;
-    pkt << account << sessionIDArray;
+    pkt << account << sessionID;
 
     // Send the packet.
     m_client.send(pkt);
@@ -43,6 +39,12 @@ void InitialState::onRead(Dummy::Protocol::IncomingPacket& pkt) {
         std::cerr << "wrong credentials." << std::endl;
         ::exit(-1);
     }
+}
+
+
+void
+InitialState::onResponse(const Dummy::Server::Response::Response& response) {
+
 }
 
 } // namespace ClientState

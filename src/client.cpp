@@ -1,14 +1,28 @@
 #include <cstring>
 #include <iostream>
 
+#include "connector/connector.hpp"
+#include "server/command/connect_command.hpp"
+
 #include "game.hpp"
 #include "map_view.hpp"
 #include "client.hpp"
 
-Client::Client(::Game& game, const Credentials&& credentials)
-    : m_game(game), m_packetSize(0), m_credentials(std::move(credentials)),
-      m_state(nullptr), m_character(nullptr)
+Client::Client(Connector::Connector& connector,
+               ::Game& game, const Credentials&& credentials)
+    : m_connector(connector), m_game(game), m_packetSize(0),
+      m_credentials(std::move(credentials)), m_state(nullptr),
+      m_character(nullptr)
 {
+}
+
+void Client::start() {
+    Dummy::Server::Command::ConnectCommand cmd(
+        m_credentials.account(), m_credentials.sessionID()
+    );
+    sendCommand(cmd);
+    //m_state = std::make_shared<Client::InitialState>(*this);
+
 }
 
 void Client::connect(const char* host, unsigned short port) {
@@ -218,4 +232,8 @@ void Client::_updateServerPosition(
         send(pkt);
         m_serverPosition = position;
     }
+}
+
+void Client::sendCommand(const Dummy::Server::Command::Command& command) {
+    m_connector.sendCommand(command);
 }
