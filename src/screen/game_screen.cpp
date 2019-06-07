@@ -8,7 +8,6 @@
 #include "graphics/living.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
-#include "model/playing_model.hpp"
 
 #include "screen/game_screen.hpp"
 

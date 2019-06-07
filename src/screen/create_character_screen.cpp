@@ -6,7 +6,6 @@
 
 #include "client.hpp"
 #include "game.hpp"
-#include "model/characters_list_model.hpp"
 #include "screen/create_character_screen.hpp"
 #include "screen/select_character_screen.hpp"
 #include "widget/label.hpp"

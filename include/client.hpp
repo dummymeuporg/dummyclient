@@ -8,7 +8,6 @@
 #include "core/character.hpp"
 #include "protocol/outgoing_packet.hpp"
 
-#include "client_state/initial_state.hpp"
 #include "credentials.hpp"
 #include "screen/screen.hpp"
 

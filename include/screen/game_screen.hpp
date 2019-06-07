@@ -4,7 +4,6 @@
 #include "camera.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
-#include "model/playing_model.hpp"
 #include "screen/ui_screen.hpp"
 
 namespace Screen {
@@ -27,8 +26,6 @@ public:
     virtual void handleCustomEvent(const ::CustomEvent&);
     virtual void draw() override;
     virtual void tick() override;
-
-    //void syncWithModel(std::shared_ptr<Model::PlayingModel> model);
 
     virtual void
     onResponse(const Dummy::Server::Response::Response& response)
@@ -58,7 +55,6 @@ private:
     sf::Clock m_syncLivingsClock;
 	unsigned int m_characterDirection;
 	bool m_isMoving;
-    //std::shared_ptr<Model::PlayingModel> m_model;
 };
 
 } // namespace Screen

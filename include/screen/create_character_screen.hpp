@@ -1,6 +1,5 @@
 #pragma once
 
-#include "model/model.hpp"
 #include "screen/ui_screen.hpp"
 #include "widget/button.hpp"
 #include "widget/label.hpp"

@@ -4,7 +4,6 @@
 #include "server/response/teleport_map.hpp"
 #include "game.hpp"
 #include "client.hpp"
-#include "client_state/playing_state.hpp"
 #include "screen/game_screen.hpp"
 #include "screen/loading_screen.hpp"
 
@@ -85,8 +84,6 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
     }
     case CustomEvent::Type::MapViewLoaded: {
         std::cerr << "Can display map." << std::endl;
-        std::shared_ptr<Model::PlayingModel> model =
-            std::make_shared<Model::PlayingModel>();
 
         Dummy::Server::Command::TeleportMap teleport(
             m_mapNameToLoad,
@@ -95,11 +92,6 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
         );
         m_client.sendCommand(teleport);
 
-        /*
-        m_client.changeState(
-            std::make_shared<ClientState::PlayingState>(m_client, model)
-        );
-        */
     }
     default:
         break;

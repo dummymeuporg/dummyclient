@@ -2,7 +2,6 @@
 
 #include <cstdint>
 
-#include "model/characters_list_model.hpp"
 #include "screen/ui_screen.hpp"
 #include "widget/button.hpp"
 #include "widget/label.hpp"
