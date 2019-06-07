@@ -1,3 +1,4 @@
+#include <iostream>
 #include "protocol/bridge.hpp"
 #include "protocol/outgoing_packet.hpp"
 #include "server/command/command.hpp"
@@ -26,6 +27,7 @@ InitialState::sendCommand(
 std::unique_ptr<const Dummy::Server::Response::Response>
 InitialState::getResponse(Dummy::Protocol::IncomingPacket& packet)
 {
+    std::cerr << "GOT PACKET!" << std::endl;
     return nullptr;
 }
 
