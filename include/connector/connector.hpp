@@ -16,6 +16,17 @@ class Command;
 
 namespace Connector {
 
+class Error : public std::exception {
+
+};
+
+class ConnectionError : public Error {
+public:
+    virtual const char* what() const noexcept override {
+        return "error while connecting to the server";
+    }
+};
+
 class Connector {
 public:
     Connector() {}
