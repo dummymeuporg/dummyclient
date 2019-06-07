@@ -17,6 +17,7 @@ public:
     const std::string& skin() const {
         return m_skinList[m_currentSkinIndex];
     }
+    void _updateSprite();
 private:
     int m_currentSkinIndex;
     sf::Vector2f m_origin;

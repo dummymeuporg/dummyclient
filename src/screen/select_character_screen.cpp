@@ -64,11 +64,11 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
         .setColor(sf::Color::White)
         .setFont("arial.ttf");
 
-    // 448 = (1280/2) - (24*4)
-    m_skinPreviewer->setPos(544, 150);
+    // 448 = (width/2) - (24*4)
+    m_skinPreviewer->setPos(384, 120);
 
-    // 450 = (1280/2) - (width of character selector / 2)
-    m_characterSelector->setPos(450, 500);
+    // 450 = (width/2) - (width of character selector (380) / 2)
+    m_characterSelector->setPos(310, 600);
 
     addWidget(m_accountLabel);
     addWidget(m_playButton);

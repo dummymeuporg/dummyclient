@@ -21,10 +21,6 @@ void SkinPreviewer::paint(sf::RenderWindow& window) {
     // draw the sprite
     if (m_currentSkinIndex >= 0 && m_currentSkinIndex < m_skinList.size())
     {
-        m_sprite.setTexture(texture(m_skinList[m_currentSkinIndex]));
-        m_sprite.setScale(8, 8);
-        m_sprite.setTextureRect(sf::IntRect(24, 32 * 2, 24, 32));
-        m_sprite.setPosition(sf::Vector2f(m_origin.x, m_origin.y));
         window.draw(m_sprite);
     }
 }
@@ -38,12 +34,14 @@ void SkinPreviewer::showNextSkin() {
     if (++m_currentSkinIndex == m_skinList.size()) {
         m_currentSkinIndex = 0;
     }
+    _updateSprite();
 }
 
 void SkinPreviewer::showPreviousSkin() {
     if (--m_currentSkinIndex < 0) {
         m_currentSkinIndex = m_skinList.size() - 1;
     }
+    _updateSprite();
 }
 
 SkinPreviewer& SkinPreviewer::setSkinList(std::vector<std::string>&& skinList)
@@ -52,8 +50,16 @@ SkinPreviewer& SkinPreviewer::setSkinList(std::vector<std::string>&& skinList)
     {
         m_currentSkinIndex = 0;
         m_skinList = std::move(skinList);
+        _updateSprite();
     }
     return *this;
+}
+
+void SkinPreviewer::_updateSprite() {
+    m_sprite.setTexture(texture(m_skinList[m_currentSkinIndex]));
+    m_sprite.setScale(6, 6);
+    m_sprite.setTextureRect(sf::IntRect(24, 32 * 2, 24, 32));
+    m_sprite.setPosition(sf::Vector2f(m_origin.x, m_origin.y));
 }
 
 } // namespace Widget
