@@ -1,3 +1,4 @@
+#include "protocol/outgoing_packet.hpp"
 #include "server/command/command.hpp"
 #include "server/response/response.hpp"
 #include "connector/network_connector.hpp"
@@ -24,12 +25,17 @@ void
 NetworkConnector::sendCommand(const Dummy::Server::Command::Command& command) {
     // XXX: convert the command to an outgoing packet, then send it
     // through network
+    m_state->sendCommand(command);
 }
 
 std::unique_ptr<const Dummy::Server::Response::Response>
 NetworkConnector::getResponse() {
     // XXX: read packet through network then build a response
     return nullptr;
+}
+
+void NetworkConnector::sendPacket(const Dummy::Protocol::OutgoingPacket& pkt) {
+    m_socket.send(pkt.buffer(), pkt.size());
 }
 
 

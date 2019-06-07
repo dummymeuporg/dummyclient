@@ -5,6 +5,9 @@
 
 
 namespace Dummy {
+namespace Protocol {
+class OutgoingPacket;
+} // namespace OutgoingPacket
 namespace Server {
 class GameSession;
 
@@ -29,6 +32,7 @@ public:
     getResponse() override;
 
     void connect();
+    void sendPacket(const Dummy::Protocol::OutgoingPacket&);
 private:
     std::string m_host;
     unsigned short m_port;

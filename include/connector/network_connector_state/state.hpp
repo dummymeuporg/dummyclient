@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "server/command/command_visitor.hpp"
 
 namespace Dummy {
 namespace Protocol {
@@ -24,7 +25,8 @@ namespace Connector {
 class NetworkConnector;
 namespace NetworkConnectorState {
 
-class State : public std::enable_shared_from_this<State> {
+class State : public std::enable_shared_from_this<State>,
+              public Dummy::Server::Command::CommandVisitor {
 public:
     State(NetworkConnector&);
 
@@ -34,7 +36,8 @@ public:
     virtual
     std::unique_ptr<const Dummy::Server::Response::Response>
     getResponse(Dummy::Protocol::IncomingPacket&) = 0;
-private:
+
+protected:
     NetworkConnector& m_networkConnector;
 };
 

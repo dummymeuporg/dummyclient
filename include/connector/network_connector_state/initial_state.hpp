@@ -23,6 +23,10 @@ public:
     std::unique_ptr<const Dummy::Server::Response::Response>
     getResponse(Dummy::Protocol::IncomingPacket&) override;
 
+    virtual
+    std::unique_ptr<const Dummy::Server::Response::Response>
+    visitCommand(const Dummy::Server::Command::ConnectCommand&) override;
+
 };
 
 } // namespace NetworkConnectorState
