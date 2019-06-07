@@ -1,4 +1,8 @@
 #include <iostream>
+
+#include <boost/core/ignore_unused.hpp>
+#include <boost/range/irange.hpp>
+
 #include "protocol/bridge.hpp"
 #include "protocol/incoming_packet.hpp"
 #include "protocol/outgoing_packet.hpp"
@@ -62,6 +66,17 @@ ReceivePrimaryInfoState::_getCharactersListResponse(
     std::unique_ptr<Dummy::Server::Response::CharactersListResponse> response =
         std::make_unique<Dummy::Server::Response::CharactersListResponse>();
     response->setStatus(status);
+    std::uint16_t charactersCount;
+    packet >> charactersCount;
+
+    for (const auto i: boost::irange(charactersCount)) {
+        boost::ignore_unused(i);
+        std::shared_ptr<Dummy::Core::Character> chr =
+            std::make_shared<Dummy::Core::Character>();
+        packet >> *chr;
+        response->addCharacter(chr);
+    }
+    
     return response;
 }
 
