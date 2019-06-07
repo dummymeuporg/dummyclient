@@ -7,6 +7,17 @@ namespace Dummy {
 namespace Protocol {
 class IncomingPacket;
 } // namespace Protocol
+
+namespace Server {
+namespace Command {
+class Command;
+} // namespace Command
+
+namespace Response {
+class Response;
+} // namespace Response
+
+} // namespace Server
 } // namespace Dummy
 
 namespace Connector {
