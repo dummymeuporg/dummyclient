@@ -1,11 +1,14 @@
+#include "server/command/command.hpp"
 #include "server/response/response.hpp"
 #include "connector/network_connector.hpp"
+#include "connector/network_connector_state/initial_state.hpp"
 
 namespace Connector {
 
 NetworkConnector::NetworkConnector(const std::string& host,
                                    unsigned short port)
-    : m_host(host), m_port(port), m_packetSize(0)
+    : m_host(host), m_port(port), m_packetSize(0),
+      m_state(std::make_shared<NetworkConnectorState::InitialState>(*this))
 {
 
 }

@@ -3,6 +3,7 @@
 #include <SFML/Network.hpp>
 #include "connector/connector.hpp"
 
+
 namespace Dummy {
 namespace Server {
 class GameSession;
@@ -14,6 +15,10 @@ class Response;
 } // namespace Dummy
 
 namespace Connector {
+
+namespace NetworkConnectorState {
+class State;
+}
 
 class NetworkConnector : public Connector {
 public:
@@ -29,6 +34,7 @@ private:
     unsigned short m_port;
     sf::TcpSocket m_socket;
     std::uint16_t m_packetSize;
+    std::shared_ptr<NetworkConnectorState::State> m_state;
 };
 
 } // namespace Connector
