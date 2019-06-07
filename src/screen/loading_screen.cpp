@@ -74,6 +74,13 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
         std::cerr << "Load map view" << std::endl;
         m_mapView = std::make_unique<::MapView>(std::move(m_graphicMap));
         std::cerr << "Loaded map view." << std::endl;
+        pushEvent(
+            CustomEvent(
+                reinterpret_cast<void*>(shared_from_this().get()),
+                CustomEvent::MapViewLoaded,
+                reinterpret_cast<void*>(shared_from_this().get())
+            )
+        );
         break;
     }
     case CustomEvent::Type::MapViewLoaded: {
