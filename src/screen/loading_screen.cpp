@@ -108,6 +108,7 @@ void LoadingScreen::onResponse(
 void LoadingScreen::visitResponse(
     const Dummy::Server::Response::TeleportMap& response
 ) {
+    std::cerr << "Got teleport map response" << std::endl;
     // Switch to game screen
     std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
         m_game, m_client, std::move(m_mapView)
