@@ -9,24 +9,28 @@
 
 Game::Game(const char* account,
            const char* sessionID,
+           Connector::Connector& connector,
            Config& config,
            std::size_t width, std::size_t height,
            std::size_t scaleFactor) 
-    : m_client(*this, Credentials(account, sessionID)),
+    : m_client(connector, *this, Credentials(account, sessionID)),
       m_config(config),
       m_window(sf::VideoMode(width, height),
 		       "DummyClient",
 		       sf::Style::Titlebar | sf::Style::Close),
       m_customEventQueue(CustomEventQueue::instance()),
       m_resourceProvider(ResourceProvider::instance()),
-      m_currentScreen(std::make_shared<Screen::SelectCharacterScreen>(
-        *this, m_client)),
       m_width(width), m_height(height), m_scaleFactor(scaleFactor)
 { }
 
 int Game::run()
 {
-    m_client.connect(m_config.host().c_str(), m_config.port());
+    //m_client.connect(m_config.host().c_str(), m_config.port());
+    m_client.setScreen(
+        std::make_shared<Screen::SelectCharacterScreen>(
+            *this, m_client
+        )
+    );
     sf::Clock clock;
     m_window.setKeyRepeatEnabled(false);
     m_window.setFramerateLimit(Game::FPS);
@@ -39,30 +43,25 @@ int Game::run()
                 m_window.close();
         }
 
-        m_client.checkData();
+        //m_client.checkData();
+        m_client.checkResponse();
         m_window.clear();
-        m_currentScreen->handleEvent(event);
+        m_client.screen()->handleEvent(event);
 
         CustomEvent customEvent;
         m_customEventQueue.pollEvent(customEvent);
         if (customEvent.type() != CustomEvent::None) {
-            m_currentScreen->handleCustomEvent(customEvent);
+            m_client.screen()->handleCustomEvent(customEvent);
         }
 
         if (clock.getElapsedTime().asMilliseconds() > 1000/Game::FPS) {
-            m_currentScreen->draw();
+            m_client.screen()->draw();
             m_window.display();
             clock.restart();
         }
-        m_currentScreen->tick();
+        m_client.screen()->tick();
         sf::sleep(sf::milliseconds(1));
     }
 
     return EXIT_SUCCESS;
-}
-
-void Game::setScreen(std::shared_ptr<Screen::Screen> screen) {
-    std::cerr << "Change screen." << std::endl;
-    m_currentScreen = screen;
-    m_currentScreen->loaded();
 }

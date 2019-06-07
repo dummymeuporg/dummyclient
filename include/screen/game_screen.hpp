@@ -4,7 +4,6 @@
 #include "camera.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
-#include "model/playing_model.hpp"
 #include "screen/ui_screen.hpp"
 
 namespace Screen {
@@ -20,8 +19,7 @@ public:
 
     GameScreen(::Game&,
                ::Client&,
-               std::unique_ptr<::MapView>,
-               std::shared_ptr<Model::PlayingModel> model);
+               std::unique_ptr<::MapView>);
     virtual ~GameScreen();
     virtual void loaded() override;
     virtual void handleEvent(const sf::Event&);
@@ -29,13 +27,10 @@ public:
     virtual void draw() override;
     virtual void tick() override;
 
-    void syncWithModel(std::shared_ptr<Model::PlayingModel> model);
+    virtual void
+    onResponse(const Dummy::Server::Response::Response& response)
+    override;
 
-    virtual void accept(std::shared_ptr<Model::Model> model) override {
-        model->visit(
-            std::reinterpret_pointer_cast<GameScreen>(shared_from_this())
-        );
-    }
 private:
     /* Private methods. */
     void _drawLayer(::Sprites&);
@@ -60,7 +55,6 @@ private:
     sf::Clock m_syncLivingsClock;
 	unsigned int m_characterDirection;
 	bool m_isMoving;
-    std::shared_ptr<Model::PlayingModel> m_model;
 };
 
 } // namespace Screen

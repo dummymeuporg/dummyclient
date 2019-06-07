@@ -1,6 +1,5 @@
 #include "client.hpp"
 
-#include "model/model.hpp"
 #include "screen/screen.hpp"
 
 namespace Screen {
@@ -18,6 +17,10 @@ void Screen::loaded() {
 }
 
 void Screen::tick() {
+
+}
+
+void Screen::returned() {
 
 }
 

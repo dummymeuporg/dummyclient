@@ -1,10 +1,9 @@
 #include <iostream>
 
+#include "server/command/teleport_map.hpp"
+#include "server/response/teleport_map.hpp"
 #include "game.hpp"
 #include "client.hpp"
-#include "client_state/playing_state.hpp"
-#include "model/loading_model.hpp"
-#include "model/playing_model.hpp"
 #include "screen/game_screen.hpp"
 #include "screen/loading_screen.hpp"
 
@@ -13,10 +12,12 @@ namespace Screen {
 LoadingScreen::LoadingScreen(
     ::Game& game,
     ::Client& client,
-    const std::string& mapNameToLoad
+    const std::string& mapNameToLoad,
+    const std::string& instance
 )
     : UIScreen(game, client),
       m_mapNameToLoad(mapNameToLoad),
+      m_instance(instance),
       m_label(std::make_shared<Widget::Label>()),
       m_graphicMap(nullptr),
       m_mapView(nullptr)
@@ -71,30 +72,47 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
     case CustomEvent::Type::MapFileLoaded: {
         std::cerr << "Load map view" << std::endl;
         m_mapView = std::make_unique<::MapView>(std::move(m_graphicMap));
-        std::cerr << "Loaded map view. Switch to gamescreen." << std::endl;
-        Dummy::Protocol::OutgoingPacket pkt;
-        const std::pair<std::uint16_t, std::uint16_t>& position(
-            m_client.character()->position()
+        std::cerr << "Loaded map view." << std::endl;
+        pushEvent(
+            CustomEvent(
+                reinterpret_cast<void*>(shared_from_this().get()),
+                CustomEvent::MapViewLoaded,
+                reinterpret_cast<void*>(shared_from_this().get())
+            )
         );
-        pkt << m_mapNameToLoad << position.first << position.second;
-        m_client.send(pkt);
         break;
     }
     case CustomEvent::Type::MapViewLoaded: {
         std::cerr << "Can display map." << std::endl;
-        std::shared_ptr<Model::PlayingModel> model =
-            std::make_shared<Model::PlayingModel>();
-        std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
-            m_game, m_client, std::move(m_mapView), model
+
+        Dummy::Server::Command::TeleportMap teleport(
+            m_mapNameToLoad,
+            m_client.character()->position(),
+            m_instance
         );
-        m_game.setScreen(screen);
-        m_client.changeState(
-            std::make_shared<ClientState::PlayingState>(m_client, model)
-        );
+        m_client.sendCommand(teleport);
+
     }
     default:
         break;
     }
+}
+
+void LoadingScreen::onResponse(
+    const Dummy::Server::Response::Response& response
+) {
+    response.accept(*this);
+}
+
+void LoadingScreen::visitResponse(
+    const Dummy::Server::Response::TeleportMap& response
+) {
+    std::cerr << "Got teleport map response" << std::endl;
+    // Switch to game screen
+    std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
+        m_game, m_client, std::move(m_mapView)
+    );
+    m_client.setScreen(screen);
 }
 
 } // namespace Screen

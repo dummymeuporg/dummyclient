@@ -14,21 +14,17 @@ public:
     static const int FPS = 60;
     Game(const char*,
          const char*,
+         Connector::Connector&,
          Config&,
          std::size_t = 960,
          std::size_t = 720,
          std::size_t = 2);
     int run();
-    void setScreen(std::shared_ptr<Screen::Screen> screen);
     sf::RenderWindow& window() {
         return m_window;
     }
     Client& client() {
         return m_client;
-    }
-
-    std::shared_ptr<Screen::Screen> screen() {
-        return m_currentScreen;
     }
 
     std::size_t width() const {
@@ -48,7 +44,6 @@ private:
     sf::RenderWindow m_window;
     ::CustomEventQueue& m_customEventQueue;
     ::ResourceProvider& m_resourceProvider;
-    std::shared_ptr<Screen::Screen> m_currentScreen;
     std::size_t m_width, m_height;
     std::size_t m_scaleFactor;
 };

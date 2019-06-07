@@ -33,7 +33,7 @@ set(CLIENT_LINK_LIBRARIES
 if (UNIX)
     set(CLIENT_LINK_LIBRARIES
         ${CLIENT_LINK_LIBRARIES}
-        boost_filesystem
+        pthread
         stdc++fs
     )
     add_executable(dummyclient ${SOURCES} ${HEADERS})

@@ -2,12 +2,24 @@
 
 #include <cstdint>
 
-#include "model/characters_list_model.hpp"
 #include "screen/ui_screen.hpp"
 #include "widget/button.hpp"
 #include "widget/label.hpp"
 #include "widget/character_selector.hpp"
 #include "widget/skin_previewer.hpp"
+
+
+namespace Dummy {
+namespace Core {
+class Character;
+} // namespace Core
+namespace Server {
+namespace Response {
+class ConnectResponse;
+class CharactersListResponse;
+} // namespace Response
+} // namespace Server
+} // namespace Dummy
 
 namespace Screen {
 
@@ -16,19 +28,33 @@ public:
     SelectCharacterScreen(::Game&, ::Client&);
     virtual ~SelectCharacterScreen();
     virtual void handleCustomEvent(const ::CustomEvent&) override;
-    virtual void accept(std::shared_ptr<Model::Model> model) override {
-        model->visit(
-            std::reinterpret_pointer_cast<SelectCharacterScreen>(
-                shared_from_this()
-            )
-        );
-    }
-    void
-    setCharacters(
-        const Model::CharactersListModel::CharactersList& charactersList
-    );
+    virtual void loaded();
+    virtual void returned();
+
+    virtual void
+    onResponse(const Dummy::Server::Response::Response& response)
+    override;
+
+
+    virtual void
+    visitResponse(
+        const Dummy::Server::Response::ConnectResponse&
+    ) override;
+
+    virtual void
+    visitResponse(
+        const Dummy::Server::Response::CharactersListResponse&
+    ) override;
+
+    virtual void
+    visitResponse(
+        const Dummy::Server::Response::SelectCharacter&
+    ) override;
+
 private:
-    std::int16_t m_charactersCount;
+    void _refreshCharactersList();
+    std::vector<std::shared_ptr<Dummy::Core::Character>> m_characters;
+    std::shared_ptr<Dummy::Core::Character> m_selectedCharacter;
     std::shared_ptr<Widget::Button> m_createCharacterButton;
     std::shared_ptr<Widget::Button> m_playButton;
     std::shared_ptr<Widget::Label> m_accountLabel;

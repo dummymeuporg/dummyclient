@@ -4,10 +4,14 @@
 #include "client.hpp"
 #include "game.hpp"
 
-#include "protocol/outgoing_packet.hpp"
+#include "server/command/connect_command.hpp"
+#include "server/command/get_primary_info_command.hpp"
+#include "server/command/select_character.hpp"
+#include "server/response/connect_response.hpp"
+#include "server/response/characters_list_response.hpp"
+#include "server/response/select_character.hpp"
 
-#include "model/characters_list_model.hpp"
-#include "model/loading_model.hpp"
+#include "protocol/outgoing_packet.hpp"
 
 #include "screen/create_character_screen.hpp"
 #include "screen/loading_screen.hpp"
@@ -17,7 +21,8 @@ namespace Screen {
 
 SelectCharacterScreen::SelectCharacterScreen(::Game& game,
                                              ::Client& client)
-    : UIScreen(game, client), m_charactersCount(-1),
+    : UIScreen(game, client),
+      m_selectedCharacter(nullptr),
       m_createCharacterButton(std::make_shared<Widget::Button>()),
       m_playButton(std::make_shared<Widget::Button>()),
       m_accountLabel(std::make_shared<Widget::Label>()),
@@ -36,7 +41,7 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
     m_playButton->setCaption("Play");
     m_playButton->setEnabled(false);
 
-    m_createCharacterButton->setPos(950, 730);
+    m_createCharacterButton->setPos(500, 500);
     m_createCharacterButton
         ->setBackgroundColor(sf::Color(183, 109, 44))
         .setBorderColor(sf::Color(94, 47, 6))
@@ -76,6 +81,20 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
 SelectCharacterScreen::~SelectCharacterScreen()
 {}
 
+void SelectCharacterScreen::loaded() {
+    std::cerr << "Send command for primary info" << std::endl;
+    Dummy::Server::Command::ConnectCommand cmd(
+        m_client.credentials().account(),
+        m_client.credentials().sessionID()
+    );
+    m_client.sendCommand(cmd);
+}
+
+
+void SelectCharacterScreen::returned() {
+    _refreshCharactersList();
+}
+
 void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
 {
     auto self(shared_from_this());
@@ -85,9 +104,9 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
             std::make_shared<CreateCharacterScreen>(
                 m_game,
                 m_client,
-                m_characterSelector->characters().size() // XXX
+                m_characters
             );
-        m_game.setScreen(screen);
+        m_client.setScreen(screen, true);
     } else if (event.source() == m_characterSelector.get()) {
         std::shared_ptr<const Dummy::Core::Character> character =
             m_characterSelector->selectedCharacter();
@@ -98,43 +117,70 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
         );
         m_playButton->setEnabled(true);
     } else if (event.source() == m_playButton.get()) {
-        std::shared_ptr<Dummy::Core::Character> chr =
+        m_selectedCharacter = 
             m_characterSelector->selectedCharacter();
-        std::uint8_t request = 2;
-        Dummy::Protocol::OutgoingPacket pkt;
-        pkt << request;
-        pkt << chr->name();
-        m_client.send(pkt);
 
-        std::shared_ptr<Model::LoadingModel> model =
-            std::make_shared<Model::LoadingModel>();
+        Dummy::Server::Command::SelectCharacter selectCharacter(
+            m_selectedCharacter->name()
+        );
 
-        std::shared_ptr<LoadingScreen> screen =
-            std::make_shared<LoadingScreen>(
-                m_game, m_client, chr->mapLocation()
-            );
-        m_client.setCharacter(chr);
-        m_game.setScreen(screen);
+        m_client.sendCommand(selectCharacter);
     }
 }
 
-void
-SelectCharacterScreen::setCharacters(
-    const Model::CharactersListModel::CharactersList& charactersList
+void SelectCharacterScreen::onResponse(
+    const Dummy::Server::Response::Response& response
 ) {
+    response.accept(*this);
+}
+
+void SelectCharacterScreen::visitResponse(
+    const Dummy::Server::Response::ConnectResponse& response
+) {
+    std::cerr << "Got connect response." << std::endl;
+    switch(response.status()) {
+    case 0: /* O.K. */
+        m_client.sendCommand(Dummy::Server::Command::GetPrimaryInfoCommand());
+        break;
+    default: /* Quit the program */
+        break;
+    }
+}
+
+void SelectCharacterScreen::_refreshCharactersList() {
+    std::cerr << "Got characters list." << std::endl;
     std::stringstream ss;
-    m_charactersCount = charactersList.size();
-    ss << "You have " << m_charactersCount << " characters";
+    ss << "You have " << m_characters.size() << " characters";
 
     m_charactersCountLabel->setCaption(ss.str());
-    m_characterSelector->setCharacters(charactersList);
+    m_characterSelector->setCharacters(m_characters);
 
     // Center the label
     sf::Text& caption(m_charactersCountLabel->caption());
     sf::FloatRect textRect = caption.getLocalBounds();
     caption.setOrigin(textRect.left + textRect.width/2.0f,
                       textRect.top  + textRect.height/2.0f);
-    caption.setPosition(1280/2, 960/2);
+    caption.setPosition(m_game.width()/2, m_game.height()/2);
+}
+
+void SelectCharacterScreen::visitResponse(
+    const Dummy::Server::Response::CharactersListResponse& response
+) {
+    m_characters = std::move(response.charactersList());
+    _refreshCharactersList();
+}
+
+
+void SelectCharacterScreen::visitResponse(
+    const Dummy::Server::Response::SelectCharacter&
+) {
+
+    auto self(shared_from_this());
+    std::shared_ptr<LoadingScreen> screen = std::make_shared<LoadingScreen>(
+        m_game, m_client, m_selectedCharacter->mapLocation(), "main"
+    );
+    m_client.setCharacter(m_selectedCharacter);
+    m_client.setScreen(screen, true);
 
 }
 

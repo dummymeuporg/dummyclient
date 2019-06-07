@@ -1,34 +1,41 @@
 #pragma once
 
-#include "model/model.hpp"
 #include "screen/ui_screen.hpp"
 #include "widget/button.hpp"
 #include "widget/label.hpp"
 #include "widget/skin_previewer.hpp"
 #include "widget/textbox.hpp"
 
+
+namespace Dummy {
+namespace Core {
+class Character;
+} // namespace Core
+} // namespace Dummy
+
 namespace Screen {
 
 class CreateCharacterScreen : public UIScreen {
 public:
-    CreateCharacterScreen(::Game&, ::Client&, std::size_t);
+    CreateCharacterScreen(
+        ::Game&,
+        ::Client&,
+        std::vector<std::shared_ptr<Dummy::Core::Character>>&
+    );
     virtual ~CreateCharacterScreen();
     virtual void handleCustomEvent(const ::CustomEvent&) override;
-    virtual void accept(std::shared_ptr<Model::Model> model) override {
-        model->visit(
-            std::reinterpret_pointer_cast<CreateCharacterScreen>(
-                shared_from_this()
-            )
-        );
-    }
-    std::size_t initialCharactersCount() const {
-        return m_initialCharactersCount;
-    }
+
+    virtual void
+    onResponse(const Dummy::Server::Response::Response& response) override;
+
+    virtual void visitResponse(
+        const Dummy::Server::Response::CreateCharacter&
+    ) override;
 private:
     void _handleButtonClicked(const ::CustomEvent&);
     void _onCreateCharacterButton();
     void _back();
-    std::size_t m_initialCharactersCount;
+    std::vector<std::shared_ptr<Dummy::Core::Character>>& m_characters;
     std::shared_ptr<Widget::Label> m_characterNameLabel; 
     std::shared_ptr<Widget::Textbox> m_characterNameTextbox;
     std::shared_ptr<Widget::Label> m_characterSkinLabel; 

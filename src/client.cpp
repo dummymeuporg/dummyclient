@@ -1,14 +1,29 @@
 #include <cstring>
 #include <iostream>
 
+#include "connector/connector.hpp"
+
 #include "game.hpp"
 #include "map_view.hpp"
 #include "client.hpp"
 
-Client::Client(::Game& game, const Credentials&& credentials)
-    : m_game(game), m_packetSize(0), m_credentials(std::move(credentials)),
-      m_state(nullptr), m_character(nullptr)
+Client::Client(Connector::Connector& connector,
+               ::Game& game, const Credentials&& credentials)
+    : m_connector(connector), m_game(game),
+      m_packetSize(0),
+      m_currentScreen(nullptr),
+      m_credentials(std::move(credentials)),
+      m_character(nullptr)
 {
+}
+
+void Client::checkResponse() {
+    std::unique_ptr<const Dummy::Server::Response::Response> response =
+        std::move(m_connector.getResponse());
+
+    if (nullptr != response && m_currentScreen != nullptr) {
+        m_currentScreen->onResponse(*response);
+    }
 }
 
 void Client::connect(const char* host, unsigned short port) {
@@ -17,9 +32,6 @@ void Client::connect(const char* host, unsigned short port) {
         throw ConnectionError();
     }
     m_socket.setBlocking(false);
-
-    m_state = std::make_shared<ClientState::InitialState>(*this); 
-    m_state->resume();
 }
 
 void Client::checkData() {
@@ -44,7 +56,7 @@ void Client::checkData() {
     if (m_packetSize == receivedBytes) {
         // Everything is fine. Reset the packet size and handle the data.
         Dummy::Protocol::IncomingPacket pkt(buffer);
-        m_state->onRead(pkt);
+        //m_state->onRead(pkt);
         m_packetSize = 0;
     } else {
         std::cerr << "Houston, I don't know how to handle this error."
@@ -59,12 +71,6 @@ void Client::send(const std::uint8_t* data, std::size_t size) {
 
 void Client::send(const Dummy::Protocol::OutgoingPacket& packet) {
     m_socket.send(packet.buffer(), packet.size());
-}
-
-void Client::changeState(std::shared_ptr<ClientState::State> state) {
-	auto selfState(m_state->shared_from_this());
-    m_state = state;
-    m_state->resume();
 }
 
 void Client::setCharacter(std::shared_ptr<Dummy::Core::Character> character) {
@@ -185,7 +191,7 @@ void Client::move(int xVector, int yVector, const MapView& mapView) {
 		)
 	);
 
-	_updateServerPosition(servCoords);
+	//_updateServerPosition(servCoords);
 }
 
 std::pair<std::uint16_t, std::uint16_t>
@@ -217,5 +223,28 @@ void Client::_updateServerPosition(
             << position.second << std::endl;
         send(pkt);
         m_serverPosition = position;
+    }
+}
+
+void Client::sendCommand(const Dummy::Server::Command::Command& command) {
+    m_connector.sendCommand(command);
+}
+
+void Client::setScreen(std::shared_ptr<Screen::Screen> screen,
+                       bool savePreviousScreen)
+{
+    if (savePreviousScreen && m_currentScreen != nullptr) {
+        m_previousScreens.push_back(m_currentScreen);
+    }
+
+    m_currentScreen = screen;
+    m_currentScreen->loaded();
+}
+
+void Client::returnToPreviousScreen() {
+    if (m_previousScreens.size() > 0) {
+        m_currentScreen = m_previousScreens.back();
+        m_previousScreens.pop_back();
+        m_currentScreen->returned();
     }
 }
