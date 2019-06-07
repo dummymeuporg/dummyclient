@@ -7,11 +7,11 @@
 namespace Dummy {
 namespace Server {
 namespace Command {
-class ConnectCommand;
+class GetPrimaryInfoCommand;
 } // namespace Command
 
 namespace Response {
-class ConnectResponse;
+class CharactersListResponse;
 } // namespace Response
 } // namespace Server
 
@@ -23,9 +23,9 @@ class IncomingPacket;
 namespace Connector {
 namespace NetworkConnectorState {
 
-class InitialState : public State {
+class ReceivePrimaryInfoState : public State {
 public:
-    InitialState(NetworkConnector&);
+    ReceivePrimaryInfoState(NetworkConnector&);
     virtual void
     sendCommand(const Dummy::Server::Command::Command&) override;
 
@@ -35,10 +35,11 @@ public:
 
     virtual
     std::unique_ptr<const Dummy::Server::Response::Response>
-    visitCommand(const Dummy::Server::Command::ConnectCommand&) override;
+    visitCommand(const Dummy::Server::Command::GetPrimaryInfoCommand&)
+    override;
 private:
-    std::unique_ptr<const Dummy::Server::Response::ConnectResponse>
-    _getConnectResponse(Dummy::Protocol::IncomingPacket&);
+    std::unique_ptr<const Dummy::Server::Response::CharactersListResponse>
+    _getCharactersListResponse(Dummy::Protocol::IncomingPacket&);
 
 };
 

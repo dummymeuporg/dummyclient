@@ -33,6 +33,7 @@ public:
 
     void connect();
     void sendPacket(const Dummy::Protocol::OutgoingPacket&);
+    void changeState(std::shared_ptr<NetworkConnectorState::State>);
 private:
     std::string m_host;
     unsigned short m_port;

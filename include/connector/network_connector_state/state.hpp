@@ -25,6 +25,17 @@ namespace Connector {
 class NetworkConnector;
 namespace NetworkConnectorState {
 
+class Error : public std::exception {
+
+};
+
+class UnknownResponseError : public Error {
+public:
+    virtual const char* what() const noexcept override {
+        return "the response code is incorrect";
+    }
+};
+
 class State : public std::enable_shared_from_this<State>,
               public Dummy::Server::Command::CommandVisitor {
 public:

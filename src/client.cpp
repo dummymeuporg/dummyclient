@@ -26,45 +26,6 @@ void Client::checkResponse() {
     }
 }
 
-void Client::connect(const char* host, unsigned short port) {
-    if(sf::Socket::Status::Done != m_socket.connect(host, port))
-    {
-        throw ConnectionError();
-    }
-    m_socket.setBlocking(false);
-}
-
-void Client::checkData() {
-    sf::Socket::Status status;
-    std::size_t receivedBytes;
-    if (m_packetSize == 0) {
-        // Read size of incoming packet.
-        status = m_socket.receive(reinterpret_cast<void*>(&m_packetSize),
-                                  sizeof(std::uint16_t),
-                                  receivedBytes);
-
-        if(sf::Socket::Status::NotReady == status) {
-            return; // Try again.
-        }
-    }
-
-    // From here, packetSize should have been set.
-    std::vector<std::uint8_t> buffer(m_packetSize);
-    status = m_socket.receive(reinterpret_cast<void*>(buffer.data()),
-                              m_packetSize,
-                              receivedBytes);
-    if (m_packetSize == receivedBytes) {
-        // Everything is fine. Reset the packet size and handle the data.
-        Dummy::Protocol::IncomingPacket pkt(buffer);
-        //m_state->onRead(pkt);
-        m_packetSize = 0;
-    } else {
-        std::cerr << "Houston, I don't know how to handle this error."
-            << std::endl;
-        ::exit(-1);
-    }
-}
-
 void Client::send(const std::uint8_t* data, std::size_t size) {
     m_socket.send(data, size);
 }

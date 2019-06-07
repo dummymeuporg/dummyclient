@@ -1,3 +1,5 @@
+#include <iostream>
+#include "protocol/incoming_packet.hpp"
 #include "protocol/outgoing_packet.hpp"
 #include "server/command/command.hpp"
 #include "server/response/response.hpp"
@@ -23,14 +25,50 @@ void NetworkConnector::connect() {
 
 void
 NetworkConnector::sendCommand(const Dummy::Server::Command::Command& command) {
-    // XXX: convert the command to an outgoing packet, then send it
-    // through network
     m_state->sendCommand(command);
+}
+
+
+void NetworkConnector::changeState(
+    std::shared_ptr<NetworkConnectorState::State> state
+) {
+    m_state = state;
 }
 
 std::unique_ptr<const Dummy::Server::Response::Response>
 NetworkConnector::getResponse() {
-    // XXX: read packet through network then build a response
+    sf::Socket::Status status;
+    std::size_t receivedBytes;
+    if (m_packetSize == 0) {
+        // Read size of incoming packet.
+        status = m_socket.receive(reinterpret_cast<void*>(&m_packetSize),
+                                  sizeof(std::uint16_t),
+                                  receivedBytes);
+
+        if (sf::Socket::Status::Disconnected == status) {
+            std::cerr << "Error: disconnected." << std::endl;
+            ::exit(EXIT_FAILURE);
+        } else if(sf::Socket::Status::NotReady == status) {
+            return nullptr; // Try again.
+        }
+    }
+
+    // From here, packetSize should have been set.
+    std::vector<std::uint8_t> buffer(m_packetSize);
+    status = m_socket.receive(reinterpret_cast<void*>(buffer.data()),
+                              m_packetSize,
+                              receivedBytes);
+    if (m_packetSize == receivedBytes) {
+        // Everything is fine. Reset the packet size and handle the data.
+        Dummy::Protocol::IncomingPacket pkt(buffer);
+        m_packetSize = 0;
+        return m_state->getResponse(pkt);
+    } else {
+        std::cerr << "Houston, I don't know how to handle this error."
+            << std::endl;
+        ::exit(EXIT_FAILURE);
+    }
+
     return nullptr;
 }
 
