@@ -17,8 +17,7 @@ namespace Screen {
 GameScreen::GameScreen(
     ::Game& game,
     ::Client& client,
-    std::unique_ptr<::MapView> mapView,
-    std::shared_ptr<Model::PlayingModel> model
+    std::unique_ptr<::MapView> mapView
 )
     : UIScreen(game, client), m_mapView(std::move(mapView)),
       m_camera(m_client.pixelPosition().first + 12 * m_game.scaleFactor(),
@@ -35,8 +34,7 @@ GameScreen::GameScreen(
       m_isArrowPressed(false),
       m_direction(sf::Keyboard::Unknown),
 	  m_characterDirection(DIRECTION_NONE),
-	  m_isMoving(false),
-      m_model(model)
+	  m_isMoving(false)
 {
     m_player.setPixelX(m_client.pixelPosition().first);
     m_player.setPixelY(m_client.pixelPosition().second);
@@ -52,6 +50,7 @@ void GameScreen::loaded() {
 }
 
 
+/*
 void GameScreen::syncWithModel(std::shared_ptr<Model::PlayingModel> model) {
     const std::pair<std::uint16_t, std::uint16_t>& position(
         m_client.pixelPosition()
@@ -104,6 +103,7 @@ void GameScreen::syncWithModel(std::shared_ptr<Model::PlayingModel> model) {
         }
     }
 }
+*/
 
 void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
@@ -330,6 +330,7 @@ void GameScreen::draw() {
     UIScreen::draw();
 }
 
+/*
 void GameScreen::_syncLivings() {
     std::shared_ptr<Model::PlayingModel> model =
         std::dynamic_pointer_cast<Model::PlayingModel>(m_model);
@@ -364,18 +365,18 @@ void GameScreen::_syncLivings() {
         }
     }
 }
-
+*/
 void GameScreen::tick() {
 	/*
 	std::cerr << m_client.serverPosition().first <<
 		", " << m_client.serverPosition().second << std::endl;
 		*/
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
-        m_client.ping();
+        //m_client.ping();
         m_pingClock.restart();
     }
     if (m_syncLivingsClock.getElapsedTime().asMicroseconds() >= 2000) {
-		_syncLivings();
+		//_syncLivings();
         m_syncLivingsClock.restart();
     }
 

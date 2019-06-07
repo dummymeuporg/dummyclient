@@ -20,9 +20,11 @@ void PlayingModel::removeLiving(const std::string& name) {
 
 void
 PlayingModel::visit(std::shared_ptr<Screen::GameScreen> screen) {
+    /*
     screen->syncWithModel(
         std::reinterpret_pointer_cast<PlayingModel>(shared_from_this())
     );
+    */
 }
 
 } // namespace Model

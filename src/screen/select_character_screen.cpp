@@ -180,10 +180,10 @@ void SelectCharacterScreen::visitResponse(
 
     auto self(shared_from_this());
     std::shared_ptr<LoadingScreen> screen = std::make_shared<LoadingScreen>(
-        m_game, m_client, m_selectedCharacter->mapLocation()
+        m_game, m_client, m_selectedCharacter->mapLocation(), "main"
     );
     m_client.setCharacter(m_selectedCharacter);
-    m_client.setScreen(screen);
+    m_client.setScreen(screen, true);
 
 }
 

@@ -191,7 +191,7 @@ void Client::move(int xVector, int yVector, const MapView& mapView) {
 		)
 	);
 
-	_updateServerPosition(servCoords);
+	//_updateServerPosition(servCoords);
 }
 
 std::pair<std::uint16_t, std::uint16_t>

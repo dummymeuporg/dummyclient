@@ -20,8 +20,7 @@ public:
 
     GameScreen(::Game&,
                ::Client&,
-               std::unique_ptr<::MapView>,
-               std::shared_ptr<Model::PlayingModel> model);
+               std::unique_ptr<::MapView>);
     virtual ~GameScreen();
     virtual void loaded() override;
     virtual void handleEvent(const sf::Event&);
@@ -29,7 +28,7 @@ public:
     virtual void draw() override;
     virtual void tick() override;
 
-    void syncWithModel(std::shared_ptr<Model::PlayingModel> model);
+    //void syncWithModel(std::shared_ptr<Model::PlayingModel> model);
 
     virtual void
     onResponse(const Dummy::Server::Response::Response& response)
@@ -59,7 +58,7 @@ private:
     sf::Clock m_syncLivingsClock;
 	unsigned int m_characterDirection;
 	bool m_isMoving;
-    std::shared_ptr<Model::PlayingModel> m_model;
+    //std::shared_ptr<Model::PlayingModel> m_model;
 };
 
 } // namespace Screen
