@@ -7,11 +7,13 @@
 namespace Dummy {
 namespace Server {
 namespace Command {
-class ConnectCommand;
+class CreateCharacter;
+class SelectCharacter;
 } // namespace Command
 
 namespace Response {
-class ConnectResponse;
+class CreateCharacter;
+class SelectCharacter;
 } // namespace Response
 } // namespace Server
 
@@ -23,9 +25,9 @@ class IncomingPacket;
 namespace Connector {
 namespace NetworkConnectorState {
 
-class InitialState : public State {
+class ManageCharactersState : public State {
 public:
-    InitialState(NetworkConnector&);
+    ManageCharactersState(NetworkConnector&);
     virtual void
     sendCommand(const Dummy::Server::Command::Command&) override;
 
@@ -34,11 +36,23 @@ public:
     getResponse(Dummy::Protocol::IncomingPacket&) override;
 
     virtual void
-    visitCommand(const Dummy::Server::Command::ConnectCommand&) override;
-private:
-    std::unique_ptr<const Dummy::Server::Response::ConnectResponse>
-    _getConnectResponse(Dummy::Protocol::IncomingPacket&);
+    visitCommand(const Dummy::Server::Command::CreateCharacter&)
+    override;
 
+    virtual void
+    visitCommand(const Dummy::Server::Command::SelectCharacter&)
+    override;
+
+private:
+    std::unique_ptr<const Dummy::Server::Response::CreateCharacter>
+    _createCharacter(
+        Dummy::Protocol::IncomingPacket& packet
+    );
+
+    std::unique_ptr<const Dummy::Server::Response::SelectCharacter>
+    _selectCharacter(
+        Dummy::Protocol::IncomingPacket& packet
+    );
 };
 
 } // namespace NetworkConnectorState

@@ -12,6 +12,7 @@
 #include "server/response/characters_list_response.hpp"
 #include "connector/network_connector.hpp"
 #include "connector/network_connector_state/receive_primary_info_state.hpp"
+#include "connector/network_connector_state/manage_characters_state.hpp"
 
 namespace Connector {
 namespace NetworkConnectorState {
@@ -45,8 +46,7 @@ ReceivePrimaryInfoState::getResponse(Dummy::Protocol::IncomingPacket& packet)
     return nullptr;
 }
 
-std::unique_ptr<const Dummy::Server::Response::Response>
-ReceivePrimaryInfoState::visitCommand(
+void ReceivePrimaryInfoState::visitCommand(
     const Dummy::Server::Command::GetPrimaryInfoCommand& info
 ) {
     Dummy::Protocol::OutgoingPacket pkt;
@@ -54,7 +54,6 @@ ReceivePrimaryInfoState::visitCommand(
         Dummy::Protocol::Bridge::GET_PRIMARY_INFO
     );
     m_networkConnector.sendPacket(pkt);
-    return nullptr; // no response to return
 }
 
 std::unique_ptr<const Dummy::Server::Response::CharactersListResponse>
@@ -76,6 +75,10 @@ ReceivePrimaryInfoState::_getCharactersListResponse(
         packet >> *chr;
         response->addCharacter(chr);
     }
+
+    m_networkConnector.changeState(
+        std::make_shared<ManageCharactersState>(m_networkConnector)
+    );
     
     return response;
 }

@@ -36,6 +36,7 @@ public:
     }
 };
 
+
 class State : public std::enable_shared_from_this<State>,
               public Dummy::Server::Command::CommandVisitor {
 public:

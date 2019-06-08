@@ -33,14 +33,14 @@ public:
     std::unique_ptr<const Dummy::Server::Response::Response>
     getResponse(Dummy::Protocol::IncomingPacket&) override;
 
-    virtual
-    std::unique_ptr<const Dummy::Server::Response::Response>
+    virtual void
     visitCommand(const Dummy::Server::Command::GetPrimaryInfoCommand&)
     override;
 private:
     std::unique_ptr<const Dummy::Server::Response::CharactersListResponse>
     _getCharactersListResponse(Dummy::Protocol::IncomingPacket&);
 
+    
 };
 
 } // namespace NetworkConnectorState

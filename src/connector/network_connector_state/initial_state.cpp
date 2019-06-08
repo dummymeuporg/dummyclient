@@ -42,15 +42,13 @@ InitialState::getResponse(Dummy::Protocol::IncomingPacket& packet)
     return nullptr;
 }
 
-std::unique_ptr<const Dummy::Server::Response::Response>
-InitialState::visitCommand(
+void InitialState::visitCommand(
     const Dummy::Server::Command::ConnectCommand& connect
 ) {
     Dummy::Protocol::OutgoingPacket pkt;
     pkt << static_cast<std::uint16_t>(Dummy::Protocol::Bridge::CONNECT);
     pkt << connect.tagName() << connect.sessionID();
     m_networkConnector.sendPacket(pkt);
-    return nullptr; // no response to return
 }
 
 std::unique_ptr<const Dummy::Server::Response::ConnectResponse>
