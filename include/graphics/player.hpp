@@ -1,12 +1,14 @@
 #include "graphics/living.hpp"
 
 class Client;
+class MapView;
 
 namespace Graphics {
 
 class Player : public Living {
 public:
     Player(
+        const ::MapView&,
         ::Client&,
         const std::string&,
         const std::string&,

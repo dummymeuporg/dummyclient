@@ -33,9 +33,9 @@ void WalkingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
     ));
 
 	int xPos = static_cast<int>(windowSize.x / 2) +
-		m_living.pixelX() - camera.centerX();
+		m_living.x() - camera.centerX();
 	int yPos = static_cast<int>(windowSize.y / 2) +
-		m_living.pixelY() - camera.centerY();
+		m_living.y() - camera.centerY();
 
     sprite.setPosition(xPos, yPos);
     window.draw(sprite);
@@ -43,18 +43,18 @@ void WalkingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
 
 void WalkingState::moveTowards(std::uint16_t x, std::uint16_t y) {
     auto self(shared_from_this());
-    if (m_living.pixelX() == x && m_living.pixelY() == y) {
+    if (m_living.x() == x && m_living.y() == y) {
         m_living.changeState(
             std::make_shared<LivingState::StandingState>(m_living)
         );
     } else {
-        if (m_living.pixelY() < y) {
+        if (m_living.y() < y) {
             m_living.setDirection(Dummy::Core::Character::Direction::DOWN);
-        } else if(m_living.pixelY() > y) {
+        } else if(m_living.y() > y) {
             m_living.setDirection(Dummy::Core::Character::Direction::UP);
-        } else if (m_living.pixelX() < x) {
+        } else if (m_living.x() < x) {
             m_living.setDirection(Dummy::Core::Character::Direction::RIGHT);
-        } else if (m_living.pixelX() > x) {
+        } else if (m_living.x() > x) {
             m_living.setDirection(Dummy::Core::Character::Direction::LEFT);
         }
     }

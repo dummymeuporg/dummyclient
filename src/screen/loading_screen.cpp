@@ -71,7 +71,10 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
     }
     case CustomEvent::Type::MapFileLoaded: {
         std::cerr << "Load map view" << std::endl;
-        m_mapView = std::make_unique<::MapView>(std::move(m_graphicMap));
+        m_mapView = std::make_unique<::MapView>(
+            std::move(m_graphicMap),
+            m_game.scaleFactor()
+        );
         std::cerr << "Loaded map view." << std::endl;
         pushEvent(
             CustomEvent(

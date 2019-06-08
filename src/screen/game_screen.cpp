@@ -22,6 +22,7 @@ GameScreen::GameScreen(
       m_camera(m_client.pixelPosition().first + 12 * m_game.scaleFactor(),
                m_client.pixelPosition().second + 16 * m_game.scaleFactor()),
       m_player(
+          *m_mapView,
           m_client,
           m_client.character()->skin(),
           m_client.character()->name(),
@@ -35,8 +36,11 @@ GameScreen::GameScreen(
 	  m_characterDirection(DIRECTION_NONE),
 	  m_isMoving(false)
 {
-    m_player.setPixelX(m_client.pixelPosition().first);
-    m_player.setPixelY(m_client.pixelPosition().second);
+    m_player.setX(
+        m_client.character()->position().first * 8 * m_game.scaleFactor());
+    m_player.setY(
+        m_client.character()->position().second * 8 * m_game.scaleFactor()
+    );
 }
 
 GameScreen::~GameScreen() {
@@ -199,11 +203,21 @@ void GameScreen::_moveCharacter(sf::Keyboard::Key key) {
 		m_player.setDirection(Dummy::Core::Character::Direction::RIGHT);
 	}
 
-	m_client.move(xVector, yVector, *m_mapView);
+    m_player.setXMovement(xVector);
+    m_player.setYMovement(yVector);
 
+	//m_client.move(xVector, yVector, *m_mapView);
+
+    /*
     m_camera.setCenter(
         m_client.pixelPosition().first + 12 * m_game.scaleFactor(),
         m_client.pixelPosition().second + 16 * m_game.scaleFactor()
+    );
+    */
+    
+    m_camera.setCenter(
+        m_player.x() + 12 * m_game.scaleFactor(),
+        m_player.y() + 16 * m_game.scaleFactor()
     );
 }
 
@@ -290,7 +304,6 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
         for (const auto y: boost::irange(yStart, yEnd)) {
             std::size_t index = y * m_mapView->width() + x;
             sf::Sprite& sprite = sprites.at(index);
-            sprite.setScale(m_game.scaleFactor(), m_game.scaleFactor());
             int windowX = ((x * 16 * m_game.scaleFactor()))
                 + 4 * m_game.scaleFactor() +
                 ((windowSize.x / 2) - static_cast<int>(m_camera.centerX()));
@@ -298,20 +311,24 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
                 + 24 * m_game.scaleFactor() +
                 ((windowSize.y / 2) - static_cast<int>(m_camera.centerY()));
             sprite.setPosition(sf::Vector2f(windowX, windowY));
+        }
+    }
+
+    // Draw for real
+    for(const auto x: boost::irange(xStart, xEnd)) {
+        for (const auto y: boost::irange(yStart, yEnd)) {
+            std::size_t index = y * m_mapView->width() + x;
+            sf::Sprite& sprite = sprites.at(index);
             m_game.window().draw(sprite);
         }
     }
 }
 
 void GameScreen::_drawCharacter() {
-    m_player.setPixelPosition(m_client.pixelPosition());
     m_player.draw(m_game.window(), m_camera);
 }
 
 void GameScreen::_drawLivings() {
-    const std::pair<std::uint16_t, std::uint16_t>& position(
-        m_client.pixelPosition()
-    );
     for (auto [name, living]: m_livings) {
         living->draw(m_game.window(), m_camera);
     }
@@ -370,6 +387,7 @@ void GameScreen::tick() {
 	std::cerr << m_client.serverPosition().first <<
 		", " << m_client.serverPosition().second << std::endl;
 		*/
+    m_player.tick();
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
         //m_client.ping();
         m_pingClock.restart();

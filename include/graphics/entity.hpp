@@ -7,12 +7,14 @@
 #include "game_element.hpp"
 
 class Camera;
+class MapView;
 
 namespace Graphics {
 
 class Entity : public ::GameElement {
 public:
-    Entity(const std::string&,
+    Entity(const MapView&,
+           const std::string&,
            std::size_t,
            std::size_t,
            std::size_t,
@@ -47,29 +49,17 @@ public:
         return m_y;
     }
 
-    int pixelX() const {
-        return m_pixelX;
-    }
-
-    int pixelY() const {
-        return m_pixelY;
-    }
-
     void setX(std::size_t x);
     void setY(std::size_t y);
-    void setPixelPosition(int x, int y);
-    void setPixelPosition(const std::pair<int, int>&);
-    void setPixelX(int);
-    void setPixelY(int);
     void setChipsetName(const std::string&);
 
     virtual void draw(sf::RenderWindow&, const ::Camera&) = 0;
 protected:
+    const MapView& m_mapView;
     const sf::Texture& m_chipset;
     sf::Sprite m_sprite;
     std::string m_chipsetName;
     std::size_t m_w, m_h, m_x, m_y, m_scaleFactor;
-    int m_pixelX, m_pixelY;
 
 };
 

@@ -8,7 +8,7 @@ using Sprites = std::vector<sf::Sprite>;
 
 class MapView : public GameElement {
 public:
-    MapView(std::unique_ptr<const Dummy::Core::GraphicMap>);
+    MapView(std::unique_ptr<const Dummy::Core::GraphicMap>, int scaleFactor);
     Sprites& firstLayerSprites() {
         return m_firstLayerSprites;
     }
@@ -41,6 +41,7 @@ private:
 
     /* Private members. */
     std::unique_ptr<const Dummy::Core::GraphicMap> m_graphicMap;
+    int m_scaleFactor;
     const sf::Texture& m_chipset;
     Sprites m_firstLayerSprites;
     Sprites m_secondLayerSprites;

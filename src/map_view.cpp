@@ -3,8 +3,10 @@
 #include <boost/range/irange.hpp>
 #include "map_view.hpp"
 
-MapView::MapView(std::unique_ptr<const Dummy::Core::GraphicMap> graphicMap)
+MapView::MapView(std::unique_ptr<const Dummy::Core::GraphicMap> graphicMap,
+                 int scaleFactor)
     : m_graphicMap(std::move(graphicMap)),
+      m_scaleFactor(scaleFactor),
       m_chipset(texture(m_graphicMap->chipset()))
 {
     std::cerr << "Map width: " << m_graphicMap->width() << std::endl;
@@ -37,6 +39,7 @@ MapView::_loadLayer(const Dummy::Core::GraphicLayer& layer, Sprites& sprites) {
             auto coords = layer[i];
             if (coords.first >= 0 && coords.second >= 0) {
                 sf::Sprite& sprite(sprites[i]);
+                sprite.setScale(m_scaleFactor, m_scaleFactor);
                 sprite.setTexture(m_chipset);
                 sprite.setTextureRect(sf::IntRect(16 * coords.first,
                                                   16 * coords.second,
