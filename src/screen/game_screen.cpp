@@ -19,8 +19,8 @@ GameScreen::GameScreen(
     std::unique_ptr<::MapView> mapView
 )
     : UIScreen(game, client), m_mapView(std::move(mapView)),
-      m_camera(m_client.pixelPosition().first + 12 * m_game.scaleFactor(),
-               m_client.pixelPosition().second + 16 * m_game.scaleFactor()),
+      m_camera(m_player.x() + 12 * m_game.scaleFactor(),
+               m_player.y() + 16 * m_game.scaleFactor()),
       m_player(
           *m_mapView,
           m_client,

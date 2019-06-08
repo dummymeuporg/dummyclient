@@ -39,7 +39,7 @@ public:
     }
 
     void moveTowards(std::uint16_t, std::uint16_t);
-    void tick();
+    virtual void tick();
 
     std::uint8_t velocity() const {
         return m_velocity;

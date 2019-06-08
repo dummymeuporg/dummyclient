@@ -72,18 +72,12 @@ public:
         return m_character;
     }
 
-    const std::pair<std::uint16_t, std::uint16_t> pixelPosition() const {
-        return m_pixelPosition;
-    }
-
     const std::pair<std::uint16_t, std::uint16_t> serverPosition() const {
         return m_serverPosition;
     }
 
     void sendCommand(const Dummy::Server::Command::Command&);
     void onResponse(const Dummy::Server::Response::Response&);
-
-	void move(int, int, const MapView&);
 
     void setCharacter(std::shared_ptr<Dummy::Core::Character>);
     void _updateServerPosition(const std::pair<std::uint16_t, std::uint16_t>&);
@@ -95,8 +89,6 @@ public:
     }
 
 private:
-    std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
-        std::uint16_t, std::uint16_t);
     Connector::Connector& m_connector;
     ::Game& m_game;
     std::shared_ptr<Screen::Screen> m_currentScreen;

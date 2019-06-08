@@ -17,7 +17,15 @@ public:
         std::size_t,
         Direction direction = Direction::DOWN
     );
+
+    virtual void tick() override;
 protected:
+    void _move(int, int);
+
+    std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
+        std::uint16_t,
+        std::uint16_t
+    );
     ::Client& m_client;
 };
 

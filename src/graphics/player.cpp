@@ -17,4 +17,133 @@ Player::Player(const ::MapView& mapView,
 
 }
 
+
+void Player::tick() {
+    if (m_movingClock.getElapsedTime().asMilliseconds() >= 16 - m_velocity)
+    {
+        _move(m_xMovement, m_yMovement);
+        m_movingClock.restart();
+    }
+}
+
+std::pair<std::uint16_t, std::uint16_t>
+Player::_translateCoordsToServ(
+    std::uint16_t x,
+    std::uint16_t y
+) {
+    return std::pair<std::uint16_t, std::uint16_t>(
+        x / (8 * m_scaleFactor),
+        y / (8 * m_scaleFactor)
+    );
+}
+
+
+void Player::_move(int xVector, int yVector) {
+    std::pair<std::uint16_t, std::uint16_t> servCoords = 
+        _translateCoordsToServ(m_x, m_y);
+
+	if (xVector == 1) {
+        std::size_t edge(
+            m_mapView.width() * 16 * m_scaleFactor
+            - 16 * m_scaleFactor - m_scaleFactor
+        );
+		/* Cancel the movement if out of bounds */
+		if (m_x == edge) {
+			xVector = 0;
+		} else {
+			/* Moving towards right */
+			servCoords = std::move(
+				_translateCoordsToServ(
+					m_x
+                    + 16 * m_scaleFactor
+                    + m_scaleFactor,
+					m_y
+				)
+			);
+			if (m_mapView.blocksAt(servCoords.first, servCoords.second))
+			{
+				xVector = 0; /* Cancel the movement */
+			}
+		}
+	}
+	else if (xVector == -1) {
+		/* Cancel the movement if out of bounds */
+		if (m_x == 0) {
+			xVector = 0;
+		}
+		else {
+			/* Moving towards left */
+			servCoords = std::move(
+				_translateCoordsToServ(
+					m_x - m_scaleFactor,
+					m_y
+				)
+			);
+			if (m_mapView.blocksAt(servCoords.first, servCoords.second))
+			{
+				xVector = 0; /* Cancel the movement */
+			}
+		}
+	}
+
+	if (yVector == 1) {
+        std::size_t edge(
+            m_mapView.width() * 16 * m_scaleFactor
+            - 8 * m_scaleFactor - m_scaleFactor
+        );
+		/* Cancel the movement if out of bounds */
+		if (m_y == edge) {
+			yVector = 0;
+		}
+		else {
+			/* Moving towards bottom */
+			servCoords = std::move(
+				_translateCoordsToServ(
+					m_x,
+					m_y
+                    + 8 * m_scaleFactor
+                    + m_scaleFactor
+				)
+			);
+			if (m_mapView.blocksAt(servCoords.first, servCoords.second) ||
+				m_mapView.blocksAt(servCoords.first + m_scaleFactor,
+                servCoords.second))
+			{
+				yVector = 0; /* Cancel the movement */
+			}
+		}
+	}
+	else if (yVector == -1) {
+		/* Cancel the movement if out of bounds */
+		if (m_y == 0) {
+			yVector = 0;
+		}
+		else {
+			/* Moving towards top */
+			servCoords = std::move(
+				_translateCoordsToServ(
+					m_x,
+					m_y - m_scaleFactor
+				)
+			);
+
+			if (m_mapView.blocksAt(servCoords.first, servCoords.second) ||
+				m_mapView.blocksAt(servCoords.first + m_scaleFactor,
+                                 servCoords.second))
+			{
+				yVector = 0; /* Cancel the movement */
+			}
+		}
+	}
+
+	/* From here the vectors has been cleaned. Update position. */
+	m_x += xVector * m_scaleFactor;
+	m_y += yVector * m_scaleFactor;
+
+	if (servCoords != _translateCoordsToServ(m_x, m_y)) {
+        std::cerr << "Update coords to server!" << std::endl;
+    }
+}
+
+
 } // namespace Graphics
