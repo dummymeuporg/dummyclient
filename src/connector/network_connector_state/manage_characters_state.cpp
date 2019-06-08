@@ -36,10 +36,10 @@ ManageCharactersState::getResponse(Dummy::Protocol::IncomingPacket& packet)
     packet >> response;
     switch(response) {
     case Dummy::Protocol::Bridge::CREATE_CHARACTER:
-        //return _getCharactersListResponse(packet);
+        return _createCharacter(packet);
         break;
     case Dummy::Protocol::Bridge::SELECT_CHARACTER:
-        // return
+        return _selectCharacter(packet);
         break;
     default:
         throw UnknownResponseError();
@@ -55,6 +55,7 @@ void ManageCharactersState::visitCommand(
     pkt << static_cast<std::uint16_t>(
         Dummy::Protocol::Bridge::CREATE_CHARACTER
     );
+    pkt << create.name() << create.skin();
     // XXX: put character name and skin name
     m_networkConnector.sendPacket(pkt);
 }
@@ -66,6 +67,7 @@ void ManageCharactersState::visitCommand(
     pkt << static_cast<std::uint16_t>(
         Dummy::Protocol::Bridge::SELECT_CHARACTER
     );
+    pkt << select.name();
     // XXX: put character name
     m_networkConnector.sendPacket(pkt);
 
