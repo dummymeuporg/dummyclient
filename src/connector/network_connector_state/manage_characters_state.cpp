@@ -10,6 +10,7 @@
 #include "server/response/create_character.hpp"
 #include "server/response/select_character.hpp"
 #include "connector/network_connector.hpp"
+#include "connector/network_connector_state/loading_state.hpp"
 #include "connector/network_connector_state/manage_characters_state.hpp"
 
 namespace Connector {
@@ -77,11 +78,9 @@ std::unique_ptr<const Dummy::Server::Response::CreateCharacter>
 ManageCharactersState::_createCharacter(
     Dummy::Protocol::IncomingPacket& packet
 ) {
-    std::uint8_t status;
-    packet >> status;
     std::unique_ptr<Dummy::Server::Response::CreateCharacter> response =
         std::make_unique<Dummy::Server::Response::CreateCharacter>();
-    response->setStatus(status);
+    response->readFrom(packet);
     return response;
 }
 
@@ -89,11 +88,14 @@ std::unique_ptr<const Dummy::Server::Response::SelectCharacter>
 ManageCharactersState::_selectCharacter(
     Dummy::Protocol::IncomingPacket& packet
 ) {
-    std::uint8_t status;
-    packet >> status;
     std::unique_ptr<Dummy::Server::Response::SelectCharacter> response =
         std::make_unique<Dummy::Server::Response::SelectCharacter>();
-    response->setStatus(status);
+    response->readFrom(packet);
+    if (response->status() == 0) {
+        m_networkConnector.changeState(
+            std::make_shared<LoadingState>(m_networkConnector)
+        );
+    }
     return response;
 }
 

@@ -54,14 +54,15 @@ void InitialState::visitCommand(
 std::unique_ptr<const Dummy::Server::Response::ConnectResponse>
 InitialState::_getConnectResponse(Dummy::Protocol::IncomingPacket& packet) {
     auto self(shared_from_this());
-    std::uint8_t status;
-    packet >> status;
     std::unique_ptr<Dummy::Server::Response::ConnectResponse> response =
         std::make_unique<Dummy::Server::Response::ConnectResponse>();
-    response->setStatus(status);
-    m_networkConnector.changeState(
-        std::make_shared<ReceivePrimaryInfoState>(m_networkConnector)
-    );
+    response->readFrom(packet);
+
+    if (response->status() == 0) {
+        m_networkConnector.changeState(
+            std::make_shared<ReceivePrimaryInfoState>(m_networkConnector)
+        );
+    }
     return response;
 }
 

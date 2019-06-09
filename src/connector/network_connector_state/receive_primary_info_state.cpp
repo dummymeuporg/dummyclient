@@ -60,21 +60,9 @@ std::unique_ptr<const Dummy::Server::Response::CharactersListResponse>
 ReceivePrimaryInfoState::_getCharactersListResponse(
     Dummy::Protocol::IncomingPacket& packet
 ) {
-    std::uint8_t status;
-    packet >> status;
     std::unique_ptr<Dummy::Server::Response::CharactersListResponse> response =
         std::make_unique<Dummy::Server::Response::CharactersListResponse>();
-    response->setStatus(status);
-    std::uint16_t charactersCount;
-    packet >> charactersCount;
-
-    for (const auto i: boost::irange(charactersCount)) {
-        boost::ignore_unused(i);
-        std::shared_ptr<Dummy::Core::Character> chr =
-            std::make_shared<Dummy::Core::Character>();
-        packet >> *chr;
-        response->addCharacter(chr);
-    }
+    response->readFrom(packet);
 
     m_networkConnector.changeState(
         std::make_shared<ManageCharactersState>(m_networkConnector)
