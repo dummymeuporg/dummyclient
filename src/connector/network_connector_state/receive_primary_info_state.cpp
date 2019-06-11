@@ -50,9 +50,7 @@ void ReceivePrimaryInfoState::visitCommand(
     const Dummy::Server::Command::GetPrimaryInfoCommand& info
 ) {
     Dummy::Protocol::OutgoingPacket pkt;
-    pkt << static_cast<std::uint16_t>(
-        Dummy::Protocol::Bridge::GET_PRIMARY_INFO
-    );
+    pkt << Dummy::Protocol::Bridge::GET_PRIMARY_INFO;
     m_networkConnector.sendPacket(pkt);
 }
 

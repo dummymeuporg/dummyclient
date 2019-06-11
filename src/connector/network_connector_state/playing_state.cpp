@@ -67,7 +67,8 @@ std::unique_ptr<const Dummy::Server::Response::Ping>
 PlayingState::_ping(Dummy::Protocol::IncomingPacket& packet) {
     std::unique_ptr<Dummy::Server::Response::Ping> response =
         std::make_unique<Dummy::Server::Response::Ping>();
-    response->readFrom(packet);
+    //response->readFrom(packet);
+    // XXX: the response contains map updates. parse them manually hiere.
     return response;
 }
 
