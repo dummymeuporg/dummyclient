@@ -33,7 +33,7 @@ ManageCharactersState::sendCommand(
 std::unique_ptr<const Dummy::Server::Response::Response>
 ManageCharactersState::getResponse(Dummy::Protocol::IncomingPacket& packet)
 {
-    std::uint8_t response;
+    std::uint16_t response;
     packet >> response;
     switch(response) {
     case Dummy::Protocol::Bridge::CREATE_CHARACTER:
@@ -53,9 +53,7 @@ void ManageCharactersState::visitCommand(
     const Dummy::Server::Command::CreateCharacter& create
 ) {
     Dummy::Protocol::OutgoingPacket pkt;
-    pkt << static_cast<std::uint16_t>(
-        Dummy::Protocol::Bridge::CREATE_CHARACTER
-    );
+    pkt << Dummy::Protocol::Bridge::CREATE_CHARACTER;
     pkt << create.name() << create.skin();
     // XXX: put character name and skin name
     m_networkConnector.sendPacket(pkt);
@@ -65,9 +63,7 @@ void ManageCharactersState::visitCommand(
     const Dummy::Server::Command::SelectCharacter& select
 ) {
     Dummy::Protocol::OutgoingPacket pkt;
-    pkt << static_cast<std::uint16_t>(
-        Dummy::Protocol::Bridge::SELECT_CHARACTER
-    );
+    pkt << Dummy::Protocol::Bridge::SELECT_CHARACTER;
     pkt << select.name();
     // XXX: put character name
     m_networkConnector.sendPacket(pkt);

@@ -21,15 +21,16 @@ public:
                ::Client&,
                std::unique_ptr<::MapView>);
     virtual ~GameScreen();
-    virtual void loaded() override;
-    virtual void handleEvent(const sf::Event&);
-    virtual void handleCustomEvent(const ::CustomEvent&);
-    virtual void draw() override;
-    virtual void tick() override;
+    void loaded() override;
+    void handleEvent(const sf::Event&) override;
+    void handleCustomEvent(const ::CustomEvent&) override;
+    void draw() override;
+    void tick() override;
 
-    virtual void
-    onResponse(const Dummy::Server::Response::Response& response)
-    override;
+    void
+    onResponse(const Dummy::Server::Response::Response& response) override;
+    void visitResponse(const Dummy::Server::Response::Ping&) override;
+    void visitResponse(const Dummy::Server::Response::SetPosition&) override;
 
 private:
     /* Private methods. */

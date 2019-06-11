@@ -12,14 +12,12 @@ class LoadingScreen : public UIScreen {
 public:
     LoadingScreen(::Game&, ::Client&, const std::string&, const std::string&);
     virtual ~LoadingScreen();
-    virtual void loaded() override;
-    virtual void handleCustomEvent(const ::CustomEvent&) override;
+    void loaded() override;
+    void handleCustomEvent(const ::CustomEvent&) override;
 
-    virtual void
-    onResponse(const Dummy::Server::Response::Response&) override;
+    void onResponse(const Dummy::Server::Response::Response&) override;
 
-    virtual void
-    visitResponse(const Dummy::Server::Response::TeleportMap&) override;
+    void visitResponse(const Dummy::Server::Response::TeleportMap&) override;
 private:
     std::string m_mapNameToLoad;
     std::string m_instance;

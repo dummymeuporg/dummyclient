@@ -415,4 +415,17 @@ void GameScreen::onResponse(
     response.accept(*this);
 }
 
+void GameScreen::visitResponse(
+    const Dummy::Server::Response::SetPosition& setPosition
+) {
+    // XXX: Nothing to do for now!
+}
+
+
+void GameScreen::visitResponse(
+    const Dummy::Server::Response::Ping& ping
+) {
+    // XXX: refresh MapState & livings
+}
+
 } // namespace Screen

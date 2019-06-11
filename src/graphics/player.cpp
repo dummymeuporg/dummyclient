@@ -1,3 +1,4 @@
+#include "server/command/set_position.hpp"
 #include "client.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
@@ -136,12 +137,19 @@ void Player::_move(int xVector, int yVector) {
 		}
 	}
 
-	/* From here the vectors has been cleaned. Update position. */
+	/* From here the vectors have been cleaned. Update position. */
 	m_x += xVector * m_scaleFactor;
 	m_y += yVector * m_scaleFactor;
 
-	if (servCoords != _translateCoordsToServ(m_x, m_y)) {
+    std::pair<std::uint16_t, std::uint16_t> newCoords(
+        _translateCoordsToServ(m_x, m_y)
+    );
+	if (servCoords != newCoords) {
         std::cerr << "Update coords to server!" << std::endl;
+        m_client.sendCommand(
+            Dummy::Server::Command::SetPosition(newCoords.first,
+                                                newCoords.second)
+        );
     }
 }
 

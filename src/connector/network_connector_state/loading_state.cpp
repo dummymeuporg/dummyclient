@@ -6,6 +6,7 @@
 #include "server/response/teleport_map.hpp"
 #include "connector/network_connector.hpp"
 #include "connector/network_connector_state/loading_state.hpp"
+#include "connector/network_connector_state/playing_state.hpp"
 
 namespace Connector {
 namespace NetworkConnectorState {
@@ -57,11 +58,9 @@ LoadingState::_teleportMap(Dummy::Protocol::IncomingPacket& packet) {
         std::make_unique<Dummy::Server::Response::TeleportMap>();
     response->readFrom(packet);
     if (response->status() == 0) {
-        /*
         m_networkConnector.changeState(
             std::make_shared<PlayingState>(m_networkConnector)
         );
-        */
     }
     return response;
 }
