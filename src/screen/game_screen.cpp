@@ -41,6 +41,12 @@ GameScreen::GameScreen(
     m_player.setY(
         m_client.character()->position().second * 8 * m_game.scaleFactor()
     );
+
+    // XXX: find a better way to construct the camera.
+    m_camera.setCenter(
+        m_player.x() + 12 * m_game.scaleFactor(),
+        m_player.y() + 16 * m_game.scaleFactor()
+    );
 }
 
 GameScreen::~GameScreen() {
@@ -281,16 +287,16 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
         static_cast<int>(m_camera.centerX()) / (16 * m_game.scaleFactor())
     );
 
-    std::uint16_t y(
+    std::int16_t y(
         static_cast<int>(m_camera.centerY()) / (16 * m_game.scaleFactor())
     );
 
-    std::uint16_t deltaX(
+    std::int16_t deltaX(
         (m_game.width() / (16 * m_game.scaleFactor() * 2)) + 2
     );
 
 
-    std::uint16_t deltaY(
+    std::int16_t deltaY(
         (m_game.height() / (16 * m_game.scaleFactor() * 2)) + 2
     );
 
