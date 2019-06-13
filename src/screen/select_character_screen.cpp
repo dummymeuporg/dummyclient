@@ -143,6 +143,8 @@ void SelectCharacterScreen::visitResponse(
         m_client.sendCommand(Dummy::Server::Command::GetPrimaryInfoCommand());
         break;
     default: /* Quit the program */
+        // XXX: Find a neater way to quit.
+        ::exit(-1);
         break;
     }
 }
