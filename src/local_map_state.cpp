@@ -26,23 +26,20 @@ void LocalMapState::visitMapUpdate(
         const auto& modelLiving(living(name)); 
         auto& graphicLiving(*m_graphicLivingsMap.at(name));
         auto scaleFactor(graphicLiving.scaleFactor());
-        auto graphicLivingX(graphicLiving.x() / (8 * scaleFactor));
-        auto graphicLivingY(graphicLiving.y() / (8 * scaleFactor));
-        if (modelLiving.x() != graphicLivingX) {
+        auto modelLivingX(modelLiving.x() * 8 * scaleFactor);
+        auto modelLivingY(modelLiving.y() * 8 * scaleFactor);
+        if (modelLivingX != graphicLiving.x()) {
             graphicLiving.setXMovement(
-                2 * (graphicLivingX < modelLiving.x()) - 1
+                2 * (graphicLiving.x() < modelLivingX) - 1
             );
         }
-        if (modelLiving.y() != graphicLivingY) {
+        if (modelLivingY != graphicLiving.y()) {
             graphicLiving.setYMovement(
-                2 * (graphicLivingY < modelLiving.y()) - 1
+                2 * (graphicLiving.y() < modelLivingY) - 1
             );
         }
         // XXX: ugly
-        graphicLiving.moveTowards(
-            modelLiving.x() * 8 * scaleFactor,
-            modelLiving.y() * 8 * scaleFactor
-        );
+        graphicLiving.moveTowards(modelLivingX, modelLivingY);
     }
 }
 
@@ -81,20 +78,20 @@ void LocalMapState::tick() {
     for (const auto& [name, graphicLiving]: m_graphicLivingsMap) {
         auto& modelLiving(living(name));
         graphicLiving->tick();
-        auto graphicLivingX(graphicLiving->x() / (8 * scaleFactor));
-        auto graphicLivingY(graphicLiving->y() / (8 * scaleFactor));
+        auto modelLivingX(modelLiving.x() * 8 * scaleFactor);
+        auto modelLivingY(modelLiving.y() * 8 * scaleFactor);
 
         // XXX: ugly
-        if (modelLiving.x() != graphicLivingX) {
+        if (modelLivingX != graphicLiving->x()) {
             graphicLiving->setXMovement(
-                2 * (graphicLivingX < modelLiving.x()) - 1
+                2 * (graphicLiving->x() < modelLivingX) - 1
             );
         } else {
             graphicLiving->setXMovement(0);
         }
-        if (modelLiving.y() != graphicLivingY) {
+        if (modelLivingY != graphicLiving->y()) {
             graphicLiving->setYMovement(
-                2 * (graphicLivingY < modelLiving.y()) - 1
+                2 * (graphicLiving->y() < modelLivingY) - 1
             );
         } else {
             graphicLiving->setYMovement(0);
@@ -107,9 +104,7 @@ void LocalMapState::tick() {
             graphicLiving->x() << ", " <<
             graphicLiving->y() << std::endl;
         */
-        graphicLiving->moveTowards(
-            modelLiving.x() * 8 * scaleFactor,
-            modelLiving.y() * 8 * scaleFactor
-        );
+        // XXX: find a "smart" way to make the character stand
+        //graphicLiving->moveTowards(modelLivingX, modelLivingY);
     }
 }
