@@ -23,6 +23,10 @@ void NetworkConnector::connect() {
     m_socket.setBlocking(false);
 }
 
+void NetworkConnector::close() {
+    m_socket.disconnect();
+}
+
 void
 NetworkConnector::sendCommand(const Dummy::Server::Command::Command& command) {
     m_state->sendCommand(command);

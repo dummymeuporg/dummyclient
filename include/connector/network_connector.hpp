@@ -31,6 +31,7 @@ public:
     virtual std::unique_ptr<const Dummy::Server::Response::Response>
     getResponse() override;
 
+    void close();
     void connect();
     void sendPacket(const Dummy::Protocol::OutgoingPacket&);
     void changeState(std::shared_ptr<NetworkConnectorState::State>);

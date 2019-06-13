@@ -62,6 +62,9 @@ InitialState::_getConnectResponse(Dummy::Protocol::IncomingPacket& packet) {
         m_networkConnector.changeState(
             std::make_shared<ReceivePrimaryInfoState>(m_networkConnector)
         );
+    } else {
+        // Invalid status. Close the connection.
+        m_networkConnector.close();
     }
     return response;
 }
