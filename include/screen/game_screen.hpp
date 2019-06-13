@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "server/map_state.hpp"
 #include "camera.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
@@ -56,6 +57,7 @@ private:
     sf::Clock m_syncLivingsClock;
 	unsigned int m_characterDirection;
 	bool m_isMoving;
+    Dummy::Server::MapState m_mapState;
 };
 
 } // namespace Screen

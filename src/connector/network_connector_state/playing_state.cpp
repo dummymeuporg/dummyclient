@@ -69,6 +69,7 @@ PlayingState::_ping(Dummy::Protocol::IncomingPacket& packet) {
         std::make_unique<Dummy::Server::Response::Ping>();
     //response->readFrom(packet);
     // XXX: the response contains map updates. parse them manually hiere.
+    response->readFrom(packet);
     return response;
 }
 

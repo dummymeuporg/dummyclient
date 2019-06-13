@@ -3,6 +3,9 @@
 
 #include <boost/range/irange.hpp>
 
+#include "server/command/ping.hpp"
+#include "server/response/ping.hpp"
+
 #include "client.hpp"
 #include "game.hpp"
 #include "graphics/living.hpp"
@@ -392,10 +395,14 @@ void GameScreen::tick() {
 	/*
 	std::cerr << m_client.serverPosition().first <<
 		", " << m_client.serverPosition().second << std::endl;
-		*/
+		*/ 
     m_player.tick();
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
         //m_client.ping();
+        for (const auto [name, living]: m_mapState.livings()) {
+            std::cerr << "There is " << name << std::endl;
+        }
+        m_client.sendCommand(Dummy::Server::Command::Ping());
         m_pingClock.restart();
     }
     if (m_syncLivingsClock.getElapsedTime().asMicroseconds() >= 2000) {
@@ -432,6 +439,10 @@ void GameScreen::visitResponse(
     const Dummy::Server::Response::Ping& ping
 ) {
     // XXX: refresh MapState & livings
+    std::cerr << "Pong! " << ping.mapUpdates().size() << std::endl;
+    for (const auto& update: ping.mapUpdates()) {
+        m_mapState.update(*update);
+    }
 }
 
 } // namespace Screen
