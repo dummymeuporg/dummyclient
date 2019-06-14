@@ -338,7 +338,7 @@ void GameScreen::_drawCharacter() {
 }
 
 void GameScreen::_drawLivings() {
-    for (auto [name, living]: m_livings) {
+    for (auto& [name, living]: m_livings) {
         living->draw(m_game.window(), m_camera);
     }
 }

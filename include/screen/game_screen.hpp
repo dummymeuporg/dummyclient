@@ -9,6 +9,9 @@
 
 namespace Screen {
 
+using GraphicLivingsMap = 
+    std::map<std::string, std::unique_ptr<Graphics::Living>>;
+
 class GameScreen : public UIScreen {
 public:
 	static const int DIRECTION_NONE = 0x00;
@@ -49,7 +52,7 @@ private:
     std::unique_ptr<::MapView> m_mapView;
     Camera m_camera;
     Graphics::Player m_player;
-    std::map<std::string, std::shared_ptr<Graphics::Living>> m_livings;
+    GraphicLivingsMap m_livings;
     bool m_isArrowPressed;
     sf::Keyboard::Key m_direction;
     sf::Clock m_tickMove;
