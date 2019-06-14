@@ -49,6 +49,10 @@ public:
         return m_y;
     }
 
+    std::size_t scaleFactor() const {
+        return m_scaleFactor;
+    }
+
     void setX(std::size_t x);
     void setY(std::size_t y);
     void setChipsetName(const std::string&);
