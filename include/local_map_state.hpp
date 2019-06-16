@@ -12,9 +12,11 @@ class Living;
 using GraphicLivingsMap =
     std::map<std::string, std::unique_ptr<Graphics::Living>>;
 
+class MapView;
+
 class LocalMapState : public Dummy::Server::MapState {
 public:
-    LocalMapState();
+    LocalMapState(const MapView&);
     void visitMapUpdate(
         const Dummy::Protocol::MapUpdate::CharacterPosition&
     ) override;
@@ -26,6 +28,13 @@ public:
     void visitMapUpdate(
         const Dummy::Protocol::MapUpdate::CharacterOn&
     ) override;
+
+    void tick();
+
+    const GraphicLivingsMap& graphicLivings() const {
+        return m_graphicLivingsMap;
+    }
 private:
+    const MapView& m_mapView;
     GraphicLivingsMap m_graphicLivingsMap;
 };

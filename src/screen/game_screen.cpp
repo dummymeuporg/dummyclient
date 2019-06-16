@@ -21,7 +21,8 @@ GameScreen::GameScreen(
     ::Client& client,
     std::unique_ptr<::MapView> mapView
 )
-    : UIScreen(game, client), m_mapView(std::move(mapView)),
+    : UIScreen(game, client),
+      m_mapView(std::move(mapView)),
       m_camera(m_player.x() + 12 * m_game.scaleFactor(),
                m_player.y() + 16 * m_game.scaleFactor()),
       m_player(
@@ -37,7 +38,8 @@ GameScreen::GameScreen(
       m_isArrowPressed(false),
       m_direction(sf::Keyboard::Unknown),
 	  m_characterDirection(DIRECTION_NONE),
-	  m_isMoving(false)
+	  m_isMoving(false),
+      m_mapState(*m_mapView)
 {
     m_player.setX(
         m_client.character()->position().first * 8 * m_game.scaleFactor());
@@ -338,7 +340,7 @@ void GameScreen::_drawCharacter() {
 }
 
 void GameScreen::_drawLivings() {
-    for (auto& [name, living]: m_livings) {
+    for (auto& [name, living]: m_mapState.graphicLivings()) {
         living->draw(m_game.window(), m_camera);
     }
 }
@@ -399,9 +401,7 @@ void GameScreen::tick() {
     m_player.tick();
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
         //m_client.ping();
-        for (const auto [name, living]: m_mapState.livings()) {
-            std::cerr << "There is " << name << std::endl;
-        }
+        m_mapState.tick();
         m_client.sendCommand(Dummy::Server::Command::Ping());
         m_pingClock.restart();
     }

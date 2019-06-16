@@ -35,6 +35,10 @@ public:
 
     bool blocksAt(std::uint16_t x, std::uint16_t y) const; 
 
+    int scaleFactor() const {
+        return m_scaleFactor;
+    }
+
 private:
     void _load();
     void _loadLayer(const Dummy::Core::GraphicLayer&, Sprites&);
