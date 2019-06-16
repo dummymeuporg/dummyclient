@@ -42,6 +42,7 @@ Player::_translateCoordsToServ(
 void Player::_move(int xVector, int yVector) {
     std::pair<std::uint16_t, std::uint16_t> servCoords = 
         _translateCoordsToServ(m_x, m_y);
+    auto tmpCoords(servCoords);
 
 	if (xVector == 1) {
         std::size_t edge(
@@ -53,7 +54,7 @@ void Player::_move(int xVector, int yVector) {
 			xVector = 0;
 		} else {
 			/* Moving towards right */
-			servCoords = std::move(
+			tmpCoords = std::move(
 				_translateCoordsToServ(
 					m_x
                     + 16 * m_scaleFactor
@@ -61,7 +62,7 @@ void Player::_move(int xVector, int yVector) {
 					m_y
 				)
 			);
-			if (m_mapView.blocksAt(servCoords.first, servCoords.second))
+			if (m_mapView.blocksAt(tmpCoords.first, tmpCoords.second))
 			{
 				xVector = 0; /* Cancel the movement */
 			}
@@ -74,13 +75,13 @@ void Player::_move(int xVector, int yVector) {
 		}
 		else {
 			/* Moving towards left */
-			servCoords = std::move(
+			tmpCoords = std::move(
 				_translateCoordsToServ(
 					m_x - m_scaleFactor,
 					m_y
 				)
 			);
-			if (m_mapView.blocksAt(servCoords.first, servCoords.second))
+			if (m_mapView.blocksAt(tmpCoords.first, tmpCoords.second))
 			{
 				xVector = 0; /* Cancel the movement */
 			}
@@ -98,7 +99,7 @@ void Player::_move(int xVector, int yVector) {
 		}
 		else {
 			/* Moving towards bottom */
-			servCoords = std::move(
+			tmpCoords = std::move(
 				_translateCoordsToServ(
 					m_x,
 					m_y
@@ -106,9 +107,9 @@ void Player::_move(int xVector, int yVector) {
                     + m_scaleFactor
 				)
 			);
-			if (m_mapView.blocksAt(servCoords.first, servCoords.second) ||
-				m_mapView.blocksAt(servCoords.first + m_scaleFactor,
-                servCoords.second))
+			if (m_mapView.blocksAt(tmpCoords.first, tmpCoords.second) ||
+				m_mapView.blocksAt(tmpCoords.first + m_scaleFactor,
+                tmpCoords.second))
 			{
 				yVector = 0; /* Cancel the movement */
 			}
@@ -121,16 +122,16 @@ void Player::_move(int xVector, int yVector) {
 		}
 		else {
 			/* Moving towards top */
-			servCoords = std::move(
+			tmpCoords = std::move(
 				_translateCoordsToServ(
 					m_x,
 					m_y - m_scaleFactor
 				)
 			);
 
-			if (m_mapView.blocksAt(servCoords.first, servCoords.second) ||
-				m_mapView.blocksAt(servCoords.first + m_scaleFactor,
-                                 servCoords.second))
+			if (m_mapView.blocksAt(tmpCoords.first, tmpCoords.second) ||
+				m_mapView.blocksAt(tmpCoords.first + m_scaleFactor,
+                                   tmpCoords.second))
 			{
 				yVector = 0; /* Cancel the movement */
 			}
@@ -145,7 +146,8 @@ void Player::_move(int xVector, int yVector) {
         _translateCoordsToServ(m_x, m_y)
     );
 	if (servCoords != newCoords) {
-        std::cerr << "Update coords to server!" << std::endl;
+        std::cerr << "Update coords to server! " <<
+            newCoords.first << ", " << newCoords.second << std::endl;
         m_client.sendCommand(
             Dummy::Server::Command::SetPosition(newCoords.first,
                                                 newCoords.second)
