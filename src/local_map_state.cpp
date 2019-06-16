@@ -13,6 +13,10 @@ LocalMapState::LocalMapState(const MapView& mapView)
 void LocalMapState::visitMapUpdate(
     const Dummy::Protocol::MapUpdate::CharacterPosition& characterPosition
 ) {
+    std::cerr << "[!] " <<
+        characterPosition.name() << " IS AT " <<
+        characterPosition.x() << ", " <<
+        characterPosition.y() << std::endl;
     Dummy::Server::MapState::visitMapUpdate(characterPosition);
     const std::string& name(characterPosition.name());
     int xVector = 0, yVector = 0;
@@ -95,10 +99,14 @@ void LocalMapState::tick() {
         } else {
             graphicLiving->setYMovement(0);
         }
+        /*
         std::cerr << "Model living: " <<
             modelLiving.x() << ", " <<
             modelLiving.y() << std::endl;
-
+        std::cerr << "Graphic living: " <<
+            graphicLiving->x() << ", " <<
+            graphicLiving->y() << std::endl;
+        */
         graphicLiving->moveTowards(
             modelLiving.x() * 8 * scaleFactor,
             modelLiving.y() * 8 * scaleFactor

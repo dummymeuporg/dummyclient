@@ -399,9 +399,9 @@ void GameScreen::tick() {
 		", " << m_client.serverPosition().second << std::endl;
 		*/ 
     m_player.tick();
+    m_mapState.tick();
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
         //m_client.ping();
-        m_mapState.tick();
         m_client.sendCommand(Dummy::Server::Command::Ping());
         m_pingClock.restart();
     }
