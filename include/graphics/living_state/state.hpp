@@ -14,6 +14,8 @@ public:
     State(Graphics::Living&);
     virtual void draw(sf::RenderWindow&, const Camera&) = 0;
     virtual void moveTowards(std::uint16_t, std::uint16_t) = 0;
+    virtual void walk() = 0;
+    virtual void stand() = 0;
 protected:
     Graphics::Living& m_living;
 };

@@ -1,3 +1,5 @@
+#include <set>
+
 #include "protocol/map_update/character_off.hpp"
 #include "protocol/map_update/character_on.hpp"
 #include "protocol/map_update/character_position.hpp"
@@ -10,13 +12,21 @@ LocalMapState::LocalMapState(const MapView& mapView)
     : m_mapView(mapView)
 {}
 
+void LocalMapState::setIdleLivings() {
+    for (const auto& living: m_graphicLivingsMap) {
+        m_idleLivings.insert(living.first);
+    }
+}
+
 void LocalMapState::visitMapUpdate(
     const Dummy::Protocol::MapUpdate::CharacterPosition& characterPosition
 ) {
+    /*
     std::cerr << "[!] " <<
         characterPosition.name() << " IS AT " <<
         characterPosition.x() << ", " <<
         characterPosition.y() << std::endl;
+    */
     Dummy::Server::MapState::visitMapUpdate(characterPosition);
     const std::string& name(characterPosition.name());
     int xVector = 0, yVector = 0;
@@ -39,7 +49,12 @@ void LocalMapState::visitMapUpdate(
             );
         }
         // XXX: ugly
-        graphicLiving.moveTowards(modelLivingX, modelLivingY);
+        graphicLiving.moveTowards(
+            modelLiving.x() * 8 * scaleFactor,
+            modelLiving.y() * 8 * scaleFactor
+        );
+        graphicLiving.walk();
+        m_idleLivings.erase(name);
     }
 }
 
@@ -107,4 +122,13 @@ void LocalMapState::tick() {
         // XXX: find a "smart" way to make the character stand
         //graphicLiving->moveTowards(modelLivingX, modelLivingY);
     }
+}
+
+void LocalMapState::syncLivings() {
+    for (const auto& name: m_idleLivings) {
+        if (m_graphicLivingsMap.find(name) != std::end(m_graphicLivingsMap)) {
+            m_graphicLivingsMap[name]->stand();
+        }
+    }
+    m_idleLivings.clear();
 }

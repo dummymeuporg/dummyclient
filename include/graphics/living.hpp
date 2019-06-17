@@ -58,6 +58,9 @@ public:
     void setXMovement(int);
     void setYMovement(int);
 
+    void walk();
+    void stand();
+
 protected:
     std::string m_name;
     Direction m_direction;

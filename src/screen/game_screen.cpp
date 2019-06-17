@@ -412,12 +412,8 @@ void GameScreen::tick() {
 
     if (!m_isArrowPressed && m_direction != sf::Keyboard::Unknown) {
         _onArrowPressed();
-        m_tickMove.restart();
     } else {
-        if (m_tickMove.getElapsedTime().asMicroseconds() >= 1700) {
-            _moveCharacter(m_direction);
-            m_tickMove.restart();
-        }
+        _moveCharacter(m_direction);
     }
 }
 
@@ -439,10 +435,13 @@ void GameScreen::visitResponse(
     const Dummy::Server::Response::Ping& ping
 ) {
     // XXX: refresh MapState & livings
+    m_mapState.setIdleLivings();
     std::cerr << "Pong! " << ping.mapUpdates().size() << std::endl;
     for (const auto& update: ping.mapUpdates()) {
         m_mapState.update(*update);
     }
+
+    m_mapState.syncLivings();
 }
 
 } // namespace Screen

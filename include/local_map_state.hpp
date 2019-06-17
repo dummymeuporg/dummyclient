@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <set>
 #include <string>
 
 #include "server/map_state.hpp"
@@ -34,7 +35,11 @@ public:
     const GraphicLivingsMap& graphicLivings() const {
         return m_graphicLivingsMap;
     }
+
+    void setIdleLivings();
+    void syncLivings();
 private:
     const MapView& m_mapView;
     GraphicLivingsMap m_graphicLivingsMap;
+    std::set<std::string> m_idleLivings;
 };

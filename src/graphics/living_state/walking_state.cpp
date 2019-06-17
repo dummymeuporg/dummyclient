@@ -44,22 +44,30 @@ void WalkingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
 void WalkingState::moveTowards(std::uint16_t x, std::uint16_t y) {
     auto self(shared_from_this());
     if (m_living.x() == x && m_living.y() == y) {
-        m_living.changeState(
-            std::make_shared<LivingState::StandingState>(m_living)
-        );
         m_living.setXMovement(0);
         m_living.setYMovement(0);
     } else {
-        if (m_living.y() < y) {
+        if (m_living.yMovement() > 0) {
             m_living.setDirection(Dummy::Core::Character::Direction::DOWN);
-        } else if(m_living.y() > y) {
+        } else if(m_living.yMovement() < 0) {
             m_living.setDirection(Dummy::Core::Character::Direction::UP);
-        } else if (m_living.x() < x) {
+        } else if (m_living.xMovement() > 0) {
             m_living.setDirection(Dummy::Core::Character::Direction::RIGHT);
-        } else if (m_living.x() > x) {
+        } else if (m_living.xMovement() < 0) {
             m_living.setDirection(Dummy::Core::Character::Direction::LEFT);
         }
     }
+}
+
+void WalkingState::walk() {
+    // Do nothing, already walking.
+}
+
+void WalkingState::stand() {
+    auto self(shared_from_this());
+    m_living.changeState(
+        std::make_shared<StandingState>(m_living)
+    );
 }
 
 } // namespace LivingState

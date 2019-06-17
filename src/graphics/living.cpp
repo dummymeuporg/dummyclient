@@ -113,4 +113,12 @@ void Living::setYMovement(int yMovement) {
     m_yMovement = yMovement;
 }
 
+void Living::walk() {
+    m_state->walk();
+}
+
+void Living::stand() {
+    m_state->stand();
+}
+
 } // namespace Graphics

@@ -40,5 +40,16 @@ void StandingState::moveTowards(std::uint16_t x, std::uint16_t y) {
     }
 }
 
+void StandingState::walk() {
+    auto self(shared_from_this());
+    m_living.changeState(
+        std::make_shared<LivingState::WalkingState>(m_living)
+    );
+}
+
+void StandingState::stand() {
+    // Do nothing; already standing.
+}
+
 } // namespace LivingState
 } // namespace Graphics
