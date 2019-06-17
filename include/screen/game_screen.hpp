@@ -57,7 +57,6 @@ private:
     sf::Keyboard::Key m_direction;
     sf::Clock m_tickMove;
     sf::Clock m_pingClock;
-    sf::Clock m_syncLivingsClock;
 	unsigned int m_characterDirection;
 	bool m_isMoving;
     ::LocalMapState m_mapState;

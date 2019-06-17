@@ -60,64 +60,7 @@ GameScreen::~GameScreen() {
 void GameScreen::loaded() {
     m_client.ping();
     m_pingClock.restart();
-    m_syncLivingsClock.restart();
 }
-
-
-/*
-void GameScreen::syncWithModel(std::shared_ptr<Model::PlayingModel> model) {
-    const std::pair<std::uint16_t, std::uint16_t>& position(
-        m_client.pixelPosition()
-    );
-    // Synchronize local livings with the model
-    std::vector<std::string> removal;
-    for (const auto [name, living]: m_livings) {
-        if (model->livings().find(name) == std::end(model->livings())) {
-            removal.push_back(name);
-        }
-    }
-
-    std::for_each(removal.begin(),
-                  removal.end(),
-                  [this](const std::string& name) {
-                       m_livings.erase(name);
-                  }
-    );
-
-    for(const auto [name, living]: model->livings()) {
-        if (m_livings.find(name) == std::end(m_livings)) {
-            m_livings[name] = std::make_shared<Graphics::Living>(*living);
-            m_livings[name]->setPixelPosition(
-                m_livings[name]->x() * 8 * m_game.scaleFactor(),
-                m_livings[name]->y() * 8 * m_game.scaleFactor()
-            );
-            living->setPixelPosition(
-                living->x() * 8 * m_game.scaleFactor(),
-                living->y() * 8 * m_game.scaleFactor()
-            );
-        } else {
-            // If the living already exists, check the position and
-            // set the walking state if needed.
-
-            if (m_livings[name]->x() != living->x() ||
-                m_livings[name]->y() != living->y())
-            {
-                // Need to move.
-                // Update the model pixel pos.
-                living->setPixelPosition(
-                    living->x() * 8 * m_game.scaleFactor(),
-                    living->y() * 8 * m_game.scaleFactor()
-                );
-                
-            }
-            // Animate the charater.
-            m_livings[name]->moveTowards(
-                living->pixelX(), living->pixelY()
-            );
-        }
-    }
-}
-*/
 
 void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
@@ -217,15 +160,6 @@ void GameScreen::_moveCharacter(sf::Keyboard::Key key) {
     m_player.setXMovement(xVector);
     m_player.setYMovement(yVector);
 
-	//m_client.move(xVector, yVector, *m_mapView);
-
-    /*
-    m_camera.setCenter(
-        m_client.pixelPosition().first + 12 * m_game.scaleFactor(),
-        m_client.pixelPosition().second + 16 * m_game.scaleFactor()
-    );
-    */
-    
     m_camera.setCenter(
         m_player.x() + 12 * m_game.scaleFactor(),
         m_player.y() + 16 * m_game.scaleFactor()
@@ -357,57 +291,12 @@ void GameScreen::draw() {
     UIScreen::draw();
 }
 
-/*
-void GameScreen::_syncLivings() {
-    std::shared_ptr<Model::PlayingModel> model =
-        std::dynamic_pointer_cast<Model::PlayingModel>(m_model);
-    for(auto [name, living]: m_livings) {
-        if (model->livings().find(name) != std::end(model->livings())) {
-            std::shared_ptr<const Graphics::Living> modelLiving =
-                model->getLiving(name);
-
-            int dstPixelX = modelLiving->pixelX();
-            int dstPixelY = modelLiving->pixelY();
-
-            // Update pixel position.
-            if (living->pixelX() != dstPixelX) {
-                living->setPixelX(
-                    living->pixelX() + 2 * (living->pixelX() < dstPixelX) - 1
-                );
-            }
-            if (living->pixelY() != dstPixelY) {
-                living->setPixelY(
-                    living->pixelY() + 2 * (living->pixelY() < dstPixelY) - 1
-                );
-            }
-
-            // If the pixel positions are equal, sync server positions.
-            if (living->pixelX() == dstPixelX &&
-                living->pixelY() == dstPixelY)
-            {
-                // Sync server position.
-                living->setX(modelLiving->x());
-                living->setY(modelLiving->y());
-            }
-        }
-    }
-}
-*/
 void GameScreen::tick() {
-	/*
-	std::cerr << m_client.serverPosition().first <<
-		", " << m_client.serverPosition().second << std::endl;
-		*/ 
     m_player.tick();
     m_mapState.tick();
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
-        //m_client.ping();
         m_client.sendCommand(Dummy::Server::Command::Ping());
         m_pingClock.restart();
-    }
-    if (m_syncLivingsClock.getElapsedTime().asMicroseconds() >= 2000) {
-		//_syncLivings();
-        m_syncLivingsClock.restart();
     }
 
     if (!m_isArrowPressed && m_direction != sf::Keyboard::Unknown) {
