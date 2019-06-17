@@ -37,6 +37,16 @@ void StandingState::moveTowards(std::uint16_t x, std::uint16_t y) {
         m_living.changeState(
             std::make_shared<LivingState::WalkingState>(m_living)
         );
+        if (m_living.yMovement() > 0) {
+            m_living.setDirection(Dummy::Core::Character::Direction::DOWN);
+        } else if(m_living.yMovement() < 0) {
+            m_living.setDirection(Dummy::Core::Character::Direction::UP);
+        } else if (m_living.xMovement() > 0) {
+            m_living.setDirection(Dummy::Core::Character::Direction::RIGHT);
+        } else if (m_living.xMovement() < 0) {
+            m_living.setDirection(Dummy::Core::Character::Direction::LEFT);
+        }
+
     }
 }
 
