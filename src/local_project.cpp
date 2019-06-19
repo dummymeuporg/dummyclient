@@ -1,5 +1,5 @@
 #include "local_project.hpp"
 
 LocalProject::LocalProject()
-    : Project(".")
+    : Project(fs::path("."))
 {}

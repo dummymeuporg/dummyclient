@@ -14,7 +14,7 @@ void LocalGameServer::_instantiateTestAccount(
 {
     std::string testAccountName(accountName);
     fs::path accountPath(
-        m_serverPath / "accounts" / testAccountName
+        fs::path(m_serverPath) / "accounts" / testAccountName
     );
     if (!fs::exists(accountPath)) {
         std::cerr << "Test account directory does not exist. Create it."
