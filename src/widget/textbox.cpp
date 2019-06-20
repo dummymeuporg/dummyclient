@@ -1,3 +1,4 @@
+#include <cctype>
 #include <iostream>
 #include "widget/textbox.hpp"
 
