@@ -15,11 +15,30 @@ find_package(Boost)
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
+macro(GroupSources curdir)
+    file(
+        GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir}
+        ${PROJECT_SOURCE_DIR}/${curdir}/*
+    )
+    foreach(child ${children})
+        if(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+            GroupSources(${curdir}/${child})
+        else()
+            string(REPLACE "/" "\\" groupname ${curdir})
+            source_group(
+                ${groupname}
+                FILES
+                ${PROJECT_SOURCE_DIR}/${curdir}/${child}
+            )
+        endif()
+    endforeach()
+endmacro()
+
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "include/*.hpp")
 
-source_group("include" FILES ${HEADERS} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
-source_group("src" FILES ${SOURCES} RELATIVE ${CMAKE_CURRENT_SOURCE_DIR})
+GroupSources(include)
+GroupSources(src)
 
 set(CLIENT_LINK_LIBRARIES
     ${Boost_LIBRARIES}

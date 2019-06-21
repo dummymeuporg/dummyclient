@@ -89,7 +89,7 @@ void Player::_move(int xVector, int yVector) {
 
     if (yVector == 1) {
         std::size_t edge(
-                m_mapView.width() * 16 * m_scaleFactor
+                m_mapView.height() * 16 * m_scaleFactor
                 - 8 * m_scaleFactor - m_scaleFactor
                 );
         /* Cancel the movement if out of bounds */
