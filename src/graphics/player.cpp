@@ -107,7 +107,7 @@ void Player::_move(int xVector, int yVector) {
                         )
                     );
             if (m_mapView.blocksAt(tmpCoords.first, tmpCoords.second) ||
-                    m_mapView.blocksAt(tmpCoords.first + m_scaleFactor,
+                    m_mapView.blocksAt(tmpCoords.first + 1,
                         tmpCoords.second))
             {
                 yVector = 0; /* Cancel the movement */
@@ -129,7 +129,7 @@ void Player::_move(int xVector, int yVector) {
                     );
 
             if (m_mapView.blocksAt(tmpCoords.first, tmpCoords.second) ||
-                    m_mapView.blocksAt(tmpCoords.first + m_scaleFactor,
+                    m_mapView.blocksAt(tmpCoords.first + 1,
                         tmpCoords.second))
             {
                 yVector = 0; /* Cancel the movement */
