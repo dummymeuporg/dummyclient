@@ -53,7 +53,6 @@ if (UNIX)
     set(CLIENT_LINK_LIBRARIES
         ${CLIENT_LINK_LIBRARIES}
         pthread
-        stdc++fs
     )
     add_executable(dummyclient ${SOURCES} ${HEADERS})
 endif (UNIX)
