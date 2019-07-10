@@ -38,14 +38,14 @@ CreateCharacterScreen::CreateCharacterScreen(
 {
     m_characterNameLabel
         ->setCaption("Name: ")
-        .setFontSize(24)
+        .setFontSize(18)
         .setColor(sf::Color::White)
         .setStyle(sf::Text::Bold)
         .setFont("arial.ttf")
         .setPos(100, 100);
 
     m_characterNameTextbox
-        ->setFontSize(24)
+        ->setFontSize(18)
         .setColor(sf::Color::Black)
         .setBackgroundColor(sf::Color(200, 200, 200))
         .setBorderColor(sf::Color(128, 128, 128))
@@ -56,15 +56,13 @@ CreateCharacterScreen::CreateCharacterScreen(
 
     m_characterSkinLabel
         ->setCaption("Skin: ")
-        .setFontSize(24)
+        .setFontSize(18)
         .setColor(sf::Color::White)
         .setStyle(sf::Text::Bold)
         .setFont("arial.ttf")
         .setPos(100, 200);
 
-    m_skinPreviewer->setPos(230, 200);
-
-    m_leftSkinButton->setPos(220, 250);
+    m_leftSkinButton->setPos(220, 220);
     m_leftSkinButton
         ->setBackgroundColor(sf::Color(183, 109, 44))
         .setBorderColor(sf::Color(94, 47, 6))
@@ -74,7 +72,9 @@ CreateCharacterScreen::CreateCharacterScreen(
     m_leftSkinButton->setFont("arial.ttf");
     m_leftSkinButton->setCaption("<");
 
-    m_rightSkinButton->setPos(450, 250);
+    m_skinPreviewer->setPos(260, 180);
+
+    m_rightSkinButton->setPos(400, 220);
     m_rightSkinButton
         ->setBackgroundColor(sf::Color(183, 109, 44))
         .setBorderColor(sf::Color(94, 47, 6))
@@ -90,17 +90,17 @@ CreateCharacterScreen::CreateCharacterScreen(
         .setBorderColor(sf::Color(94, 47, 6))
         .setColor(sf::Color::Black)
         .setStyle(0)
-        .setFontSize(24);
+        .setFontSize(18);
     m_createCharacterButton->setFont("arial.ttf");
     m_createCharacterButton->setCaption("Create");
 
-    m_cancelButton->setPos(900, 600);
+    m_cancelButton->setPos(800, 600);
     m_cancelButton
         ->setBackgroundColor(sf::Color(183, 109, 44))
         .setBorderColor(sf::Color(94, 47, 6))
         .setColor(sf::Color::Black)
         .setStyle(0)
-        .setFontSize(24);
+        .setFontSize(18);
     m_cancelButton->setFont("arial.ttf");
     m_cancelButton->setCaption("Cancel");
 

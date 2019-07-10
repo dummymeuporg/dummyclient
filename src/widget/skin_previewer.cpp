@@ -57,7 +57,7 @@ SkinPreviewer& SkinPreviewer::setSkinList(std::vector<std::string>&& skinList)
 
 void SkinPreviewer::_updateSprite() {
     m_sprite.setTexture(texture(m_skinList[m_currentSkinIndex]));
-    m_sprite.setScale(6, 6);
+    m_sprite.setScale(4, 4);
     m_sprite.setTextureRect(sf::IntRect(24, 32 * 2, 24, 32));
     m_sprite.setPosition(sf::Vector2f(m_origin.x, m_origin.y));
 }
