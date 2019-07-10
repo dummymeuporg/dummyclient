@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "core/character.hpp"
+#include "server/errors.hpp"
 #include "server/command/create_character.hpp"
 #include "server/response/create_character.hpp"
 
@@ -9,6 +10,9 @@
 #include "screen/create_character_screen.hpp"
 #include "screen/select_character_screen.hpp"
 #include "widget/label.hpp"
+
+
+using CreateCharacterStatus = Dummy::Server::CreateCharacterError::Code;
 
 namespace Screen {
 
@@ -171,14 +175,25 @@ void CreateCharacterScreen::onResponse(
 void CreateCharacterScreen::visitResponse(
     const Dummy::Server::Response::CreateCharacter& createCharacter
 ) {
-    m_characters.push_back(createCharacter.character());
-    pushEvent(
-        ::CustomEvent(
-            reinterpret_cast<void*>(shared_from_this().get()),
-            CustomEvent::CharacterCreated,
-            reinterpret_cast<void*>(shared_from_this().get())
-        )
-    );
+    switch (createCharacter.status()) {
+    case CreateCharacterStatus::OK:
+        m_characters.push_back(createCharacter.character());
+        pushEvent(
+            ::CustomEvent(
+                reinterpret_cast<void*>(shared_from_this().get()),
+                CustomEvent::CharacterCreated,
+                reinterpret_cast<void*>(shared_from_this().get())
+            )
+        );
+        break;
+
+    case CreateCharacterStatus::NAME_EMPTY:
+        // XXX: print error
+        break;
+
+    // XXX: handle other errors.
+    }
+
 }
 
 } // namespace Screen
