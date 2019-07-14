@@ -7,6 +7,10 @@
 #include "graphics/player.hpp"
 #include "screen/ui_screen.hpp"
 
+class Sprites;
+class Client;
+class Game;
+
 namespace Screen {
 
 using GraphicLivingsMap = 

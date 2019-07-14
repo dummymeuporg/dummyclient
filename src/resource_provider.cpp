@@ -1,10 +1,14 @@
 #include <filesystem>
 #include <iostream>
+#include <string>
+#include "local/project.hpp"
+#include "graphics/map.hpp"
 #include "resource_provider.hpp"
 
 namespace fs = std::filesystem;
 
-ResourceProvider::ResourceProvider() {}
+ResourceProvider::ResourceProvider()
+    : m_localProject(std::string(".")) {}
 
 sf::Font& ResourceProvider::font(const std::string& fontName) {
     if (m_fonts.find(fontName) == std::end(m_fonts)) {
@@ -35,10 +39,10 @@ sf::Texture& ResourceProvider::texture(const std::string& textureName) {
     return m_textures[textureKey];
 }
 
-std::unique_ptr<Dummy::Core::GraphicMap>
+std::unique_ptr<Graphics::Map>
 ResourceProvider::loadGraphicMap(const std::string& mapName) {
-    std::unique_ptr<Dummy::Core::GraphicMap> map =
-        std::make_unique<Dummy::Core::GraphicMap>(m_localProject, mapName);
+    std::unique_ptr<Graphics::Map> map =
+        std::make_unique<Graphics::Map>(m_localProject, mapName);
     map->load();
-    return std::move(map);
+    return map;
 }

@@ -1,14 +1,14 @@
 #pragma once
 #include <memory>
 
-#include "core/graphic_map.hpp"
+#include "graphics/map.hpp"
 #include "game_element.hpp"
 
 using Sprites = std::vector<sf::Sprite>;
 
 class MapView : public GameElement {
 public:
-    MapView(std::unique_ptr<const Dummy::Core::GraphicMap>, int scaleFactor);
+    MapView(std::unique_ptr<const Graphics::Map>, int scaleFactor);
     Sprites& firstLayerSprites() {
         return m_firstLayerSprites;
     }
@@ -26,11 +26,11 @@ public:
     }
 
     std::uint16_t width() const {
-        return m_graphicMap->width();
+        return m_map->width();
     }
 
     std::uint16_t height() const {
-        return m_graphicMap->height();
+        return m_map->height();
     }
 
     bool blocksAt(std::uint16_t x, std::uint16_t y) const; 
@@ -44,7 +44,7 @@ private:
     void _loadLayer(const Dummy::Core::GraphicLayer&, Sprites&);
 
     /* Private members. */
-    std::unique_ptr<const Dummy::Core::GraphicMap> m_graphicMap;
+    std::unique_ptr<const Graphics::Map> m_map;
     int m_scaleFactor;
     const sf::Texture& m_chipset;
     Sprites m_firstLayerSprites;

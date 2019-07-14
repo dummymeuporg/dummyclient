@@ -1,5 +1,6 @@
 #pragma once
 
+#include "graphics/map.hpp"
 #include "custom_event_queue.hpp"
 #include "resource_provider.hpp"
 
@@ -22,7 +23,7 @@ protected:
         return m_resourceProvider.texture(textureName);
     }
 
-    std::unique_ptr<Dummy::Core::GraphicMap> loadGraphicMap(
+    std::unique_ptr<Graphics::Map> loadGraphicMap(
         const std::string& mapName
     ) {
         return std::move(m_resourceProvider.loadGraphicMap(mapName));

@@ -1,41 +1,45 @@
 #include <iostream>
 
 #include <boost/range/irange.hpp>
+#include "graphics/map.hpp"
 #include "map_view.hpp"
 
-MapView::MapView(std::unique_ptr<const Dummy::Core::GraphicMap> graphicMap,
+MapView::MapView(std::unique_ptr<const Graphics::Map> graphicMap,
                  int scaleFactor)
-    : m_graphicMap(std::move(graphicMap)),
+    : m_map(std::move(graphicMap)),
       m_scaleFactor(scaleFactor),
-      m_chipset(texture(m_graphicMap->chipset()))
+      m_chipset(texture(m_map->chipset()))
 {
-    std::cerr << "Map width: " << m_graphicMap->width() << std::endl;
-    std::cerr << "Map height: " << m_graphicMap->height() << std::endl;
-    m_firstLayerSprites.resize(m_graphicMap->width() * m_graphicMap->height());
+    std::cerr << "Map width: " << m_map->width() << std::endl;
+    std::cerr << "Map height: " << m_map->height() << std::endl;
+    m_firstLayerSprites.resize(m_map->width() * m_map->height());
     m_secondLayerSprites.resize(
-        m_graphicMap->width() * m_graphicMap->height()
+        m_map->width() * m_map->height()
     );
     m_thirdLayerSprites.resize(
-        m_graphicMap->width() * m_graphicMap->height()
+        m_map->width() * m_map->height()
     );
     m_fourthLayerSprites.resize(
-        m_graphicMap->width() * m_graphicMap->height()
+        m_map->width() * m_map->height()
     );
     _load();
 }
 
 void MapView::_load() {
-    _loadLayer(m_graphicMap->firstLayer(), m_firstLayerSprites);
-    _loadLayer(m_graphicMap->secondLayer(), m_secondLayerSprites);
-    _loadLayer(m_graphicMap->thirdLayer(), m_thirdLayerSprites);
-    _loadLayer(m_graphicMap->fourthLayer(), m_fourthLayerSprites);
+    // XXX: fix this.
+    /*
+    _loadLayer(m_map->firstLayer(), m_firstLayerSprites);
+    _loadLayer(m_map->secondLayer(), m_secondLayerSprites);
+    _loadLayer(m_map->thirdLayer(), m_thirdLayerSprites);
+    _loadLayer(m_map->fourthLayer(), m_fourthLayerSprites);
+    */
 }
 
 void
 MapView::_loadLayer(const Dummy::Core::GraphicLayer& layer, Sprites& sprites) {
-    for (const auto y: boost::irange(m_graphicMap->height())) {
-        for(const auto x: boost::irange(m_graphicMap->width())) {
-            std::size_t i(y * m_graphicMap->width() + x);
+    for (const auto y: boost::irange(m_map->height())) {
+        for(const auto x: boost::irange(m_map->width())) {
+            std::size_t i(y * m_map->width() + x);
             auto coords = layer[i];
             if (coords.first >= 0 && coords.second >= 0) {
                 sf::Sprite& sprite(sprites[i]);
@@ -51,6 +55,8 @@ MapView::_loadLayer(const Dummy::Core::GraphicLayer& layer, Sprites& sprites) {
 }
 
 bool MapView::blocksAt(std::uint16_t x, std::uint16_t y) const {
-    return m_graphicMap->isBlocking(x, y);
+    // XXX: fix this.
+    //return m_map->isBlocking(x, y);
+    return false;
 }
 
