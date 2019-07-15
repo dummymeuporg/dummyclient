@@ -26,7 +26,11 @@ void MapView::load() {
 }
 
 
-bool MapView::blocksAt(std::uint16_t x, std::uint16_t y) const {
+bool MapView::blocksAt(
+    std::uint8_t floor,
+    std::uint16_t x,
+    std::uint16_t y
+) const {
     // XXX: fix this.
     //return m_map->isBlocking(x, y);
     return false;
