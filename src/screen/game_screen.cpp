@@ -218,6 +218,7 @@ void GameScreen::_onKeyReleased(const sf::Event& event) {
 	}
 }
 
+/*
 void GameScreen::_drawLayer(::Sprites& sprites) {
     const sf::Vector2u& windowSize(
         m_game.window().getSize()
@@ -269,6 +270,8 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
     }
 }
 
+*/
+
 void GameScreen::_drawCharacter() {
     m_player.draw(m_game.window(), m_camera);
 }
@@ -281,12 +284,16 @@ void GameScreen::_drawLivings() {
 
 void GameScreen::draw() {
     // Draw the map
+    /*
     _drawLayer(m_mapView->firstLayerSprites());
     _drawLayer(m_mapView->secondLayerSprites());
     _drawLivings();
+    */
     _drawCharacter();
+    /*
     _drawLayer(m_mapView->thirdLayerSprites());
     _drawLayer(m_mapView->fourthLayerSprites());
+    */
     // Draw widgets (HUD) if needed.
     UIScreen::draw();
 }

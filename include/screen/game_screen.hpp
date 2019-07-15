@@ -3,11 +3,11 @@
 #include <memory>
 #include "local_map_state.hpp"
 #include "camera.hpp"
+#include "level_view.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
 #include "screen/ui_screen.hpp"
 
-class Sprites;
 class Client;
 class Game;
 
