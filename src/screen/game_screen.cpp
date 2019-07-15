@@ -11,6 +11,7 @@
 #include "graphics/living.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
+#include "level_view.hpp"
 
 #include "screen/game_screen.hpp"
 
@@ -218,6 +219,68 @@ void GameScreen::_onKeyReleased(const sf::Event& event) {
 	}
 }
 
+void GameScreen::drawSprites(Sprites& sprites) {
+    const sf::Vector2u& windowSize(
+        m_game.window().getSize()
+    );
+    std::int16_t x(
+        static_cast<int>(m_camera.centerX()) / (16 * m_game.scaleFactor())
+    );
+
+    std::int16_t y(
+        static_cast<int>(m_camera.centerY()) / (16 * m_game.scaleFactor())
+    );
+
+    std::int16_t deltaX(
+        (m_game.width() / (16 * m_game.scaleFactor() * 2)) + 2
+    );
+
+
+    std::int16_t deltaY(
+        (m_game.height() / (16 * m_game.scaleFactor() * 2)) + 2
+    );
+
+    std::int16_t xStart(std::max(0, static_cast<int>(x - deltaX))),
+                xEnd(std::min(static_cast<uint16_t>(x + deltaX),
+                              m_mapView->width())),
+                yStart(std::max(0, static_cast<int>(y - deltaY))),
+                yEnd(std::min(static_cast<uint16_t>(y + deltaY),
+                              m_mapView->height()));
+    for(const auto x: boost::irange(xStart, xEnd)) {
+        for (const auto y: boost::irange(yStart, yEnd)) {
+            std::size_t index = y * m_mapView->width() + x;
+            sf::Sprite& sprite = sprites.at(index);
+            int windowX = ((x * 16 * m_game.scaleFactor()))
+                + 4 * m_game.scaleFactor() +
+                ((windowSize.x / 2) - static_cast<int>(m_camera.centerX()));
+            int windowY = ((y * 16 * m_game.scaleFactor()))
+                + 24 * m_game.scaleFactor() +
+                ((windowSize.y / 2) - static_cast<int>(m_camera.centerY()));
+            sprite.setPosition(sf::Vector2f(windowX, windowY));
+        }
+    }
+
+    // Draw for real
+    for(const auto x: boost::irange(xStart, xEnd)) {
+        for (const auto y: boost::irange(yStart, yEnd)) {
+            std::size_t index = y * m_mapView->width() + x;
+            sf::Sprite& sprite = sprites.at(index);
+            m_game.window().draw(sprite);
+        }
+    }
+}
+
+void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
+{
+    // Draw the lower layers.
+    drawSprites(levelView.bottomSprites());
+
+    // XXX: draw the character if needed.
+    _drawCharacter();
+
+    drawSprites(levelView.topSprites());
+}
+
 /*
 void GameScreen::_drawLayer(::Sprites& sprites) {
     const sf::Vector2u& windowSize(
@@ -283,13 +346,17 @@ void GameScreen::_drawLivings() {
 }
 
 void GameScreen::draw() {
+
+    for (unsigned i = 0; i < m_mapView->levelViews().size(); ++i) {
+        drawLevelView(i, m_mapView->levelView(i));
+    }
     // Draw the map
     /*
     _drawLayer(m_mapView->firstLayerSprites());
     _drawLayer(m_mapView->secondLayerSprites());
     _drawLivings();
     */
-    _drawCharacter();
+    //_drawCharacter();
     /*
     _drawLayer(m_mapView->thirdLayerSprites());
     _drawLayer(m_mapView->fourthLayerSprites());

@@ -15,7 +15,6 @@ public:
     Game(const char*,
          const char*,
          Connector::Connector&,
-         Config&,
          std::size_t = 960,
          std::size_t = 720,
          std::size_t = 2);
@@ -40,7 +39,6 @@ public:
     }
 private:
     Client m_client;
-    Config& m_config;
     sf::RenderWindow m_window;
     ::CustomEventQueue& m_customEventQueue;
     ::ResourceProvider& m_resourceProvider;

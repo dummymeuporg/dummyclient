@@ -51,6 +51,8 @@ private:
     void _moveCharacter(sf::Keyboard::Key);
     void _drawLivings();
     void _syncLivings();
+    void drawLevelView(unsigned int, LevelView&);
+    void drawSprites(Sprites&);
 
     /* Private attributes. */
     std::unique_ptr<::MapView> m_mapView;

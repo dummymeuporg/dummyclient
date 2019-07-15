@@ -37,6 +37,10 @@ public:
     void load() {
         Dummy::Local::Map::load();
     }
+
+    const Dummy::Local::Levels& levels() const {
+        return Dummy::Local::Map::levels();
+    }
 };
 
 } // namespace Graphics
