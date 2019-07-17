@@ -32,7 +32,6 @@ bool MapView::blocksAt(
     std::uint16_t y
 ) const {
     // XXX: fix this.
-    //return m_map->isBlocking(x, y);
-    return false;
+    return m_map->isBlocking(floor, x, y);
 }
 

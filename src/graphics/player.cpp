@@ -55,13 +55,13 @@ void Player::_move(int xVector, int yVector) {
         } else {
             /* Moving towards right */
             tmpCoords = std::move(
-                    _translateCoordsToServ(
-                        m_x
-                        + 16 * m_scaleFactor
-                        + m_scaleFactor,
-                        m_y
-                        )
-                    );
+                _translateCoordsToServ(
+                    m_x
+                    + 16 * m_scaleFactor
+                    + m_scaleFactor,
+                    m_y
+                    )
+                );
             if (m_mapView.blocksAt(floor, tmpCoords.first, tmpCoords.second))
             {
                 xVector = 0; /* Cancel the movement */
