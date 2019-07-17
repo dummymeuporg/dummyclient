@@ -21,8 +21,8 @@ int run_standalone(const char* projectPath, const char* serverPath,
         server.buildGameSession();
     session->start();
     Connector::LocalConnector connector(*session);
-    ::Config config("dummyclient.ini");
-    ::Game game(account, sessionID, connector, config);
+    //::Config config("dummyclient.ini");
+    ::Game game(account, sessionID, connector);
     return game.run();
 }
 
@@ -31,8 +31,8 @@ int run_remote(const char* host, unsigned short port, const char* account,
 {
     Connector::NetworkConnector connector(host, port);
     connector.connect();
-    ::Config config("dummyclient.ini");
-    ::Game game(account, sessionID, connector, config);
+    //::Config config("dummyclient.ini");
+    ::Game game(account, sessionID, connector);
     return game.run();
 }
 

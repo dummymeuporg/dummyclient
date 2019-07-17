@@ -6,6 +6,10 @@
 #include "screen/ui_screen.hpp"
 #include "widget/label.hpp"
 
+namespace Graphics {
+class Map;
+} // namespace Graphics
+
 namespace Screen {
 
 class LoadingScreen : public UIScreen {
@@ -22,7 +26,7 @@ private:
     std::string m_mapNameToLoad;
     std::string m_instance;
     std::shared_ptr<Widget::Label> m_label;
-    std::unique_ptr<Dummy::Core::GraphicMap> m_graphicMap;
+    std::unique_ptr<Graphics::Map> m_map;
     std::unique_ptr<::MapView> m_mapView;
 };
 

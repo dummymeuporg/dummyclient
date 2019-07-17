@@ -11,6 +11,7 @@
 #include "graphics/living.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
+#include "level_view.hpp"
 
 #include "screen/game_screen.hpp"
 
@@ -84,17 +85,17 @@ void GameScreen::handleEvent(const sf::Event& event)
 {
     switch(event.type) {
     case sf::Event::KeyPressed:
-        _onKeyPressed(event);
+        onKeyPressed(event);
         break;
     case sf::Event::KeyReleased:
-        _onKeyReleased(event);
+        onKeyReleased(event);
         break;
     default:
         break;
     }
 }
 
-void GameScreen::_onArrowReleased() {
+void GameScreen::onArrowReleased() {
 	
 	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
 		!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
@@ -113,7 +114,7 @@ void GameScreen::_onArrowReleased() {
     }
 }
 
-void GameScreen::_onArrowPressed() {
+void GameScreen::onArrowPressed() {
     if (!m_isArrowPressed) {
         pushEvent(
             CustomEvent(
@@ -126,7 +127,7 @@ void GameScreen::_onArrowPressed() {
     }
 }
 
-void GameScreen::_moveCharacter(sf::Keyboard::Key key) {
+void GameScreen::moveCharacter(sf::Keyboard::Key key) {
 
 	int xVector = 0;
 	int yVector = 0;
@@ -166,7 +167,7 @@ void GameScreen::_moveCharacter(sf::Keyboard::Key key) {
     );
 }
 
-void GameScreen::_onKeyPressed(const sf::Event& event) {
+void GameScreen::onKeyPressed(const sf::Event& event) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		m_characterDirection |= DIRECTION_UP;
 	}
@@ -192,7 +193,7 @@ void GameScreen::_onKeyPressed(const sf::Event& event) {
 	}
 }
 
-void GameScreen::_onKeyReleased(const sf::Event& event) {
+void GameScreen::onKeyReleased(const sf::Event& event) {
 	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_UP);
 	}
@@ -218,7 +219,7 @@ void GameScreen::_onKeyReleased(const sf::Event& event) {
 	}
 }
 
-void GameScreen::_drawLayer(::Sprites& sprites) {
+void GameScreen::drawSprites(Sprites& sprites) {
     const sf::Vector2u& windowSize(
         m_game.window().getSize()
     );
@@ -269,24 +270,44 @@ void GameScreen::_drawLayer(::Sprites& sprites) {
     }
 }
 
-void GameScreen::_drawCharacter() {
+void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
+{
+    // Draw the lower layers.
+    drawSprites(levelView.bottomSprites());
+
+    // XXX: draw the character if needed.
+    drawCharacter();
+
+    drawSprites(levelView.topSprites());
+}
+
+
+void GameScreen::drawCharacter() {
     m_player.draw(m_game.window(), m_camera);
 }
 
-void GameScreen::_drawLivings() {
+void GameScreen::drawLivings() {
     for (auto& [name, living]: m_mapState.graphicLivings()) {
         living->draw(m_game.window(), m_camera);
     }
 }
 
 void GameScreen::draw() {
+
+    for (unsigned i = 0; i < m_mapView->levelViews().size(); ++i) {
+        drawLevelView(i, m_mapView->levelView(i));
+    }
     // Draw the map
+    /*
     _drawLayer(m_mapView->firstLayerSprites());
     _drawLayer(m_mapView->secondLayerSprites());
     _drawLivings();
-    _drawCharacter();
+    */
+    //_drawCharacter();
+    /*
     _drawLayer(m_mapView->thirdLayerSprites());
     _drawLayer(m_mapView->fourthLayerSprites());
+    */
     // Draw widgets (HUD) if needed.
     UIScreen::draw();
 }
@@ -300,9 +321,9 @@ void GameScreen::tick() {
     }
 
     if (!m_isArrowPressed && m_direction != sf::Keyboard::Unknown) {
-        _onArrowPressed();
+        onArrowPressed();
     } else {
-        _moveCharacter(m_direction);
+        moveCharacter(m_direction);
     }
 }
 

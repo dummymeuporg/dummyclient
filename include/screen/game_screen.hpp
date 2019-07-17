@@ -3,9 +3,13 @@
 #include <memory>
 #include "local_map_state.hpp"
 #include "camera.hpp"
+#include "level_view.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
 #include "screen/ui_screen.hpp"
+
+class Client;
+class Game;
 
 namespace Screen {
 
@@ -38,15 +42,17 @@ public:
 
 private:
     /* Private methods. */
-    void _drawLayer(::Sprites&);
-    void _drawCharacter();
-    void _onKeyPressed(const sf::Event&);
-    void _onKeyReleased(const sf::Event&);
-    void _onArrowPressed();
-    void _onArrowReleased();
-    void _moveCharacter(sf::Keyboard::Key);
-    void _drawLivings();
-    void _syncLivings();
+    void drawLayer(::Sprites&);
+    void drawCharacter();
+    void onKeyPressed(const sf::Event&);
+    void onKeyReleased(const sf::Event&);
+    void onArrowPressed();
+    void onArrowReleased();
+    void moveCharacter(sf::Keyboard::Key);
+    void drawLivings();
+    void syncLivings();
+    void drawLevelView(unsigned int, LevelView&);
+    void drawSprites(Sprites&);
 
     /* Private attributes. */
     std::unique_ptr<::MapView> m_mapView;

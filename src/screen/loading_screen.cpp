@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "graphics/map.hpp"
 #include "server/command/teleport_map.hpp"
 #include "server/response/teleport_map.hpp"
 #include "game.hpp"
@@ -19,7 +20,7 @@ LoadingScreen::LoadingScreen(
       m_mapNameToLoad(mapNameToLoad),
       m_instance(instance),
       m_label(std::make_shared<Widget::Label>()),
-      m_graphicMap(nullptr),
+      m_map(nullptr),
       m_mapView(nullptr)
 {
     m_label
@@ -59,7 +60,7 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
     case CustomEvent::Type::LoadMapFromFile: {
         std::cerr << "Load map " << m_mapNameToLoad
             << " from file" << std::endl;
-        m_graphicMap = std::move(loadGraphicMap(m_mapNameToLoad));
+        m_map = std::move(loadGraphicMap(m_mapNameToLoad));
         pushEvent(
             CustomEvent(
                 reinterpret_cast<void*>(shared_from_this().get()),
@@ -72,7 +73,7 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
     case CustomEvent::Type::MapFileLoaded: {
         std::cerr << "Load map view" << std::endl;
         m_mapView = std::make_unique<::MapView>(
-            std::move(m_graphicMap),
+            std::move(m_map),
             m_game.scaleFactor()
         );
         std::cerr << "Loaded map view." << std::endl;

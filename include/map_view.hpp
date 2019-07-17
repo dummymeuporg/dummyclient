@@ -1,54 +1,47 @@
 #pragma once
 #include <memory>
 
-#include "core/graphic_map.hpp"
+#include "level_view.hpp"
+#include "graphics/map.hpp"
 #include "game_element.hpp"
 
+
 using Sprites = std::vector<sf::Sprite>;
+using LevelViews = std::vector<::LevelView>;
 
 class MapView : public GameElement {
 public:
-    MapView(std::unique_ptr<const Dummy::Core::GraphicMap>, int scaleFactor);
-    Sprites& firstLayerSprites() {
-        return m_firstLayerSprites;
-    }
-
-    Sprites& secondLayerSprites() {
-        return m_secondLayerSprites;
-    }
-
-    Sprites& thirdLayerSprites() {
-        return m_thirdLayerSprites;
-    }
-
-    Sprites& fourthLayerSprites() {
-        return m_fourthLayerSprites;
-    }
+    MapView(std::unique_ptr<const Graphics::Map>, int scaleFactor);
 
     std::uint16_t width() const {
-        return m_graphicMap->width();
+        return m_map->width();
     }
 
     std::uint16_t height() const {
-        return m_graphicMap->height();
+        return m_map->height();
     }
 
-    bool blocksAt(std::uint16_t x, std::uint16_t y) const; 
+    bool blocksAt(std::uint8_t, std::uint16_t, std::uint16_t) const;
 
     int scaleFactor() const {
         return m_scaleFactor;
     }
 
+    const LevelViews& levelViews() const {
+        return m_levelViews;
+    }
+
+    LevelView& levelView(unsigned i) {
+        return m_levelViews[i];
+    }
+
 private:
-    void _load();
-    void _loadLayer(const Dummy::Core::GraphicLayer&, Sprites&);
+    void load();
 
     /* Private members. */
-    std::unique_ptr<const Dummy::Core::GraphicMap> m_graphicMap;
+    std::unique_ptr<const Graphics::Map> m_map;
     int m_scaleFactor;
     const sf::Texture& m_chipset;
-    Sprites m_firstLayerSprites;
-    Sprites m_secondLayerSprites;
-    Sprites m_thirdLayerSprites;
-    Sprites m_fourthLayerSprites;
+    LevelViews m_levelViews;
+
 };
