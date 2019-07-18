@@ -17,6 +17,10 @@ Player::Player(const ::MapView& mapView,
 {
 }
 
+void Player::updatePosition() {
+    auto delta = computeDistance();
+}
+
 
 void Player::tick() {
     if (m_movingClock.getElapsedTime().asMilliseconds() >= 16 - m_velocity)

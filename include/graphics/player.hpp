@@ -21,6 +21,7 @@ public:
     virtual void tick() override;
 protected:
     void _move(int, int);
+    void updatePosition() override;
 
     std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
         std::uint16_t,
