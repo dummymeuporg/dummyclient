@@ -19,27 +19,36 @@ Player::Player(const ::MapView& mapView,
 
 void Player::updatePosition() {
     auto delta = computeDistance();
+    int xStep(delta.first != 0 ? (2 * (delta.first > 0) - 1) : 0);
+    int yStep(delta.second != 0 ? (2 * (delta.second > 0) - 1) : 0);
+    // ...
+    m_x += delta.first;
+    m_y += delta.second;
+    std::cerr << "Delta: " << delta.first << ", " << delta.second << std::endl;
+
 }
 
 
 void Player::tick() {
+    /*
     if (m_movingClock.getElapsedTime().asMilliseconds() >= 16 - m_velocity)
     {
         _move(m_xMovement, m_yMovement);
         m_movingClock.restart();
     }
+    */
 }
 
 std::pair<std::uint16_t, std::uint16_t>
-    Player::_translateCoordsToServ(
-            std::uint16_t x,
-            std::uint16_t y
-            ) {
-        return std::pair<std::uint16_t, std::uint16_t>(
-                x / (8 * m_scaleFactor),
-                y / (8 * m_scaleFactor)
-                );
-    }
+Player::_translateCoordsToServ(
+        std::uint16_t x,
+        std::uint16_t y
+    ) {
+    return std::pair<std::uint16_t, std::uint16_t>(
+        x / (8 * m_scaleFactor),
+        y / (8 * m_scaleFactor)
+    );
+}
 
 
 void Player::_move(int xVector, int yVector) {

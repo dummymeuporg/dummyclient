@@ -63,7 +63,7 @@ public:
 
 protected:
     virtual void updatePosition();
-    std::pair<std::uint16_t, std::uint16_t> computeDistance();
+    std::pair<std::int16_t, std::int16_t> computeDistance();
 
     std::string m_name;
     Direction m_direction;

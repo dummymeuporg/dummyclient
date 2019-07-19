@@ -80,20 +80,21 @@ void Living::tick() {
     */
 }
 
-std::pair<std::uint16_t, std::uint16_t>
+std::pair<std::int16_t, std::int16_t>
 Living::computeDistance() {
     // If the character is going in a diagonal way, divide its browsed
     // distance by square root of 2 (Pythagor theorem).
     float divisor = m_xMovement != 0 && m_yMovement != 0 ? SQRT_2 : 1.0;
     int ellapsedMs = m_movingClock.getElapsedTime().asMilliseconds();
 
-    std::uint16_t xDistance(static_cast<unsigned>(
-        (ellapsedMs * m_velocity * m_xMovement * m_scaleFactor) / divisor
+    std::int16_t xDistance(static_cast<unsigned>(
+        ((ellapsedMs/4.5) * m_xMovement) / divisor
     ));
-    std::uint16_t yDistance(static_cast<unsigned>(
-        (ellapsedMs * m_velocity * m_yMovement * m_scaleFactor) / divisor
+    std::int16_t yDistance(static_cast<unsigned>(
+        ((ellapsedMs/4.5) * m_yMovement) / divisor
     ));
-    return std::pair<std::uint16_t, std::uint16_t>(xDistance, yDistance);
+    m_movingClock.restart();
+    return std::pair<std::int16_t, std::int16_t>(xDistance, yDistance);
 }
 
 void Living::draw(sf::RenderWindow& window, const ::Camera& camera) {
