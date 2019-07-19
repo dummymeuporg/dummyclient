@@ -63,7 +63,9 @@ protected:
     const sf::Texture& m_chipset;
     sf::Sprite m_sprite;
     std::string m_chipsetName;
-    std::size_t m_w, m_h, m_x, m_y, m_scaleFactor;
+    std::size_t m_w, m_h;
+    std::int32_t m_x, m_y;
+    std::uint16_t m_scaleFactor;
 
 };
 

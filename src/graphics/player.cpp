@@ -22,8 +22,15 @@ void Player::updatePosition() {
     int xStep(delta.first != 0 ? (2 * (delta.first > 0) - 1) : 0);
     int yStep(delta.second != 0 ? (2 * (delta.second > 0) - 1) : 0);
     // ...
-    m_x += delta.first;
-    m_y += delta.second;
+    if (xStep > 0) {
+        moveTowardsRight(delta.first);
+    } else if (xStep < 0) {
+        moveTowardsLeft(delta.first);
+    }
+
+    //m_x += delta.first;
+
+    //m_y += delta.second;
     std::cerr << "Delta: " << delta.first << ", " << delta.second << std::endl;
 
 }
@@ -168,5 +175,53 @@ void Player::_move(int xVector, int yVector) {
         );
     }
 }
+
+bool Player::blocksLeft() const {
+    auto floor(m_client.character()->floor());
+    return m_x == 0 || m_mapView.blocksAt(floor, m_x - 1, m_y);
+}
+
+bool Player::blocksRight() const {
+    auto floor(m_client.character()->floor());
+    return m_x ==
+        ((m_mapView.width() * 16 * m_scaleFactor) - (m_w * m_scaleFactor)) ||
+            m_mapView.blocksAt(
+                floor,
+                m_x + (m_w * m_scaleFactor) + 1,
+                m_y
+            );
+}
+
+bool Player::blocksTop() const {
+    return false;
+}
+
+bool Player::blocksBottom() const {
+    return false;
+}
+
+void Player::moveTowardsRight(int delta) {
+    int i = 0, step = 2 * (delta > 0) - 1;
+    while (!blocksRight() && i != delta) {
+        m_x += step;
+        i += step;
+    }
+}
+
+void Player::moveTowardsLeft(int delta) {
+    int i = 0, step = 2 * (delta > 0) - 1;
+    while (!blocksLeft() && i != delta) {
+        m_x += step;
+        i += step;
+    }
+
+}
+void Player::moveTowardsTop(int delta) {
+
+}
+void Player::moveTowardsBottom(int delta) {
+
+}
+
 
 } // namespace Graphics
