@@ -28,6 +28,12 @@ void Player::updatePosition() {
         moveTowardsLeft(delta.first);
     }
 
+    if (yStep > 0) {
+        moveTowardsBottom(delta.second);
+    } else if (yStep < 0) {
+        moveTowardsTop(delta.second);
+    }
+
     //m_x += delta.first;
 
     //m_y += delta.second;
@@ -184,20 +190,27 @@ bool Player::blocksLeft() const {
 bool Player::blocksRight() const {
     auto floor(m_client.character()->floor());
     return m_x ==
-        ((m_mapView.width() * 16 * m_scaleFactor) - (m_w * m_scaleFactor)) ||
+        ((m_mapView.width() * 16 * m_scaleFactor) - (16 * m_scaleFactor)) ||
             m_mapView.blocksAt(
                 floor,
-                m_x + (m_w * m_scaleFactor) + 1,
+                m_x + (16 * m_scaleFactor) + 1,
                 m_y
             );
 }
 
 bool Player::blocksTop() const {
-    return false;
+    auto floor(m_client.character()->floor());
+
+    // The character is two "blocking squares" wide.
+    return m_y == 0 || m_mapView.blocksAt(floor, m_x, m_y - 1) ||
+        m_mapView.blocksAt(floor, m_x + (8 * m_scaleFactor), m_y - 1);
 }
 
 bool Player::blocksBottom() const {
-    return false;
+    auto floor(m_client.character()->floor());
+    return m_y == (m_mapView.height() * 16 * m_scaleFactor) ||
+        m_mapView.blocksAt(floor, m_x, m_y + 1) ||
+        m_mapView.blocksAt(floor, m_x + (8 * m_scaleFactor), m_y + 1);
 }
 
 void Player::moveTowardsRight(int delta) {
@@ -216,11 +229,21 @@ void Player::moveTowardsLeft(int delta) {
     }
 
 }
+
 void Player::moveTowardsTop(int delta) {
-
+    int i = 0, step = 2 * (delta > 0) - 1;
+    while (!blocksTop() && i != delta) {
+        m_y += step;
+        i += step;
+    }
 }
-void Player::moveTowardsBottom(int delta) {
 
+void Player::moveTowardsBottom(int delta) {
+    int i = 0, step = 2 * (delta > 0) - 1;
+    while (!blocksBottom() && i != delta) {
+        m_y += step;
+        i += step;
+    }
 }
 
 
