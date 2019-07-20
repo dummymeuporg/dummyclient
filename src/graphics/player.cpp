@@ -210,10 +210,10 @@ bool Player::blocksBottom() const {
     auto floor(m_client.character()->floor());
     return m_y == ((m_mapView.height() * 16 * m_scaleFactor) -
         (8 * m_scaleFactor)) ||
-        m_mapView.blocksAt(floor, m_x, m_y + (8 * m_scaleFactor) + 1) ||
+        m_mapView.blocksAt(floor, m_x, m_y + (8 * m_scaleFactor)) ||
         m_mapView.blocksAt(floor,
                            m_x + (8 * m_scaleFactor),
-                           m_y + (8 * m_scaleFactor) + 1);
+                           m_y + (8 * m_scaleFactor));
 }
 
 void Player::moveTowardsRight(int delta) {
