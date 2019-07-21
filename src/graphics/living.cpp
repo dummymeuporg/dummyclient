@@ -5,6 +5,8 @@
 
 namespace Graphics {
 
+static const float SQRT_2 = 1.414213562373;
+
 Living::Living(const MapView& mapView,
                const std::string& chipset,
                const std::string& name,
@@ -68,18 +70,40 @@ Living& Living::changeState(std::shared_ptr<LivingState::State> state) {
 }
 
 void Living::tick() {
+    /*
     if (m_movingClock.getElapsedTime().asMilliseconds() >= 16 - m_velocity)
     {
         m_x += (m_xMovement * m_scaleFactor);
         m_y += (m_yMovement * m_scaleFactor);
         m_movingClock.restart();
     }
+    */
+}
+
+std::pair<std::int16_t, std::int16_t>
+Living::computeDistance() {
+    // If the character is going in a diagonal way, divide its browsed
+    // distance by square root of 2 (Pythagor theorem).
+    float divisor = m_xMovement != 0 && m_yMovement != 0 ? SQRT_2 : 1.0;
+    int ellapsedMs = m_movingClock.getElapsedTime().asMilliseconds();
+
+    std::int16_t xDistance(static_cast<unsigned>(
+        ((ellapsedMs/4.5) * m_xMovement) / divisor
+    ));
+    std::int16_t yDistance(static_cast<unsigned>(
+        ((ellapsedMs/4.5) * m_yMovement) / divisor
+    ));
+    m_movingClock.restart();
+    return std::pair<std::int16_t, std::int16_t>(xDistance, yDistance);
 }
 
 void Living::draw(sf::RenderWindow& window, const ::Camera& camera) {
     const sf::Vector2u& windowSize(window.getSize());
 
-    // Update draw position towards real position
+    // Update position given the ellapsed time and the velocity.
+    updatePosition();
+
+    // Update the movement given the effective position
     m_state->draw(window, camera);
 
     sf::FloatRect textRect = m_displayName.getLocalBounds();
@@ -119,6 +143,12 @@ void Living::walk() {
 
 void Living::stand() {
     m_state->stand();
+}
+
+void Living::updatePosition() {
+    auto delta = computeDistance();
+    m_x += delta.first;
+    m_y += delta.second;
 }
 
 } // namespace Graphics

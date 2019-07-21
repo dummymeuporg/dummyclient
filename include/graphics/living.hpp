@@ -62,6 +62,9 @@ public:
     void stand();
 
 protected:
+    virtual void updatePosition();
+    std::pair<std::int16_t, std::int16_t> computeDistance();
+
     std::string m_name;
     Direction m_direction;
     std::shared_ptr<LivingState::State> m_state;

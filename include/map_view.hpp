@@ -21,7 +21,7 @@ public:
         return m_map->height();
     }
 
-    bool blocksAt(std::uint8_t, std::uint16_t, std::uint16_t) const;
+    bool blocksAt(std::uint8_t, std::uint32_t, std::uint32_t) const;
 
     int scaleFactor() const {
         return m_scaleFactor;

@@ -65,8 +65,13 @@ void LevelView::applySprites(
 
     // Now, generate sprites from render textures.
     for (auto i = 0; i < sprites.size(); ++i) {
+        const auto& coords(graphicLayer[i]);
+
         float scaleFactor(static_cast<float>(m_scaleFactor));
         sprites[i].setScale(scaleFactor, scaleFactor);
-        sprites[i].setTexture(renderTextures[i]->getTexture());
+
+        if (coords.first >= 0 && coords.second >= 0) {
+            sprites[i].setTexture(renderTextures[i]->getTexture());
+        }
     }
 }

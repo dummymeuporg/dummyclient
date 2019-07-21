@@ -20,7 +20,17 @@ public:
 
     virtual void tick() override;
 protected:
-    void _move(int, int);
+    void updatePosition() override;
+
+    void moveTowardsRight(int);
+    void moveTowardsLeft(int);
+    void moveTowardsTop(int);
+    void moveTowardsBottom(int);
+
+    bool blocksLeft() const;
+    bool blocksRight() const;
+    bool blocksTop() const;
+    bool blocksBottom() const;
 
     std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
         std::uint16_t,

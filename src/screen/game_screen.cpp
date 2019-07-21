@@ -250,13 +250,20 @@ void GameScreen::drawSprites(Sprites& sprites) {
         for (const auto y: boost::irange(yStart, yEnd)) {
             std::size_t index = y * m_mapView->width() + x;
             sf::Sprite& sprite = sprites.at(index);
+
             int windowX = ((x * 16 * m_game.scaleFactor()))
                 + 4 * m_game.scaleFactor() +
                 ((windowSize.x / 2) - static_cast<int>(m_camera.centerX()));
             int windowY = ((y * 16 * m_game.scaleFactor()))
                 + 24 * m_game.scaleFactor() +
                 ((windowSize.y / 2) - static_cast<int>(m_camera.centerY()));
-            sprite.setPosition(sf::Vector2f(windowX, windowY));
+
+            // Only draw the sprite if it has a texture.
+            if (nullptr != sprite.getTexture()) {
+                sprite.setPosition(sf::Vector2f(windowX, windowY));
+            } else {
+                std::cerr << "Do not draw." << std::endl;
+            }
         }
     }
 
