@@ -10,11 +10,12 @@ public:
     Player(
         const ::MapView&,
         ::Client&,
-        const std::string&,
-        const std::string&,
-        std::size_t,
-        std::size_t,
-        std::size_t,
+        const std::string& chipset,
+        const std::string& name,
+        std::int32_t x,
+        std::int32_t y,
+        std::uint8_t floor,
+        std::uint16_t scaleFactor,
         Direction direction = Direction::DOWN
     );
 

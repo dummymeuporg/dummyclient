@@ -15,11 +15,11 @@ class Entity : public ::GameElement {
 public:
     Entity(const MapView&,
            const std::string&,
-           std::size_t,
-           std::size_t,
-           std::size_t,
-           std::size_t,
-           std::size_t
+           std::size_t w,
+           std::size_t h,
+           std::int32_t x,
+           std::int32_t y,
+           std::uint16_t scaleFactor
     );
     Entity(const Entity&);
     const sf::Texture& chipset() const {
@@ -41,11 +41,11 @@ public:
         return m_h;
     }
 
-    std::size_t x() const {
+    std::int32_t x() const {
         return m_x;
     }
 
-    std::size_t y() const {
+    std::int32_t y() const {
         return m_y;
     }
 
@@ -53,8 +53,8 @@ public:
         return m_scaleFactor;
     }
 
-    void setX(std::size_t x);
-    void setY(std::size_t y);
+    void setX(std::int32_t x);
+    void setY(std::int32_t y);
     void setChipsetName(const std::string&);
 
     virtual void draw(sf::RenderWindow&, const ::Camera&) = 0;

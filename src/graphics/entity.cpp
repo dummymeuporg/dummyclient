@@ -7,9 +7,9 @@ Entity::Entity(const MapView& mapView,
                const std::string& chipset,
                std::size_t w,
                std::size_t h,
-               std::size_t x,
-               std::size_t y,
-               std::size_t scaleFactor)
+               std::int32_t x,
+               std::int32_t y,
+               std::uint16_t scaleFactor)
     : m_mapView(mapView),
       m_chipset(texture(chipset)),
       m_chipsetName(chipset),
@@ -36,11 +36,11 @@ Entity::Entity(const Entity& entity) :
 
 }
 
-void Entity::setX(std::size_t x) {
+void Entity::setX(std::int32_t x) {
     m_x = x;
 }
 
-void Entity::setY(std::size_t y) {
+void Entity::setY(std::int32_t y) {
     m_y = y;
 }
 

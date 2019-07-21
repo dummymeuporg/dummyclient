@@ -18,11 +18,12 @@ public:
     Living(const MapView&,
            const std::string&,
            const std::string&,
-           std::size_t,
-           std::size_t,
-           std::size_t,
-           std::size_t,
-           std::size_t,
+           std::size_t w,
+           std::size_t h,
+           std::int32_t x,
+           std::int32_t y,
+           std::uint8_t floor,
+           std::size_t scaleFactor,
            Direction = Direction::DOWN,
            std::uint8_t velocity = 5);
     Living(const Living&);
@@ -43,6 +44,10 @@ public:
 
     std::uint8_t velocity() const {
         return m_velocity;
+    }
+
+    std::uint8_t floor() const {
+        return m_floor;
     }
 
     void setVelocity(std::uint8_t);
@@ -66,6 +71,7 @@ protected:
     std::pair<std::int16_t, std::int16_t> computeDistance();
 
     std::string m_name;
+    std::uint8_t m_floor;
     Direction m_direction;
     std::shared_ptr<LivingState::State> m_state;
     sf::Text m_displayName;

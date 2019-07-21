@@ -73,6 +73,7 @@ void LocalMapState::visitMapUpdate(
             32,
             8 * characterOn.x() * m_mapView.scaleFactor(),
             8 * characterOn.y() * m_mapView.scaleFactor(),
+            characterOn.floor(),
             m_mapView.scaleFactor(),
             characterOn.direction(),
             10 /* velocity */
