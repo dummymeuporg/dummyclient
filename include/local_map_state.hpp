@@ -18,7 +18,7 @@ using GraphicLivingsMap =
     std::map<std::string, std::unique_ptr<Graphics::Living>>;
 using LocalFloorStates = std::vector<LocalFloorState>;
 using GraphicLivingFloors =
-    std::map<std::uint8_t, std::unique_ptr<Graphics::Living>>;
+    std::map<std::string, std::uint8_t>;
 
 class LocalMapState : public Dummy::Server::MapState {
 public:
@@ -41,15 +41,19 @@ public:
         return m_localFloorStates;
     }
 
+    const LocalFloorState& localFloorState(std::size_t index) const {
+        return m_localFloorStates[index];
+    }
+
     int scaleFactor() const {
         return m_mapView.scaleFactor();
     }
 
     void setIdleLivings();
     void syncLivings();
+    void removeIdleLiving(const std::string&);
 private:
     const MapView& m_mapView;
     LocalFloorStates m_localFloorStates;
-    std::set<std::string> m_idleLivings;
     GraphicLivingFloors m_graphicLivingsFloor;
 };

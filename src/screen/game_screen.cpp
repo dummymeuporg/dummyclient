@@ -283,8 +283,16 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
     // Draw the lower layers.
     drawSprites(levelView.bottomSprites());
 
-    // XXX: draw the character if needed.
-    drawCharacter();
+    // Draw the character if needed.
+    if (m_player.floor() == index) {
+        drawCharacter();
+    }
+
+    // Draw the livings on the current floor.
+    const auto& localFloorState(m_mapState.localFloorState(index));
+    for (auto& [name, living]: localFloorState.graphicLivings()) {
+        living->draw(m_game.window(), m_camera);
+    }
 
     drawSprites(levelView.topSprites());
 }

@@ -28,6 +28,11 @@ void LocalMapState::setIdleLivings() {
 void LocalMapState::visitMapUpdate(
     const Dummy::Protocol::MapUpdate::CharacterPosition& characterPosition
 ) {
+    Dummy::Server::MapState::visitMapUpdate(characterPosition);
+    // Get the character's floor.
+    const auto& floor(m_graphicLivingsFloor[characterPosition.name()]);
+    m_localFloorStates[floor].onCharacterPosition(characterPosition);
+
     /*
     std::cerr << "[!] " <<
         characterPosition.name() << " IS AT " <<
@@ -81,29 +86,36 @@ void LocalMapState::visitMapUpdate(
 
     auto& localFloorState(m_localFloorStates[floor]);
 
-    /*
-    m_graphicLivingsMap[characterOn.name()] =
-        std::make_unique<Graphics::Living>(
-            m_mapView,
-            characterOn.chipset(),
-            characterOn.name(),
-            24,
-            32,
-            8 * characterOn.x() * m_mapView.scaleFactor(),
-            8 * characterOn.y() * m_mapView.scaleFactor(),
-            characterOn.floor(),
-            m_mapView.scaleFactor(),
-            characterOn.direction(),
-            10 // velocity
-        );
-    */
+    if (localFloorState.containsLiving(characterOn.name())) {
+        // XXX: throw exception?
+    }
+
+    auto living = std::make_unique<Graphics::Living>(
+        m_mapView,
+        characterOn.chipset(),
+        characterOn.name(),
+        24,
+        32,
+        8 * characterOn.x() * m_mapView.scaleFactor(),
+        8 * characterOn.y() * m_mapView.scaleFactor(),
+        characterOn.floor(),
+        m_mapView.scaleFactor(),
+        characterOn.direction(),
+        10 // velocity
+    );
+
+    localFloorState.addLiving(characterOn.name(), std::move(living));
+    m_graphicLivingsFloor[characterOn.name()] = floor;
 }
 
 void LocalMapState::visitMapUpdate(
     const Dummy::Protocol::MapUpdate::CharacterOff& characterOff
 ) {
     Dummy::Server::MapState::visitMapUpdate(characterOff);
-    //m_graphicLivingsMap.erase(characterOff.name());
+
+    // Get the appropriate floor and dispatch.
+    const auto& floor(m_graphicLivingsFloor[characterOff.name()]);
+    m_localFloorStates[floor].removeLiving(characterOff.name());
 }
 
 void LocalMapState::tick() {
@@ -113,12 +125,7 @@ void LocalMapState::tick() {
 }
 
 void LocalMapState::syncLivings() {
-    /*
-    for (const auto& name: m_idleLivings) {
-        if (m_graphicLivingsMap.find(name) != std::end(m_graphicLivingsMap)) {
-            m_graphicLivingsMap[name]->stand();
-        }
+    for (auto& floorState: m_localFloorStates) {
+        floorState.syncLivings();
     }
-    m_idleLivings.clear();
-    */
 }
