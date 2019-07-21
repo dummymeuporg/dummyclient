@@ -18,6 +18,17 @@ using GraphicLivingsMap =
 class LocalFloorState {
 public:
     LocalFloorState(const ::LocalMapState&);
+    GraphicLivingsMap& graphicLivings() {
+        return m_graphicLivingsMap;
+    }
+
+    Graphics::Living& graphicLiving(const std::string& name) {
+        return *m_graphicLivingsMap[name];
+    }
+
+    void tick();
+
 private:
     const LocalMapState& m_localMapState;
+    GraphicLivingsMap m_graphicLivingsMap;
 };

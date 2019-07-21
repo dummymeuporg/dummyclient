@@ -10,12 +10,19 @@
 
 LocalMapState::LocalMapState(const MapView& mapView)
     : m_mapView(mapView)
-{}
+{
+    // Instantiate floor states.
+    for (const auto& floor: m_mapView.levelViews()) {
+        m_localFloorStates.push_back(LocalFloorState(*this));
+    }
+}
 
 void LocalMapState::setIdleLivings() {
+    /*
     for (const auto& living: m_graphicLivingsMap) {
         m_idleLivings.insert(living.first);
     }
+    */
 }
 
 void LocalMapState::visitMapUpdate(
@@ -26,7 +33,7 @@ void LocalMapState::visitMapUpdate(
         characterPosition.name() << " IS AT " <<
         characterPosition.x() << ", " <<
         characterPosition.y() << std::endl;
-    */
+
     Dummy::Server::MapState::visitMapUpdate(characterPosition);
     const std::string& name(characterPosition.name());
     int xVector = 0, yVector = 0;
@@ -56,6 +63,7 @@ void LocalMapState::visitMapUpdate(
         graphicLiving.walk();
         m_idleLivings.erase(name);
     }
+    */
 }
 
 
@@ -64,6 +72,16 @@ void LocalMapState::visitMapUpdate(
 ) {
     Dummy::Server::MapState::visitMapUpdate(characterOn);
 
+    // Check that its floor is valid.
+    const auto& floor(characterOn.floor());
+
+    if (floor >= m_mapView.levelViews().size()) {
+        // XXX: throw exception?
+    }
+
+    auto& localFloorState(m_localFloorStates[floor]);
+
+    /*
     m_graphicLivingsMap[characterOn.name()] =
         std::make_unique<Graphics::Living>(
             m_mapView,
@@ -76,60 +94,31 @@ void LocalMapState::visitMapUpdate(
             characterOn.floor(),
             m_mapView.scaleFactor(),
             characterOn.direction(),
-            10 /* velocity */
+            10 // velocity
         );
-            
+    */
 }
 
 void LocalMapState::visitMapUpdate(
     const Dummy::Protocol::MapUpdate::CharacterOff& characterOff
 ) {
     Dummy::Server::MapState::visitMapUpdate(characterOff);
-    m_graphicLivingsMap.erase(characterOff.name());
+    //m_graphicLivingsMap.erase(characterOff.name());
 }
 
 void LocalMapState::tick() {
-    // Make graphic livings converge towards their model.
-    auto scaleFactor(m_mapView.scaleFactor());
-    for (const auto& [name, graphicLiving]: m_graphicLivingsMap) {
-        auto& modelLiving(living(name));
-        graphicLiving->tick();
-        auto modelLivingX(modelLiving.x() * 8 * scaleFactor);
-        auto modelLivingY(modelLiving.y() * 8 * scaleFactor);
-
-        // XXX: ugly
-        if (modelLivingX != graphicLiving->x()) {
-            graphicLiving->setXMovement(
-                2 * (graphicLiving->x() < modelLivingX) - 1
-            );
-        } else {
-            graphicLiving->setXMovement(0);
-        }
-        if (modelLivingY != graphicLiving->y()) {
-            graphicLiving->setYMovement(
-                2 * (graphicLiving->y() < modelLivingY) - 1
-            );
-        } else {
-            graphicLiving->setYMovement(0);
-        }
-        /*
-        std::cerr << "Model living: " <<
-            modelLiving.x() << ", " <<
-            modelLiving.y() << std::endl;
-        std::cerr << "Graphic living: " <<
-            graphicLiving->x() << ", " <<
-            graphicLiving->y() << std::endl;
-        */
-        // XXX: find a "smart" way to make the character stand
-        //graphicLiving->moveTowards(modelLivingX, modelLivingY);
+    for (auto& floorState: m_localFloorStates) {
+        floorState.tick();
     }
 }
 
 void LocalMapState::syncLivings() {
+    /*
     for (const auto& name: m_idleLivings) {
         if (m_graphicLivingsMap.find(name) != std::end(m_graphicLivingsMap)) {
             m_graphicLivingsMap[name]->stand();
         }
     }
     m_idleLivings.clear();
+    */
 }

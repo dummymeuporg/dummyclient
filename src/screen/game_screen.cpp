@@ -295,9 +295,11 @@ void GameScreen::drawCharacter() {
 }
 
 void GameScreen::drawLivings() {
+    /*
     for (auto& [name, living]: m_mapState.graphicLivings()) {
         living->draw(m_game.window(), m_camera);
     }
+    */
 }
 
 void GameScreen::draw() {
