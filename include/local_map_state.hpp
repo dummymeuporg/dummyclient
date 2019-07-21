@@ -3,8 +3,10 @@
 #include <map>
 #include <set>
 #include <string>
+#include <vector>
 
 #include "server/map_state.hpp"
+#include "local_floor_state.hpp"
 
 namespace Graphics {
 class Living;
@@ -12,6 +14,8 @@ class Living;
 
 using GraphicLivingsMap =
     std::map<std::string, std::unique_ptr<Graphics::Living>>;
+using LocalFloorStates = std::vector<LocalFloorState>;
+
 
 class MapView;
 
@@ -36,10 +40,15 @@ public:
         return m_graphicLivingsMap;
     }
 
+    const LocalFloorStates& localFloorStates() const {
+        return m_localFloorStates;
+    }
+
     void setIdleLivings();
     void syncLivings();
 private:
     const MapView& m_mapView;
     GraphicLivingsMap m_graphicLivingsMap;
+    LocalFloorStates m_localFloorStates;
     std::set<std::string> m_idleLivings;
 };
