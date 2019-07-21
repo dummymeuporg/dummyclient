@@ -44,23 +44,10 @@ void Player::updatePosition() {
     } else if (yStep < 0) {
         moveTowardsTop(delta.second);
     }
-
-    //m_x += delta.first;
-
-    //m_y += delta.second;
-    std::cerr << "Delta: " << delta.first << ", " << delta.second << std::endl;
-
 }
 
 
 void Player::tick() {
-    /*
-    if (m_movingClock.getElapsedTime().asMilliseconds() >= 16 - m_velocity)
-    {
-        _move(m_xMovement, m_yMovement);
-        m_movingClock.restart();
-    }
-    */
 }
 
 std::pair<std::uint16_t, std::uint16_t>

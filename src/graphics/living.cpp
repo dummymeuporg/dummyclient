@@ -73,14 +73,6 @@ Living& Living::changeState(std::shared_ptr<LivingState::State> state) {
 }
 
 void Living::tick() {
-    /*
-    if (m_movingClock.getElapsedTime().asMilliseconds() >= 16 - m_velocity)
-    {
-        m_x += (m_xMovement * m_scaleFactor);
-        m_y += (m_yMovement * m_scaleFactor);
-        m_movingClock.restart();
-    }
-    */
 }
 
 std::pair<std::int16_t, std::int16_t>
