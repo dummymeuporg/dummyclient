@@ -6,6 +6,8 @@
 #include <vector>
 
 #include "server/map_state.hpp"
+
+#include "map_view.hpp"
 #include "local_floor_state.hpp"
 
 namespace Graphics {
@@ -15,9 +17,8 @@ class Living;
 using GraphicLivingsMap =
     std::map<std::string, std::unique_ptr<Graphics::Living>>;
 using LocalFloorStates = std::vector<LocalFloorState>;
-
-
-class MapView;
+using GraphicLivingFloors =
+    std::map<std::string, std::uint8_t>;
 
 class LocalMapState : public Dummy::Server::MapState {
 public:
@@ -36,19 +37,23 @@ public:
 
     void tick();
 
-    const GraphicLivingsMap& graphicLivings() const {
-        return m_graphicLivingsMap;
-    }
-
     const LocalFloorStates& localFloorStates() const {
         return m_localFloorStates;
     }
 
+    const LocalFloorState& localFloorState(std::size_t index) const {
+        return m_localFloorStates[index];
+    }
+
+    int scaleFactor() const {
+        return m_mapView.scaleFactor();
+    }
+
     void setIdleLivings();
     void syncLivings();
+    void removeIdleLiving(const std::string&);
 private:
     const MapView& m_mapView;
-    GraphicLivingsMap m_graphicLivingsMap;
     LocalFloorStates m_localFloorStates;
-    std::set<std::string> m_idleLivings;
+    GraphicLivingFloors m_graphicLivingsFloor;
 };
