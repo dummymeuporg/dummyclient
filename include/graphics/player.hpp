@@ -20,7 +20,6 @@ public:
 
     virtual void tick() override;
 protected:
-    void _move(int, int);
     void updatePosition() override;
 
     void moveTowardsRight(int);
