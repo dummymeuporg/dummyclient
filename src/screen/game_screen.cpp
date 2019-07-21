@@ -262,8 +262,6 @@ void GameScreen::drawSprites(Sprites& sprites) {
             // Only draw the sprite if it has a texture.
             if (nullptr != sprite.getTexture()) {
                 sprite.setPosition(sf::Vector2f(windowX, windowY));
-            } else {
-                std::cerr << "Do not draw." << std::endl;
             }
         }
     }
