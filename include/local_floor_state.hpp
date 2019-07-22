@@ -22,7 +22,7 @@ class Living;
 
 
 using GraphicLivingsMap =
-    std::map<std::string, std::unique_ptr<Graphics::Living>>;
+    std::map<std::string, std::shared_ptr<Graphics::Living>>;
 
 class LocalFloorState {
 public:
@@ -37,7 +37,7 @@ public:
         return m_graphicLivingsMap.find(name) != std::end(m_graphicLivingsMap);
     }
 
-    void addLiving(const std::string&, std::unique_ptr<Graphics::Living>);
+    void addLiving(const std::string&, std::shared_ptr<Graphics::Living>);
     void syncLivings();
     void removeLiving(const std::string&);
     void onCharacterPosition(

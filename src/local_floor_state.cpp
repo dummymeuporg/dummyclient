@@ -39,9 +39,9 @@ void LocalFloorState::tick() {
 void
 LocalFloorState::addLiving(
     const std::string& name,
-    std::unique_ptr<Graphics::Living> living
+    std::shared_ptr<Graphics::Living> living
 ) {
-    m_graphicLivingsMap[name] = std::move(living);
+    m_graphicLivingsMap.emplace(name, living);
 }
 
 void

@@ -90,7 +90,7 @@ void LocalMapState::visitMapUpdate(
         // XXX: throw exception?
     }
 
-    auto living = std::make_unique<Graphics::Living>(
+    auto living =  std::make_shared<Graphics::Living>(
         m_mapView,
         characterOn.chipset(),
         characterOn.name(),
@@ -104,7 +104,7 @@ void LocalMapState::visitMapUpdate(
         10 // velocity
     );
 
-    localFloorState.addLiving(characterOn.name(), std::move(living));
+    localFloorState.addLiving(characterOn.name(), living);
     m_graphicLivingsFloor[characterOn.name()] = floor;
 }
 

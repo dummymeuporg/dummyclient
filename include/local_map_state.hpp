@@ -14,8 +14,6 @@ namespace Graphics {
 class Living;
 } // namespace Graphics
 
-using GraphicLivingsMap =
-    std::map<std::string, std::unique_ptr<Graphics::Living>>;
 using LocalFloorStates = std::vector<LocalFloorState>;
 using GraphicLivingFloors =
     std::map<std::string, std::uint8_t>;
