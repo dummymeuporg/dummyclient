@@ -33,11 +33,11 @@ protected:
     bool blocksTop() const;
     bool blocksBottom() const;
 
-    std::pair<std::uint16_t, std::uint16_t> _translateCoordsToServ(
-        std::uint16_t,
-        std::uint16_t
-    );
+    std::pair<std::uint16_t, std::uint16_t>
+    translateCoordsToServ(std::int32_t, std::int32_t);
     ::Client& m_client;
+    sf::Clock m_updatePosClock;
+    std::pair<std::uint16_t, std::uint16_t> m_serverPosition;
 };
 
 } // namespace Graphics

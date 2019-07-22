@@ -49,7 +49,7 @@ private:
     void onArrowPressed();
     void onArrowReleased();
     void moveCharacter(sf::Keyboard::Key);
-    void drawLivings();
+    void drawLivings(std::uint8_t);
     void syncLivings();
     void drawLevelView(unsigned int, LevelView&);
     void drawSprites(Sprites&);

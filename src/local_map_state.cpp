@@ -32,43 +32,6 @@ void LocalMapState::visitMapUpdate(
     // Get the character's floor.
     const auto& floor(m_graphicLivingsFloor[characterPosition.name()]);
     m_localFloorStates[floor].onCharacterPosition(characterPosition);
-
-    /*
-    std::cerr << "[!] " <<
-        characterPosition.name() << " IS AT " <<
-        characterPosition.x() << ", " <<
-        characterPosition.y() << std::endl;
-
-    Dummy::Server::MapState::visitMapUpdate(characterPosition);
-    const std::string& name(characterPosition.name());
-    int xVector = 0, yVector = 0;
-    if (livings().find(name) != std::end(livings()) &&
-        m_graphicLivingsMap.find(name) != std::end(m_graphicLivingsMap))
-    {
-        const auto& modelLiving(living(name)); 
-        auto& graphicLiving(*m_graphicLivingsMap.at(name));
-        auto scaleFactor(graphicLiving.scaleFactor());
-        auto modelLivingX(modelLiving.x() * 8 * scaleFactor);
-        auto modelLivingY(modelLiving.y() * 8 * scaleFactor);
-        if (modelLivingX != graphicLiving.x()) {
-            graphicLiving.setXMovement(
-                2 * (graphicLiving.x() < modelLivingX) - 1
-            );
-        }
-        if (modelLivingY != graphicLiving.y()) {
-            graphicLiving.setYMovement(
-                2 * (graphicLiving.y() < modelLivingY) - 1
-            );
-        }
-        // XXX: ugly
-        graphicLiving.moveTowards(
-            modelLiving.x() * 8 * scaleFactor,
-            modelLiving.y() * 8 * scaleFactor
-        );
-        graphicLiving.walk();
-        m_idleLivings.erase(name);
-    }
-    */
 }
 
 

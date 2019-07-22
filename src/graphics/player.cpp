@@ -1,3 +1,4 @@
+#include "server/command/ping.hpp"
 #include "server/command/set_position.hpp"
 #include "client.hpp"
 #include "map_view.hpp"
@@ -26,6 +27,8 @@ Player::Player(const ::MapView& mapView,
              direction),
     m_client(client)
 {
+    m_updatePosClock.restart();
+    m_serverPosition = translateCoordsToServ(m_x, m_y);
 }
 
 void Player::updatePosition() {
@@ -48,12 +51,29 @@ void Player::updatePosition() {
 
 
 void Player::tick() {
+    // XXX: update position and read the others each 333 ms?
+    if (m_updatePosClock.getElapsedTime().asMilliseconds() >= 333) {
+        std::cerr << "TICK" << std::endl;
+        m_client.sendCommand(Dummy::Server::Command::Ping());
+
+        // Update position if needed
+        auto newPosition = translateCoordsToServ(m_x, m_y);
+        if (newPosition != m_serverPosition) {
+            std::cerr << "UPDATE POS." << std::endl;
+            m_client.sendCommand(
+                Dummy::Server::Command::SetPosition(newPosition.first,
+                                                    newPosition.second)
+            );
+            m_serverPosition = newPosition;
+        }
+        m_updatePosClock.restart();
+    }
 }
 
 std::pair<std::uint16_t, std::uint16_t>
-Player::_translateCoordsToServ(
-        std::uint16_t x,
-        std::uint16_t y
+Player::translateCoordsToServ(
+        std::int32_t x,
+        std::int32_t y
     ) {
     return std::pair<std::uint16_t, std::uint16_t>(
         x / (8 * m_scaleFactor),

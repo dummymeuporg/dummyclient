@@ -281,10 +281,13 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
     // Draw the lower layers.
     drawSprites(levelView.bottomSprites());
 
+    drawLivings(index);
+
     // Draw the character if needed.
     if (m_player.floor() == index) {
         drawCharacter();
     }
+
 
     // Draw the livings on the current floor.
     const auto& localFloorState(m_mapState.localFloorState(index));
@@ -300,12 +303,11 @@ void GameScreen::drawCharacter() {
     m_player.draw(m_game.window(), m_camera);
 }
 
-void GameScreen::drawLivings() {
-    /*
-    for (auto& [name, living]: m_mapState.graphicLivings()) {
+void GameScreen::drawLivings(std::uint8_t index) {
+    auto& graphicLivings(m_mapState.localFloorState(index).graphicLivings());
+    for (auto& [name, living]: graphicLivings) {
         living->draw(m_game.window(), m_camera);
     }
-    */
 }
 
 void GameScreen::draw() {
@@ -313,17 +315,7 @@ void GameScreen::draw() {
     for (unsigned i = 0; i < m_mapView->levelViews().size(); ++i) {
         drawLevelView(i, m_mapView->levelView(i));
     }
-    // Draw the map
-    /*
-    _drawLayer(m_mapView->firstLayerSprites());
-    _drawLayer(m_mapView->secondLayerSprites());
-    _drawLivings();
-    */
-    //_drawCharacter();
-    /*
-    _drawLayer(m_mapView->thirdLayerSprites());
-    _drawLayer(m_mapView->fourthLayerSprites());
-    */
+
     // Draw widgets (HUD) if needed.
     UIScreen::draw();
 }
@@ -362,7 +354,6 @@ void GameScreen::visitResponse(
 ) {
     // XXX: refresh MapState & livings
     m_mapState.setIdleLivings();
-    std::cerr << "Pong! " << ping.mapUpdates().size() << std::endl;
     for (const auto& update: ping.mapUpdates()) {
         m_mapState.update(*update);
     }

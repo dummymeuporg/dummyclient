@@ -52,6 +52,7 @@ LocalFloorState::removeLiving(const std::string& name) {
 void LocalFloorState::onCharacterPosition(
     const Dummy::Protocol::MapUpdate::CharacterPosition& characterPosition
 ) {
+    std::cerr << "LocalFloorState::onCharacterPosition" << std::endl;
     const std::string& name(characterPosition.name());
     int xVector = 0, yVector = 0;
     if (m_localMapState.livings().find(name) !=
