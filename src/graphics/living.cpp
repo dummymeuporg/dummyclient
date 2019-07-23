@@ -93,27 +93,13 @@ Living::computeDistance() {
 }
 
 void Living::draw(sf::RenderWindow& window, const ::Camera& camera) {
-    const sf::Vector2u& windowSize(window.getSize());
-
     // Update position given the ellapsed time and the velocity.
     updatePosition();
 
     // Update the movement given the effective position
     m_state->draw(window, camera);
 
-    sf::FloatRect textRect = m_displayName.getLocalBounds();
-    m_displayName.setOrigin(
-        textRect.left + textRect.width / 2.0f,
-        textRect.top
-    );
-    m_displayName.setPosition(
-
-        static_cast<int>(windowSize.x / 2) + m_x - camera.centerX() +
-        w() * 1,
-        static_cast<int>(windowSize.y / 2) + m_y - camera.centerY() +
-        h() * 2
-    );
-    window.draw(m_displayName);
+    // XXX: draw name here? For now?
 }
 
 void Living::moveTowards(std::uint16_t x, std::uint16_t y) {

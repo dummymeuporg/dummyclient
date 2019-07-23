@@ -15,9 +15,9 @@ using Direction = Dummy::Core::Character::Direction;
 
 class Living : public Entity {
 public:
-    Living(const MapView&,
-           const std::string&,
-           const std::string&,
+    Living(const MapView& mapView,
+           const std::string& chipset,
+           const std::string& name,
            std::size_t w,
            std::size_t h,
            std::int32_t x,
@@ -27,7 +27,7 @@ public:
            Direction = Direction::DOWN,
            std::uint8_t velocity = 5);
     Living(const Living&);
-    virtual void draw(sf::RenderWindow&, const ::Camera&) override;
+    void draw(sf::RenderWindow&, const ::Camera&) override;
     const Dummy::Core::Character::Direction& direction() const {
         return m_direction;
     }

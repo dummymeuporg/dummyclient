@@ -19,7 +19,8 @@ public:
         Direction direction = Direction::DOWN
     );
 
-    virtual void tick() override;
+    void tick() override;
+    void draw(sf::RenderWindow&, const ::Camera&) override;
 protected:
     void updatePosition() override;
 

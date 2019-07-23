@@ -1,5 +1,6 @@
 #include "server/command/ping.hpp"
 #include "server/command/set_position.hpp"
+#include "camera.hpp"
 #include "client.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
@@ -146,6 +147,23 @@ void Player::moveTowardsBottom(int delta) {
         m_y += step;
         i += step;
     }
+}
+
+void Player::draw(sf::RenderWindow& window, const ::Camera& camera) {
+    Living::draw(window, camera);
+    const sf::Vector2u& windowSize(window.getSize());
+    sf::FloatRect textRect = m_displayName.getLocalBounds();
+    m_displayName.setOrigin(
+        textRect.left + textRect.width / 2.0f,
+        textRect.top
+    );
+    m_displayName.setPosition(
+        static_cast<int>(windowSize.x / 2) + m_x - camera.centerX() +
+        w() * 1,
+        static_cast<int>(windowSize.y / 2) + m_y - camera.centerY() +
+        h() * 2
+    );
+    window.draw(m_displayName);
 }
 
 
