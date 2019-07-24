@@ -16,15 +16,13 @@ Foe::Foe(const ::MapView& mapView,
       m_xDst(x), m_yDst(y)
 {}
 
-void Foe::draw(sf::RenderWindow& window, const ::Camera& camera) {
-    const sf::Vector2u& windowSize(window.getSize());
-
-}
 
 void Foe::updatePosition() {
     auto delta(computeDistance());
     m_x += delta.first;
     m_y += delta.second;
+    std::cerr << "Foe::updatePosition: " << delta.first << " "
+        << delta.second << std::endl;
     if ((m_xMovement > 0 && m_x > m_xDst) || (m_xMovement < 0 && m_x < m_xDst))
     {
         m_x = m_xDst;
@@ -34,6 +32,14 @@ void Foe::updatePosition() {
     {
         m_y = m_yDst;
     }
+}
+
+void Foe::setXDst(std::int32_t xDst) {
+    m_xDst = xDst;
+}
+
+void Foe::setYDst(std::int32_t yDst) {
+    m_yDst = yDst;
 }
 
 } // namespace Graphics

@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <SFML/Graphics.hpp>
-
 #include "graphics/living.hpp"
 
 class Camera;
@@ -24,7 +21,18 @@ public:
         Direction direction
     );
 
-    void draw(sf::RenderWindow&, const ::Camera&) override;
+
+    std::int32_t xDst() const {
+        return m_xDst;    
+    }
+
+    std::int32_t yDst() const {
+        return m_yDst;
+    }
+
+    void setXDst(std::int32_t);
+    void setYDst(std::int32_t);
+
 protected:
     void updatePosition() override;
 private:

@@ -49,7 +49,6 @@ public:
 
     void setIdleLivings();
     void syncLivings();
-    void removeIdleLiving(const std::string&);
 private:
     const MapView& m_mapView;
     LocalFloorStates m_localFloorStates;

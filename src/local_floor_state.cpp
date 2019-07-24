@@ -12,7 +12,7 @@ LocalFloorState::LocalFloorState(const LocalMapState& localMapState)
 void LocalFloorState::tick() {
     // Make graphic livings converge towards their model.
     auto scaleFactor(m_localMapState.scaleFactor());
-    for (const auto& [name, graphicLiving]: m_graphicLivingsMap) {
+    for (const auto& [name, graphicLiving]: m_graphicFoesMap) {
         auto& modelLiving(m_localMapState.living(name));
         graphicLiving->tick();
         auto modelLivingX(modelLiving.x() * 8 * scaleFactor);
@@ -41,12 +41,12 @@ LocalFloorState::addLiving(
     const std::string& name,
     std::shared_ptr<Graphics::Living> living
 ) {
-    m_graphicLivingsMap.emplace(name, living);
+    m_graphicFoesMap.emplace(name, living);
 }
 
 void
 LocalFloorState::removeLiving(const std::string& name) {
-    m_graphicLivingsMap.erase(name);
+    m_graphicFoesMap.erase(name);
 }
 
 void LocalFloorState::onCharacterPosition(
@@ -57,10 +57,10 @@ void LocalFloorState::onCharacterPosition(
     int xVector = 0, yVector = 0;
     if (m_localMapState.livings().find(name) !=
         std::end(m_localMapState.livings()) &&
-        m_graphicLivingsMap.find(name) != std::end(m_graphicLivingsMap))
+        m_graphicFoesMap.find(name) != std::end(m_graphicFoesMap))
     {
         const auto& modelLiving(m_localMapState.living(name));
-        auto& graphicLiving(*m_graphicLivingsMap.at(name));
+        auto& graphicLiving(*m_graphicFoesMap.at(name));
         auto scaleFactor(graphicLiving.scaleFactor());
         auto modelLivingX(modelLiving.x() * 8 * scaleFactor);
         auto modelLivingY(modelLiving.y() * 8 * scaleFactor);
@@ -86,8 +86,8 @@ void LocalFloorState::onCharacterPosition(
 
 void LocalFloorState::syncLivings() {
     for (const auto& name: m_idleLivings) {
-        if (m_graphicLivingsMap.find(name) != std::end(m_graphicLivingsMap)) {
-            m_graphicLivingsMap[name]->stand();
+        if (m_graphicFoesMap.find(name) != std::end(m_graphicFoesMap)) {
+            m_graphicFoesMap[name]->stand();
         }
     }
     m_idleLivings.clear();

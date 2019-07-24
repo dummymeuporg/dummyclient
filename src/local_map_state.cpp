@@ -4,7 +4,7 @@
 #include "protocol/map_update/character_on.hpp"
 #include "protocol/map_update/character_position.hpp"
 #include "protocol/living.hpp"
-#include "graphics/living.hpp"
+#include "graphics/foe_player.hpp"
 #include "local_map_state.hpp"
 #include "map_view.hpp"
 
@@ -53,18 +53,15 @@ void LocalMapState::visitMapUpdate(
         // XXX: throw exception?
     }
 
-    auto living =  std::make_shared<Graphics::Living>(
+    auto living =  std::make_shared<Graphics::FoePlayer>(
         m_mapView,
         characterOn.chipset(),
         characterOn.name(),
-        24,
-        32,
         8 * characterOn.x() * m_mapView.scaleFactor(),
         8 * characterOn.y() * m_mapView.scaleFactor(),
         characterOn.floor(),
         m_mapView.scaleFactor(),
-        characterOn.direction(),
-        10 // velocity
+        characterOn.direction()
     );
 
     localFloorState.addLiving(characterOn.name(), living);

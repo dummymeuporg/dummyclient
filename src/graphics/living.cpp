@@ -98,8 +98,6 @@ void Living::draw(sf::RenderWindow& window, const ::Camera& camera) {
 
     // Update the movement given the effective position
     m_state->draw(window, camera);
-
-    // XXX: draw name here? For now?
 }
 
 void Living::moveTowards(std::uint16_t x, std::uint16_t y) {
