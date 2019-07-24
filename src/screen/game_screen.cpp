@@ -8,7 +8,7 @@
 
 #include "client.hpp"
 #include "game.hpp"
-#include "graphics/living.hpp"
+#include "graphics/foe.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
 #include "level_view.hpp"
@@ -291,8 +291,8 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
 
     // Draw the livings on the current floor.
     const auto& localFloorState(m_mapState.localFloorState(index));
-    for (auto& [name, living]: localFloorState.graphicLivings()) {
-        living->draw(m_game.window(), m_camera);
+    for (auto& [name, foe]: localFloorState.graphicFoes()) {
+        foe->draw(m_game.window(), m_camera);
     }
 
     drawSprites(levelView.topSprites());
@@ -304,9 +304,9 @@ void GameScreen::drawCharacter() {
 }
 
 void GameScreen::drawLivings(std::uint8_t index) {
-    auto& graphicLivings(m_mapState.localFloorState(index).graphicLivings());
-    for (auto& [name, living]: graphicLivings) {
-        living->draw(m_game.window(), m_camera);
+    auto& graphicFoes(m_mapState.localFloorState(index).graphicFoes());
+    for (auto& [name, foe]: graphicFoes) {
+        foe->draw(m_game.window(), m_camera);
     }
 }
 

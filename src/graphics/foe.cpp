@@ -21,8 +21,7 @@ void Foe::updatePosition() {
     auto delta(computeDistance());
     m_x += delta.first;
     m_y += delta.second;
-    std::cerr << "Foe::updatePosition: " << delta.first << " "
-        << delta.second << std::endl;
+
     if ((m_xMovement > 0 && m_x > m_xDst) || (m_xMovement < 0 && m_x < m_xDst))
     {
         m_x = m_xDst;

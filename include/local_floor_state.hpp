@@ -17,19 +17,16 @@ class CharacterPosition;
 } // namespace Dummy
 
 namespace Graphics {
-class Living;
+class Foe;
 } // namespace Graphics
 
 
 using GraphicFoesMap =
-    std::map<std::string, std::shared_ptr<Graphics::Living>>;
+    std::map<std::string, std::shared_ptr<Graphics::Foe>>;
 
 class LocalFloorState {
 public:
     LocalFloorState(const ::LocalMapState&);
-    const GraphicFoesMap& graphicFoes() {
-        return m_graphicFoesMap;
-    }
 
     void tick();
 
@@ -37,20 +34,21 @@ public:
         return m_graphicFoesMap.find(name) != std::end(m_graphicFoesMap);
     }
 
-    void addLiving(const std::string&, std::shared_ptr<Graphics::Living>);
+    void addFoe(const std::string&, std::shared_ptr<Graphics::Foe>);
+    void setIdleLivings();
     void syncLivings();
-    void removeLiving(const std::string&);
+    void removeFoe(const std::string&);
     void onCharacterPosition(
         const Dummy::Protocol::MapUpdate::CharacterPosition&
     );
 
-    const GraphicFoesMap& graphicLivings() const {
+    const GraphicFoesMap& graphicFoes() const {
         return m_graphicFoesMap;
     }
 
 private:
     const LocalMapState& m_localMapState;
     GraphicFoesMap m_graphicFoesMap;
-    std::set<std::string> m_idleLivings;
+    std::set<std::string> m_idleFoes;
 
 };

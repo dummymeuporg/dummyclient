@@ -52,5 +52,5 @@ public:
 private:
     const MapView& m_mapView;
     LocalFloorStates m_localFloorStates;
-    GraphicLivingFloors m_graphicLivingsFloor;
+    GraphicLivingFloors m_graphicFoesFloor;
 };

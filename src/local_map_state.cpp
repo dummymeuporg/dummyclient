@@ -18,11 +18,10 @@ LocalMapState::LocalMapState(const MapView& mapView)
 }
 
 void LocalMapState::setIdleLivings() {
-    /*
-    for (const auto& living: m_graphicLivingsMap) {
-        m_idleLivings.insert(living.first);
+
+    for (auto& floorState: m_localFloorStates) {
+        floorState.setIdleLivings();
     }
-    */
 }
 
 void LocalMapState::visitMapUpdate(
@@ -30,7 +29,7 @@ void LocalMapState::visitMapUpdate(
 ) {
     Dummy::Server::MapState::visitMapUpdate(characterPosition);
     // Get the character's floor.
-    const auto& floor(m_graphicLivingsFloor[characterPosition.name()]);
+    const auto& floor(m_graphicFoesFloor[characterPosition.name()]);
     m_localFloorStates[floor].onCharacterPosition(characterPosition);
 }
 
@@ -53,7 +52,7 @@ void LocalMapState::visitMapUpdate(
         // XXX: throw exception?
     }
 
-    auto living =  std::make_shared<Graphics::FoePlayer>(
+    auto foe = std::make_shared<Graphics::FoePlayer>(
         m_mapView,
         characterOn.chipset(),
         characterOn.name(),
@@ -64,8 +63,8 @@ void LocalMapState::visitMapUpdate(
         characterOn.direction()
     );
 
-    localFloorState.addLiving(characterOn.name(), living);
-    m_graphicLivingsFloor[characterOn.name()] = floor;
+    localFloorState.addFoe(characterOn.name(), foe);
+    m_graphicFoesFloor[characterOn.name()] = floor;
 }
 
 void LocalMapState::visitMapUpdate(
@@ -74,8 +73,8 @@ void LocalMapState::visitMapUpdate(
     Dummy::Server::MapState::visitMapUpdate(characterOff);
 
     // Get the appropriate floor and dispatch.
-    const auto& floor(m_graphicLivingsFloor[characterOff.name()]);
-    m_localFloorStates[floor].removeLiving(characterOff.name());
+    const auto& floor(m_graphicFoesFloor[characterOff.name()]);
+    m_localFloorStates[floor].removeFoe(characterOff.name());
 }
 
 void LocalMapState::tick() {

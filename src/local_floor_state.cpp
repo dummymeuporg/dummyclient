@@ -1,5 +1,5 @@
 #include "protocol/living.hpp"
-#include "graphics/living.hpp"
+#include "graphics/foe.hpp"
 
 #include "protocol/map_update/character_position.hpp"
 
@@ -12,40 +12,40 @@ LocalFloorState::LocalFloorState(const LocalMapState& localMapState)
 void LocalFloorState::tick() {
     // Make graphic livings converge towards their model.
     auto scaleFactor(m_localMapState.scaleFactor());
-    for (const auto& [name, graphicLiving]: m_graphicFoesMap) {
-        auto& modelLiving(m_localMapState.living(name));
-        graphicLiving->tick();
+    for (const auto& [name, graphicFoe]: m_graphicFoesMap) {
+        auto& modelLiving(m_localMapState.foe(name));
+        graphicFoe->tick();
         auto modelLivingX(modelLiving.x() * 8 * scaleFactor);
         auto modelLivingY(modelLiving.y() * 8 * scaleFactor);
 
         // XXX: ugly
-        if (modelLivingX != graphicLiving->x()) {
-            graphicLiving->setXMovement(
-                2 * (graphicLiving->x() < modelLivingX) - 1
+        if (modelLivingX != graphicFoe->x()) {
+            graphicFoe->setXMovement(
+                2 * (graphicFoe->x() < modelLivingX) - 1
             );
         } else {
-            graphicLiving->setXMovement(0);
+            graphicFoe->setXMovement(0);
         }
-        if (modelLivingY != graphicLiving->y()) {
-            graphicLiving->setYMovement(
-                2 * (graphicLiving->y() < modelLivingY) - 1
+        if (modelLivingY != graphicFoe->y()) {
+            graphicFoe->setYMovement(
+                2 * (graphicFoe->y() < modelLivingY) - 1
             );
         } else {
-            graphicLiving->setYMovement(0);
+            graphicFoe->setYMovement(0);
         }
     }
 }
 
 void
-LocalFloorState::addLiving(
+LocalFloorState::addFoe(
     const std::string& name,
-    std::shared_ptr<Graphics::Living> living
+    std::shared_ptr<Graphics::Foe> living
 ) {
     m_graphicFoesMap.emplace(name, living);
 }
 
 void
-LocalFloorState::removeLiving(const std::string& name) {
+LocalFloorState::removeFoe(const std::string& name) {
     m_graphicFoesMap.erase(name);
 }
 
@@ -59,36 +59,46 @@ void LocalFloorState::onCharacterPosition(
         std::end(m_localMapState.livings()) &&
         m_graphicFoesMap.find(name) != std::end(m_graphicFoesMap))
     {
-        const auto& modelLiving(m_localMapState.living(name));
-        auto& graphicLiving(*m_graphicFoesMap.at(name));
-        auto scaleFactor(graphicLiving.scaleFactor());
-        auto modelLivingX(modelLiving.x() * 8 * scaleFactor);
-        auto modelLivingY(modelLiving.y() * 8 * scaleFactor);
-        if (modelLivingX != graphicLiving.x()) {
-            graphicLiving.setXMovement(
-                2 * (graphicLiving.x() < modelLivingX) - 1
+        const auto& modelFoe(m_localMapState.foe(name));
+        auto& graphicFoe(*m_graphicFoesMap.at(name));
+        auto scaleFactor(graphicFoe.scaleFactor());
+        auto modelFoeX(modelFoe.x() * 8 * scaleFactor);
+        auto modelFoeY(modelFoe.y() * 8 * scaleFactor);
+        if (modelFoeX != graphicFoe.x()) {
+            graphicFoe.setXDst(modelFoeX);
+            graphicFoe.setXMovement(
+                2 * (graphicFoe.x() < modelFoeX) - 1
             );
         }
-        if (modelLivingY != graphicLiving.y()) {
-            graphicLiving.setYMovement(
-                2 * (graphicLiving.y() < modelLivingY) - 1
+        if (modelFoeY != graphicFoe.y()) {
+            graphicFoe.setYDst(modelFoeY);
+            graphicFoe.setYMovement(
+                2 * (graphicFoe.y() < modelFoeY) - 1
             );
         }
         // XXX: ugly
-        graphicLiving.moveTowards(
-            modelLiving.x() * 8 * scaleFactor,
-            modelLiving.y() * 8 * scaleFactor
+        graphicFoe.moveTowards(
+            modelFoe.x() * 8 * scaleFactor,
+            modelFoe.y() * 8 * scaleFactor
         );
-        graphicLiving.walk();
-        m_idleLivings.erase(name);
+        std::cerr << "Walk" << std::endl;
+        graphicFoe.walk();
+        m_idleFoes.erase(name);
+    }
+}
+
+void LocalFloorState::setIdleLivings() {
+    for (const auto& foe: m_graphicFoesMap) {
+        m_idleFoes.insert(foe.first);
     }
 }
 
 void LocalFloorState::syncLivings() {
-    for (const auto& name: m_idleLivings) {
+    for (const auto& name: m_idleFoes) {
         if (m_graphicFoesMap.find(name) != std::end(m_graphicFoesMap)) {
+            std::cerr << "Stand" << std::endl;
             m_graphicFoesMap[name]->stand();
         }
     }
-    m_idleLivings.clear();
+    m_idleFoes.clear();
 }
