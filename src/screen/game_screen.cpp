@@ -352,13 +352,9 @@ void GameScreen::visitResponse(
 void GameScreen::visitResponse(
     const Dummy::Server::Response::Ping& ping
 ) {
-    // XXX: refresh MapState & livings
-    m_mapState.setIdleLivings();
     for (const auto& update: ping.mapUpdates()) {
         m_mapState.update(*update);
     }
-
-    m_mapState.syncLivings();
 }
 
 } // namespace Screen

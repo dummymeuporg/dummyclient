@@ -35,8 +35,6 @@ public:
     }
 
     void addFoe(const std::string&, std::shared_ptr<Graphics::Foe>);
-    void setIdleLivings();
-    void syncLivings();
     void removeFoe(const std::string&);
     void onCharacterPosition(
         const Dummy::Protocol::MapUpdate::CharacterPosition&
@@ -49,6 +47,4 @@ public:
 private:
     const LocalMapState& m_localMapState;
     GraphicFoesMap m_graphicFoesMap;
-    std::set<std::string> m_idleFoes;
-
 };

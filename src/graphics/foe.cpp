@@ -31,6 +31,12 @@ void Foe::updatePosition() {
     {
         m_y = m_yDst;
     }
+
+    if (m_x == m_xDst && m_y == m_yDst) {
+        stand();
+    } else {
+        walk();
+    }
 }
 
 void Foe::setXDst(std::int32_t xDst) {

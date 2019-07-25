@@ -17,13 +17,6 @@ LocalMapState::LocalMapState(const MapView& mapView)
     }
 }
 
-void LocalMapState::setIdleLivings() {
-
-    for (auto& floorState: m_localFloorStates) {
-        floorState.setIdleLivings();
-    }
-}
-
 void LocalMapState::visitMapUpdate(
     const Dummy::Protocol::MapUpdate::CharacterPosition& characterPosition
 ) {
@@ -80,11 +73,5 @@ void LocalMapState::visitMapUpdate(
 void LocalMapState::tick() {
     for (auto& floorState: m_localFloorStates) {
         floorState.tick();
-    }
-}
-
-void LocalMapState::syncLivings() {
-    for (auto& floorState: m_localFloorStates) {
-        floorState.syncLivings();
     }
 }

@@ -46,9 +46,6 @@ public:
     int scaleFactor() const {
         return m_mapView.scaleFactor();
     }
-
-    void setIdleLivings();
-    void syncLivings();
 private:
     const MapView& m_mapView;
     LocalFloorStates m_localFloorStates;

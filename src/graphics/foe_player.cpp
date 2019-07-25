@@ -19,7 +19,7 @@ void FoePlayer::draw(sf::RenderWindow& window, const ::Camera& camera) {
     Living::draw(window, camera);
     const sf::Vector2u& windowSize(window.getSize());
 
-    // XXX: Duplicate with the Player class. Find a way to factorize it.
+    // XXX: Duplicate with the Player class. Find a way to factorize it.
     sf::FloatRect textRect = m_displayName.getLocalBounds();
     m_displayName.setOrigin(
         textRect.left + textRect.width / 2.0f,
