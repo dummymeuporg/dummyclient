@@ -1,7 +1,7 @@
 #pragma once
 
 #include <queue>
-#include "utils/singleton.hpp"
+#include <dummy/utils/singleton.hpp>
 
 class CustomEvent {
 public:

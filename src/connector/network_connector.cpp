@@ -1,8 +1,8 @@
 #include <iostream>
-#include "protocol/incoming_packet.hpp"
-#include "protocol/outgoing_packet.hpp"
-#include "server/command/command.hpp"
-#include "server/response/response.hpp"
+#include <dummy/protocol/incoming_packet.hpp>
+#include <dummy/protocol/outgoing_packet.hpp>
+#include <dummy/server/command/command.hpp>
+#include <dummy/server/response/response.hpp>
 #include "connector/network_connector.hpp"
 #include "connector/network_connector_state/initial_state.hpp"
 

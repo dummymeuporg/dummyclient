@@ -1,6 +1,7 @@
 #pragma once
 
-#include "core/character.hpp"
+#include <dummy/core/character.hpp>
+
 #include "widget/abstract/widget.hpp"
 
 namespace Widget {

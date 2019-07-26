@@ -1,7 +1,7 @@
 #pragma once
 
 #include "game_element.hpp"
-#include "local/level.hpp"
+#include <dummy/local/level.hpp>
 
 using RenderTextures = std::vector<std::unique_ptr<sf::RenderTexture>>;
 using Sprites = std::vector<sf::Sprite>;

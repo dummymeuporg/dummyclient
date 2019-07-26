@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/graphic_layer.hpp"
-#include "local/map.hpp"
+#include <dummy/core/graphic_layer.hpp>
+#include <dummy/local/map.hpp>
 
 namespace Dummy {
 namespace Local {

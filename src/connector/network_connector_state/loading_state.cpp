@@ -1,9 +1,9 @@
-#include "protocol/bridge.hpp"
-#include "protocol/incoming_packet.hpp"
-#include "protocol/outgoing_packet.hpp"
-#include "server/command/command.hpp"
-#include "server/command/teleport_map.hpp"
-#include "server/response/teleport_map.hpp"
+#include <dummy/protocol/bridge.hpp>
+#include <dummy/protocol/incoming_packet.hpp>
+#include <dummy/protocol/outgoing_packet.hpp>
+#include <dummy/server/command/command.hpp>
+#include <dummy/server/command/teleport_map.hpp>
+#include <dummy/server/response/teleport_map.hpp>
 #include "connector/network_connector.hpp"
 #include "connector/network_connector_state/loading_state.hpp"
 #include "connector/network_connector_state/playing_state.hpp"

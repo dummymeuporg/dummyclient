@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "server/map_state.hpp"
+#include <dummy/server/map_state.hpp>
 
 #include "map_view.hpp"
 #include "local_floor_state.hpp"

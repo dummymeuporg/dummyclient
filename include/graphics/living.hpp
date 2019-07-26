@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "core/character.hpp"
+#include <dummy/core/character.hpp>
 
 #include "graphics/living_state/state.hpp"
 #include "graphics/entity.hpp"

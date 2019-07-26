@@ -3,7 +3,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 
-#include "server/response/response_visitor.hpp"
+#include <dummy/server/response/response_visitor.hpp>
 #include "game_element.hpp"
 
 class CustomEvent;

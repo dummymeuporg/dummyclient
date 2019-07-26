@@ -4,14 +4,14 @@
 #include "client.hpp"
 #include "game.hpp"
 
-#include "server/command/connect_command.hpp"
-#include "server/command/get_primary_info_command.hpp"
-#include "server/command/select_character.hpp"
-#include "server/response/connect_response.hpp"
-#include "server/response/characters_list_response.hpp"
-#include "server/response/select_character.hpp"
+#include <dummy/server/command/connect_command.hpp>
+#include <dummy/server/command/get_primary_info_command.hpp>
+#include <dummy/server/command/select_character.hpp>
+#include <dummy/server/response/connect_response.hpp>
+#include <dummy/server/response/characters_list_response.hpp>
+#include <dummy/server/response/select_character.hpp>
 
-#include "protocol/outgoing_packet.hpp"
+#include <dummy/protocol/outgoing_packet.hpp>
 
 #include "screen/create_character_screen.hpp"
 #include "screen/loading_screen.hpp"

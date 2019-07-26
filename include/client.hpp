@@ -5,14 +5,14 @@
 
 #include <SFML/Network.hpp>
 
-#include "core/character.hpp"
-#include "protocol/outgoing_packet.hpp"
+#include <dummy/core/character.hpp>
+#include <dummy/protocol/outgoing_packet.hpp>
 
 #include "credentials.hpp"
 #include "screen/screen.hpp"
 
-#include "server/command/command.hpp"
-#include "server/response/response.hpp"
+#include <dummy/server/command/command.hpp>
+#include <dummy/server/response/response.hpp>
 
 class ClientError : public std::exception {
 

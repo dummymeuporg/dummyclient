@@ -1,13 +1,14 @@
 #include <iostream>
 
-#include "protocol/bridge.hpp"
-#include "protocol/incoming_packet.hpp"
-#include "protocol/outgoing_packet.hpp"
-#include "protocol/map_update/update.hpp"
-#include "server/command/ping.hpp"
-#include "server/command/set_position.hpp"
-#include "server/response/ping.hpp"
-#include "server/response/set_position.hpp"
+#include <dummy/protocol/bridge.hpp>
+#include <dummy/protocol/incoming_packet.hpp>
+#include <dummy/protocol/outgoing_packet.hpp>
+#include <dummy/protocol/map_update/update.hpp>
+#include <dummy/server/command/ping.hpp>
+#include <dummy/server/command/set_position.hpp>
+#include <dummy/server/response/ping.hpp>
+#include <dummy/server/response/set_position.hpp>
+
 #include "connector/network_connector.hpp"
 #include "connector/network_connector_state/loading_state.hpp"
 #include "connector/network_connector_state/playing_state.hpp"
