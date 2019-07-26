@@ -1,5 +1,5 @@
-#include "server/game_session.hpp"
-#include "server/response/response.hpp"
+#include <dummy/server/game_session.hpp>
+#include <dummy/server/response/response.hpp>
 #include "connector/local_connector.hpp"
 
 namespace Connector {

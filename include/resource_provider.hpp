@@ -1,8 +1,8 @@
 #pragma once
 
 #include "graphics/map.hpp"
-#include "local/project.hpp"
-#include "utils/singleton.hpp"
+#include <dummy/local/project.hpp>
+#include <dummy/utils/singleton.hpp>
 #include <SFML/Graphics.hpp>
 
 class ResourceProviderError : public std::exception {

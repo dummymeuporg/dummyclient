@@ -1,7 +1,7 @@
 #pragma once
 #include <filesystem>
 
-#include "server/abstract_game_server.hpp"
+#include <dummy/server/abstract_game_server.hpp>
 
 namespace fs = std::filesystem;
 

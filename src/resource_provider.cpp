@@ -1,7 +1,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
-#include "local/project.hpp"
+#include <dummy/local/project.hpp>
 #include "graphics/map.hpp"
 #include "resource_provider.hpp"
 

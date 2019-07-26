@@ -1,5 +1,5 @@
 #include "graphics/map.hpp"
-#include "local/project.hpp"
+#include <dummy/local/project.hpp>
 
 namespace Graphics {
 

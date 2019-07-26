@@ -1,7 +1,7 @@
-#include "protocol/living.hpp"
+#include <dummy/protocol/living.hpp>
+#include <dummy/protocol/map_update/character_position.hpp>
 #include "graphics/foe.hpp"
 
-#include "protocol/map_update/character_position.hpp"
 
 #include "local_map_state.hpp"
 #include "local_floor_state.hpp"

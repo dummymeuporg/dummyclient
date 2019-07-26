@@ -1,8 +1,9 @@
 #include <iostream>
 
+#include <dummy/server/command/teleport_map.hpp>
+#include <dummy/server/response/teleport_map.hpp>
+
 #include "graphics/map.hpp"
-#include "server/command/teleport_map.hpp"
-#include "server/response/teleport_map.hpp"
 #include "game.hpp"
 #include "client.hpp"
 #include "screen/game_screen.hpp"
@@ -97,6 +98,7 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
         m_client.sendCommand(teleport);
 
     }
+        break;
     default:
         break;
     }

@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "core/character.hpp"
-#include "server/errors.hpp"
-#include "server/command/create_character.hpp"
-#include "server/response/create_character.hpp"
+#include <dummy/core/character.hpp>
+#include <dummy/server/errors.hpp>
+#include <dummy/server/command/create_character.hpp>
+#include <dummy/server/response/create_character.hpp>
 
 #include "client.hpp"
 #include "game.hpp"

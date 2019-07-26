@@ -3,8 +3,8 @@
 
 #include <boost/range/irange.hpp>
 
-#include "server/command/ping.hpp"
-#include "server/response/ping.hpp"
+#include <dummy/server/command/ping.hpp>
+#include <dummy/server/response/ping.hpp>
 
 #include "client.hpp"
 #include "game.hpp"

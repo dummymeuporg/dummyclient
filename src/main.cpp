@@ -2,7 +2,7 @@
 #include <iostream>
 #include <filesystem>
 #include <SFML/Graphics.hpp>
-#include "server/game_session.hpp"
+#include <dummy/server/game_session.hpp>
 
 #include "config.hpp"
 #include "connector/local_connector.hpp"

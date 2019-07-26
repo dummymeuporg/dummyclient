@@ -1,4 +1,4 @@
-#include "core/project.hpp"
+#include <dummy/core/project.hpp>
 
 class Project : public Dummy::Core::Project {
 public:

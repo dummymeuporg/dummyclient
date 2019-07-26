@@ -1,9 +1,10 @@
 #include <set>
 
-#include "protocol/map_update/character_off.hpp"
-#include "protocol/map_update/character_on.hpp"
-#include "protocol/map_update/character_position.hpp"
-#include "protocol/living.hpp"
+#include <dummy/protocol/map_update/character_off.hpp>
+#include <dummy/protocol/map_update/character_on.hpp>
+#include <dummy/protocol/map_update/character_position.hpp>
+#include <dummy/protocol/living.hpp>
+
 #include "graphics/foe_player.hpp"
 #include "local_map_state.hpp"
 #include "map_view.hpp"

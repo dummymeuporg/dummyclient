@@ -3,13 +3,14 @@
 #include <boost/core/ignore_unused.hpp>
 #include <boost/range/irange.hpp>
 
-#include "protocol/bridge.hpp"
-#include "protocol/incoming_packet.hpp"
-#include "protocol/outgoing_packet.hpp"
-#include "server/command/command.hpp"
-#include "server/command/connect_command.hpp"
-#include "server/response/response.hpp"
-#include "server/response/characters_list_response.hpp"
+#include <dummy/protocol/bridge.hpp>
+#include <dummy/protocol/incoming_packet.hpp>
+#include <dummy/protocol/outgoing_packet.hpp>
+#include <dummy/server/command/command.hpp>
+#include <dummy/server/command/connect_command.hpp>
+#include <dummy/server/response/response.hpp>
+#include <dummy/server/response/characters_list_response.hpp>
+
 #include "connector/network_connector.hpp"
 #include "connector/network_connector_state/receive_primary_info_state.hpp"
 #include "connector/network_connector_state/manage_characters_state.hpp"

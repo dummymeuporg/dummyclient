@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "server/command/command_visitor.hpp"
+#include <dummy/server/command/command_visitor.hpp>
 
 namespace Dummy {
 namespace Protocol {
