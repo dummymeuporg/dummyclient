@@ -4,10 +4,8 @@
 #include "graphics/map.hpp"
 #include "map_view.hpp"
 
-MapView::MapView(std::unique_ptr<const Graphics::Map> graphicMap,
-                 int scaleFactor)
+MapView::MapView(std::unique_ptr<const Graphics::Map> graphicMap)
     : m_map(std::move(graphicMap)),
-      m_scaleFactor(scaleFactor),
       m_chipset(texture(m_map->chipset()))
 {
     std::cerr << "Map width: " << m_map->width() << std::endl;

@@ -61,7 +61,7 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
     case CustomEvent::Type::LoadMapFromFile: {
         std::cerr << "Load map " << m_mapNameToLoad
             << " from file" << std::endl;
-        m_map = std::move(loadGraphicMap(m_mapNameToLoad));
+        m_map = loadGraphicMap(m_mapNameToLoad);
         pushEvent(
             CustomEvent(
                 reinterpret_cast<void*>(shared_from_this().get()),
@@ -73,10 +73,7 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
     }
     case CustomEvent::Type::MapFileLoaded: {
         std::cerr << "Load map view" << std::endl;
-        m_mapView = std::make_unique<::MapView>(
-            std::move(m_map),
-            m_game.scaleFactor()
-        );
+        m_mapView = std::make_unique<::MapView>(std::move(m_map));
         std::cerr << "Loaded map view." << std::endl;
         pushEvent(
             CustomEvent(

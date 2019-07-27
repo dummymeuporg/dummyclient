@@ -41,14 +41,17 @@ GameScreen::GameScreen(
       m_direction(sf::Keyboard::Unknown),
 	  m_characterDirection(DIRECTION_NONE),
 	  m_isMoving(false),
-      m_mapState(*m_mapView)
+      m_mapState(*m_mapView),
+      m_view(sf::FloatRect(0,
+                           0,
+                           m_game.width(),
+                           m_game.height()))
 {
     m_player.setX(m_client.character()->position().first * 8);
     m_player.setY(m_client.character()->position().second * 8);
 
     // XXX: find a better way to construct the camera.
     m_camera.setCenter(m_player.x() + 12, m_player.y() + 16);
-    m_view.setSize(m_game.width(), m_game.height());
     m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
     m_view.zoom(0.5);
     m_game.window().setView(m_view);
@@ -259,6 +262,7 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
 
 
 void GameScreen::drawCharacter() {
+    m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
     m_player.draw(m_game.window());
 }
 
@@ -277,6 +281,7 @@ void GameScreen::draw() {
 
     // Draw widgets (HUD) if needed.
     UIScreen::draw();
+    m_game.window().setView(m_view);
 }
 
 void GameScreen::tick() {

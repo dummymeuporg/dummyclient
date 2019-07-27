@@ -11,7 +11,7 @@ using LevelViews = std::vector<::LevelView>;
 
 class MapView : public GameElement {
 public:
-    MapView(std::unique_ptr<const Graphics::Map>, int scaleFactor);
+    MapView(std::unique_ptr<const Graphics::Map>);
 
     std::uint16_t width() const {
         return m_map->width();
