@@ -143,8 +143,14 @@ void Player::draw(sf::RenderWindow& window) {
     Living::draw(window);
     const sf::Vector2u& windowSize(window.getSize());
     sf::FloatRect textRect = m_displayName.getLocalBounds();
-    m_displayName.setOrigin(m_sprite.getOrigin());
-    m_displayName.setPosition(m_x, m_y + m_h);
+    const auto& origin(m_sprite.getOrigin());
+
+    m_displayName.setOrigin(
+        textRect.left + (textRect.width/2.0),
+        textRect.top
+    );
+
+    m_displayName.setPosition((m_x - origin.x) + m_w/2.0, m_y + (m_h/3.0));
     window.draw(m_displayName);
 }
 
