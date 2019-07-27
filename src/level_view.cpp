@@ -3,15 +3,14 @@
 LevelView::LevelView(
     const Dummy::Local::Level& level,
     std::uint16_t width,
-    std::uint16_t height,
-    int scaleFactor)
-    : m_level(level), m_scaleFactor(scaleFactor),
-    m_chipset(texture(m_level.map().chipset()))
+    std::uint16_t height)
+    : m_level(level), m_chipset(texture(m_level.map().chipset()))
 {
     m_topTextures.resize(m_level.width() * m_level.height());
     m_bottomTextures.resize(m_level.width() * m_level.height());
     m_topSprites.resize(m_level.width() * m_level.height());
     m_bottomSprites.resize(m_level.width() * m_level.height());
+    m_blockingSquares.resize(m_level.width() * m_level.height() * 4);
 
     initSprites();
 
@@ -22,6 +21,8 @@ LevelView::LevelView(
             applySprites(m_bottomTextures, layer, m_bottomSprites);
         }
     }
+
+    initBlockingSprites();
 }
 
 void LevelView::initSprites() {
@@ -38,6 +39,14 @@ void LevelView::initSprites() {
     }
 }
 
+void LevelView::initBlockingSprites()
+{
+    for (unsigned i = 0; i < m_level.blockingLayer().size(); ++i) {
+        m_blockingSquares[i].setSize(sf::Vector2f(8, 8));
+        m_blockingSquares[i].setFillColor(sf::Color(255, 0, 0, 127));
+    }
+}
+
 void LevelView::applySprites(
     RenderTextures& renderTextures,
     const Dummy::Core::GraphicLayer& graphicLayer,
@@ -47,7 +56,6 @@ void LevelView::applySprites(
     for (auto i = 0; i < graphicLayer.size(); ++i) {
         const auto& coords(graphicLayer[i]);
         sf::Sprite sprite;
-        float scaleFactor(static_cast<float>(m_scaleFactor));
         if (coords.first >= 0 && coords.second >= 0) {
             sprite.setTexture(m_chipset);
             sprite.setTextureRect(
@@ -67,8 +75,7 @@ void LevelView::applySprites(
     for (auto i = 0; i < sprites.size(); ++i) {
         const auto& coords(graphicLayer[i]);
 
-        float scaleFactor(static_cast<float>(m_scaleFactor));
-        sprites[i].setScale(scaleFactor, scaleFactor);
+        //sprites[i].setScale(scaleFactor, scaleFactor);
 
         if (coords.first >= 0 && coords.second >= 0) {
             sprites[i].setTexture(renderTextures[i]->getTexture());

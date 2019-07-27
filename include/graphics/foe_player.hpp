@@ -17,7 +17,7 @@ public:
         Direction direction
     );
 
-    void draw(sf::RenderWindow&, const ::Camera&) override;
+    void draw(sf::RenderWindow&) override;
 };
 
 } // namespace Graphics

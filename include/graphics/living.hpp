@@ -27,7 +27,7 @@ public:
            Direction = Direction::DOWN,
            std::uint8_t velocity = 5);
     Living(const Living&);
-    void draw(sf::RenderWindow&, const ::Camera&) override;
+    void draw(sf::RenderWindow&) override;
     const Dummy::Core::Character::Direction& direction() const {
         return m_direction;
     }

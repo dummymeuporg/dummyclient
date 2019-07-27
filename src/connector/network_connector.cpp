@@ -50,7 +50,6 @@ NetworkConnector::getResponse() {
                                   receivedBytes);
 
         if (sf::Socket::Status::Disconnected == status) {
-            std::cerr << "Error: disconnected." << std::endl;
             ::exit(EXIT_FAILURE);
         } else if(sf::Socket::Status::NotReady == status) {
             return nullptr; // Try again.

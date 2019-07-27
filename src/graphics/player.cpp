@@ -1,7 +1,6 @@
 #include <dummy/server/command/ping.hpp>
 #include <dummy/server/command/set_position.hpp>
 
-#include "camera.hpp"
 #include "client.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
@@ -77,26 +76,19 @@ Player::translateCoordsToServ(
         std::int32_t x,
         std::int32_t y
     ) {
-    return std::pair<std::uint16_t, std::uint16_t>(
-        x / (8 * m_scaleFactor),
-        y / (8 * m_scaleFactor)
-    );
+    return std::pair<std::uint16_t, std::uint16_t>(x / 8, y / 8);
 }
 
 bool Player::blocksLeft() const {
     auto floor(m_client.character()->floor());
-    return m_x == 0 || m_mapView.blocksAt(floor, m_x - 1, m_y);
+    return m_x == 0 ||
+        m_mapView.blocksAt(floor, m_x - 1, m_y);
 }
 
 bool Player::blocksRight() const {
     auto floor(m_client.character()->floor());
-    return m_x ==
-        ((m_mapView.width() * 16 * m_scaleFactor) - (16 * m_scaleFactor)) ||
-            m_mapView.blocksAt(
-                floor,
-                m_x + (16 * m_scaleFactor) + 1,
-                m_y
-            );
+    return m_x == ((m_mapView.width() * 16) - 16) ||
+        m_mapView.blocksAt(floor, m_x + 16, m_y);
 }
 
 bool Player::blocksTop() const {
@@ -104,17 +96,14 @@ bool Player::blocksTop() const {
 
     // The character is two "blocking squares" wide.
     return m_y == 0 || m_mapView.blocksAt(floor, m_x, m_y - 1) ||
-        m_mapView.blocksAt(floor, m_x + (8 * m_scaleFactor), m_y - 1);
+        m_mapView.blocksAt(floor, m_x + 8, m_y - 1);
 }
 
 bool Player::blocksBottom() const {
     auto floor(m_client.character()->floor());
-    return m_y == ((m_mapView.height() * 16 * m_scaleFactor) -
-        (8 * m_scaleFactor)) ||
-        m_mapView.blocksAt(floor, m_x, m_y + (8 * m_scaleFactor)) ||
-        m_mapView.blocksAt(floor,
-                           m_x + (8 * m_scaleFactor),
-                           m_y + (8 * m_scaleFactor));
+    return m_y == ((m_mapView.height() * 16) - 8) ||
+        m_mapView.blocksAt(floor, m_x, m_y + 8 + 1) ||
+        m_mapView.blocksAt(floor, m_x + 8, m_y + 8 + 1);
 }
 
 void Player::moveTowardsRight(int delta) {
@@ -150,20 +139,12 @@ void Player::moveTowardsBottom(int delta) {
     }
 }
 
-void Player::draw(sf::RenderWindow& window, const ::Camera& camera) {
-    Living::draw(window, camera);
+void Player::draw(sf::RenderWindow& window) {
+    Living::draw(window);
     const sf::Vector2u& windowSize(window.getSize());
     sf::FloatRect textRect = m_displayName.getLocalBounds();
-    m_displayName.setOrigin(
-        textRect.left + textRect.width / 2.0f,
-        textRect.top
-    );
-    m_displayName.setPosition(
-        static_cast<int>(windowSize.x / 2) + m_x - camera.centerX() +
-        w() * 1,
-        static_cast<int>(windowSize.y / 2) + m_y - camera.centerY() +
-        h() * 2
-    );
+    m_displayName.setOrigin(m_sprite.getOrigin());
+    m_displayName.setPosition(m_x, m_y + m_h);
     window.draw(m_displayName);
 }
 

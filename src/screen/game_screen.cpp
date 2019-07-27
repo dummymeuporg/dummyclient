@@ -24,8 +24,6 @@ GameScreen::GameScreen(
 )
     : UIScreen(game, client),
       m_mapView(std::move(mapView)),
-      m_camera(m_player.x() + 12 * m_game.scaleFactor(),
-               m_player.y() + 16 * m_game.scaleFactor()),
       m_player(
           *m_mapView,
           m_client,
@@ -41,19 +39,20 @@ GameScreen::GameScreen(
       m_direction(sf::Keyboard::Unknown),
 	  m_characterDirection(DIRECTION_NONE),
 	  m_isMoving(false),
-      m_mapState(*m_mapView)
+      m_mapState(*m_mapView),
+      m_view(sf::FloatRect(0,
+                           0,
+                           m_game.width(),
+                           m_game.height())),
+      m_debugMode(false)
 {
-    m_player.setX(
-        m_client.character()->position().first * 8 * m_game.scaleFactor());
-    m_player.setY(
-        m_client.character()->position().second * 8 * m_game.scaleFactor()
-    );
+    m_player.setX(m_client.character()->position().first * 8);
+    m_player.setY(m_client.character()->position().second * 8);
 
     // XXX: find a better way to construct the camera.
-    m_camera.setCenter(
-        m_player.x() + 12 * m_game.scaleFactor(),
-        m_player.y() + 16 * m_game.scaleFactor()
-    );
+    m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
+    m_view.zoom(0.5);
+    m_game.window().setView(m_view);
 }
 
 GameScreen::~GameScreen() {
@@ -90,6 +89,9 @@ void GameScreen::handleEvent(const sf::Event& event)
         break;
     case sf::Event::KeyReleased:
         onKeyReleased(event);
+        break;
+    case sf::Event::TextEntered:
+        onTextEntered(event);
         break;
     default:
         break;
@@ -161,11 +163,6 @@ void GameScreen::moveCharacter(sf::Keyboard::Key key) {
 
     m_player.setXMovement(xVector);
     m_player.setYMovement(yVector);
-
-    m_camera.setCenter(
-        m_player.x() + 12 * m_game.scaleFactor(),
-        m_player.y() + 16 * m_game.scaleFactor()
-    );
 }
 
 void GameScreen::onKeyPressed(const sf::Event& event) {
@@ -181,6 +178,7 @@ void GameScreen::onKeyPressed(const sf::Event& event) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 		m_characterDirection |= DIRECTION_LEFT;
 	}
+
 
 	if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
 		pushEvent(
@@ -220,58 +218,26 @@ void GameScreen::onKeyReleased(const sf::Event& event) {
 	}
 }
 
+void GameScreen::onTextEntered(const sf::Event& event) {
+    if ('a' == event.text.unicode) {
+        m_debugMode = !m_debugMode;
+    }
+}
+
 void GameScreen::drawSprites(Sprites& sprites) {
-    const sf::Vector2u& windowSize(
-        m_game.window().getSize()
-    );
-    std::int16_t x(
-        static_cast<int>(m_camera.centerX()) / (16 * m_game.scaleFactor())
-    );
-
-    std::int16_t y(
-        static_cast<int>(m_camera.centerY()) / (16 * m_game.scaleFactor())
-    );
-
-    std::int16_t deltaX(
-        (m_game.width() / (16 * m_game.scaleFactor() * 2)) + 2
-    );
-
-
-    std::int16_t deltaY(
-        (m_game.height() / (16 * m_game.scaleFactor() * 2)) + 2
-    );
-
-    std::int16_t xStart(std::max(0, static_cast<int>(x - deltaX))),
-                xEnd(std::min(static_cast<uint16_t>(x + deltaX),
-                              m_mapView->width())),
-                yStart(std::max(0, static_cast<int>(y - deltaY))),
-                yEnd(std::min(static_cast<uint16_t>(y + deltaY),
-                              m_mapView->height()));
-    for(const auto x: boost::irange(xStart, xEnd)) {
-        for (const auto y: boost::irange(yStart, yEnd)) {
-            std::size_t index = y * m_mapView->width() + x;
+    for (const auto y: boost::irange(0, static_cast<int>(m_mapView->height()))) {
+        for(const auto x: boost::irange(0, static_cast<int>(m_mapView->width()))) {
+            std::size_t index = (y * m_mapView->width()) + x;
             sf::Sprite& sprite = sprites.at(index);
 
-            int windowX = ((x * 16 * m_game.scaleFactor()))
-                + 4 * m_game.scaleFactor() +
-                ((windowSize.x / 2) - static_cast<int>(m_camera.centerX()));
-            int windowY = ((y * 16 * m_game.scaleFactor()))
-                + 24 * m_game.scaleFactor() +
-                ((windowSize.y / 2) - static_cast<int>(m_camera.centerY()));
+            int windowX = (x * 16);
+            int windowY = (y * 16);
 
             // Only draw the sprite if it has a texture.
             if (nullptr != sprite.getTexture()) {
                 sprite.setPosition(sf::Vector2f(windowX, windowY));
+                m_game.window().draw(sprite);
             }
-        }
-    }
-
-    // Draw for real
-    for(const auto x: boost::irange(xStart, xEnd)) {
-        for (const auto y: boost::irange(yStart, yEnd)) {
-            std::size_t index = y * m_mapView->width() + x;
-            sf::Sprite& sprite = sprites.at(index);
-            m_game.window().draw(sprite);
         }
     }
 }
@@ -288,25 +254,44 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
         drawCharacter();
     }
 
-
     // Draw the livings on the current floor.
     const auto& localFloorState(m_mapState.localFloorState(index));
     for (auto& [name, foe]: localFloorState.graphicFoes()) {
-        foe->draw(m_game.window(), m_camera);
+        foe->draw(m_game.window());
     }
 
     drawSprites(levelView.topSprites());
+
+    if (m_debugMode) {
+        drawBlockingLayer(index, levelView);
+    }
+}
+
+void GameScreen::drawBlockingLayer(unsigned int index, LevelView& levelView) {
+    for (const auto y: boost::irange(0, static_cast<int>(m_mapView->height() * 2))) {
+        for(const auto x: boost::irange(0, static_cast<int>(m_mapView->width() * 2))) {
+            std::size_t blockIndex = (y * m_mapView->width() * 2) + x;
+            if (m_mapView->blocksAt(index, x*8, y*8)) {
+                auto& blockingSquare(levelView.blockingSquares().at(blockIndex));
+                blockingSquare.setPosition(x * 8, y * 8);
+                m_game.window().draw(blockingSquare);
+
+            }
+
+        }
+    }
 }
 
 
 void GameScreen::drawCharacter() {
-    m_player.draw(m_game.window(), m_camera);
+
+    m_player.draw(m_game.window());
 }
 
 void GameScreen::drawLivings(std::uint8_t index) {
     auto& graphicFoes(m_mapState.localFloorState(index).graphicFoes());
     for (auto& [name, foe]: graphicFoes) {
-        foe->draw(m_game.window(), m_camera);
+        foe->draw(m_game.window());
     }
 }
 
@@ -318,6 +303,8 @@ void GameScreen::draw() {
 
     // Draw widgets (HUD) if needed.
     UIScreen::draw();
+    m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
+    m_game.window().setView(m_view);
 }
 
 void GameScreen::tick() {

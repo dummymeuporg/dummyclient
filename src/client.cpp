@@ -60,8 +60,6 @@ void Client::_updateServerPosition(
         Dummy::Protocol::OutgoingPacket pkt;
         std::uint16_t command = 1; /* Move */
         pkt << command << position.first << position.second;
-        std::cerr << "Update position to " << position.first << ","
-            << position.second << std::endl;
         send(pkt);
         m_serverPosition = position;
     }

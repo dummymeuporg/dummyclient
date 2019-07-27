@@ -2,7 +2,6 @@
 
 #include <memory>
 #include "local_map_state.hpp"
-#include "camera.hpp"
 #include "level_view.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
@@ -46,17 +45,18 @@ private:
     void drawCharacter();
     void onKeyPressed(const sf::Event&);
     void onKeyReleased(const sf::Event&);
+    void onTextEntered(const sf::Event&);
     void onArrowPressed();
     void onArrowReleased();
     void moveCharacter(sf::Keyboard::Key);
     void drawLivings(std::uint8_t);
     void syncLivings();
     void drawLevelView(unsigned int, LevelView&);
+    void drawBlockingLayer(unsigned int, LevelView&);
     void drawSprites(Sprites&);
 
     /* Private attributes. */
     std::unique_ptr<::MapView> m_mapView;
-    Camera m_camera;
     Graphics::Player m_player;
     GraphicLivingsMap m_livings;
     bool m_isArrowPressed;
@@ -66,6 +66,8 @@ private:
 	unsigned int m_characterDirection;
 	bool m_isMoving;
     ::LocalMapState m_mapState;
+    sf::View m_view;
+    bool m_debugMode;
 };
 
 } // namespace Screen
