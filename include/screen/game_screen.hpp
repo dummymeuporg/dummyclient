@@ -66,6 +66,7 @@ private:
 	unsigned int m_characterDirection;
 	bool m_isMoving;
     ::LocalMapState m_mapState;
+    sf::View m_view;
 };
 
 } // namespace Screen

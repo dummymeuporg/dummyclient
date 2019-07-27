@@ -15,8 +15,8 @@ FoePlayer::FoePlayer(
 ) : Foe(mapView, chipset, name, 24, 32, x, y, floor, scaleFactor, direction) {}
 
 
-void FoePlayer::draw(sf::RenderWindow& window, const ::Camera& camera) {
-    Living::draw(window, camera);
+void FoePlayer::draw(sf::RenderWindow& window) {
+    Living::draw(window);
     const sf::Vector2u& windowSize(window.getSize());
 
     // XXX: Duplicate with the Player class. Find a way to factorize it.
@@ -26,9 +26,9 @@ void FoePlayer::draw(sf::RenderWindow& window, const ::Camera& camera) {
         textRect.top
     );
     m_displayName.setPosition(
-        static_cast<int>(windowSize.x / 2) + m_x - camera.centerX() +
+        static_cast<int>(windowSize.x / 2) + m_x +
         w() * 1,
-        static_cast<int>(windowSize.y / 2) + m_y - camera.centerY() +
+        static_cast<int>(windowSize.y / 2) + m_y +
         h() * 2
     );
     window.draw(m_displayName);

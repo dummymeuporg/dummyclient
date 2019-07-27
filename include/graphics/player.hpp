@@ -20,7 +20,7 @@ public:
     );
 
     void tick() override;
-    void draw(sf::RenderWindow&, const ::Camera&) override;
+    void draw(sf::RenderWindow&) override;
 protected:
     void updatePosition() override;
 

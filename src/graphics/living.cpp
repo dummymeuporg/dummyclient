@@ -51,9 +51,9 @@ Living::Living(const Living& living)
 void Living::_setDisplayName() {
     m_displayName.setString(m_name);
     m_displayName.setColor(sf::Color::White);
-    m_displayName.setCharacterSize(15);
+    m_displayName.setCharacterSize(13);
     m_displayName.setFont(font("arial.ttf"));
-    m_displayName.setStyle(sf::Text::Bold);
+    //m_displayName.setStyle(sf::Text::Bold);
 }
 
 Living& Living::setPosition(std::uint16_t x, std::uint16_t y) {
@@ -83,21 +83,21 @@ Living::computeDistance() {
     int ellapsedMs = m_movingClock.getElapsedTime().asMilliseconds();
 
     std::int16_t xDistance(static_cast<unsigned>(
-        ((ellapsedMs/4.5) * m_xMovement) / divisor
+        ((ellapsedMs/9) * m_xMovement) / divisor
     ));
     std::int16_t yDistance(static_cast<unsigned>(
-        ((ellapsedMs/4.5) * m_yMovement) / divisor
+        ((ellapsedMs/9) * m_yMovement) / divisor
     ));
     m_movingClock.restart();
     return std::pair<std::int16_t, std::int16_t>(xDistance, yDistance);
 }
 
-void Living::draw(sf::RenderWindow& window, const ::Camera& camera) {
+void Living::draw(sf::RenderWindow& window) {
     // Update position given the ellapsed time and the velocity.
     updatePosition();
 
     // Update the movement given the effective position
-    m_state->draw(window, camera);
+    m_state->draw(window);
 }
 
 void Living::moveTowards(std::uint16_t x, std::uint16_t y) {

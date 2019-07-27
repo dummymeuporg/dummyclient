@@ -43,17 +43,15 @@ GameScreen::GameScreen(
 	  m_isMoving(false),
       m_mapState(*m_mapView)
 {
-    m_player.setX(
-        m_client.character()->position().first * 8 * m_game.scaleFactor());
-    m_player.setY(
-        m_client.character()->position().second * 8 * m_game.scaleFactor()
-    );
+    m_player.setX(m_client.character()->position().first * 8);
+    m_player.setY(m_client.character()->position().second * 8);
 
     // XXX: find a better way to construct the camera.
-    m_camera.setCenter(
-        m_player.x() + 12 * m_game.scaleFactor(),
-        m_player.y() + 16 * m_game.scaleFactor()
-    );
+    m_camera.setCenter(m_player.x() + 12, m_player.y() + 16);
+    m_view.setSize(m_game.width(), m_game.height());
+    m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
+    m_view.zoom(0.5);
+    m_game.window().setView(m_view);
 }
 
 GameScreen::~GameScreen() {
@@ -221,57 +219,19 @@ void GameScreen::onKeyReleased(const sf::Event& event) {
 }
 
 void GameScreen::drawSprites(Sprites& sprites) {
-    const sf::Vector2u& windowSize(
-        m_game.window().getSize()
-    );
-    std::int16_t x(
-        static_cast<int>(m_camera.centerX()) / (16 * m_game.scaleFactor())
-    );
-
-    std::int16_t y(
-        static_cast<int>(m_camera.centerY()) / (16 * m_game.scaleFactor())
-    );
-
-    std::int16_t deltaX(
-        (m_game.width() / (16 * m_game.scaleFactor() * 2)) + 2
-    );
-
-
-    std::int16_t deltaY(
-        (m_game.height() / (16 * m_game.scaleFactor() * 2)) + 2
-    );
-
-    std::int16_t xStart(std::max(0, static_cast<int>(x - deltaX))),
-                xEnd(std::min(static_cast<uint16_t>(x + deltaX),
-                              m_mapView->width())),
-                yStart(std::max(0, static_cast<int>(y - deltaY))),
-                yEnd(std::min(static_cast<uint16_t>(y + deltaY),
-                              m_mapView->height()));
-    for(const auto x: boost::irange(xStart, xEnd)) {
-        for (const auto y: boost::irange(yStart, yEnd)) {
-            std::size_t index = y * m_mapView->width() + x;
+    for (const auto y: boost::irange(0, static_cast<int>(m_mapView->height()))) {
+        for(const auto x: boost::irange(0, static_cast<int>(m_mapView->width()))) {
+            std::size_t index = (y * m_mapView->width()) + x;
             sf::Sprite& sprite = sprites.at(index);
 
-            int windowX = ((x * 16 * m_game.scaleFactor()))
-                + 4 * m_game.scaleFactor() +
-                ((windowSize.x / 2) - static_cast<int>(m_camera.centerX()));
-            int windowY = ((y * 16 * m_game.scaleFactor()))
-                + 24 * m_game.scaleFactor() +
-                ((windowSize.y / 2) - static_cast<int>(m_camera.centerY()));
+            int windowX = (x * 16);
+            int windowY = (y * 16);
 
             // Only draw the sprite if it has a texture.
             if (nullptr != sprite.getTexture()) {
                 sprite.setPosition(sf::Vector2f(windowX, windowY));
+                m_game.window().draw(sprite);
             }
-        }
-    }
-
-    // Draw for real
-    for(const auto x: boost::irange(xStart, xEnd)) {
-        for (const auto y: boost::irange(yStart, yEnd)) {
-            std::size_t index = y * m_mapView->width() + x;
-            sf::Sprite& sprite = sprites.at(index);
-            m_game.window().draw(sprite);
         }
     }
 }
@@ -288,11 +248,10 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
         drawCharacter();
     }
 
-
     // Draw the livings on the current floor.
     const auto& localFloorState(m_mapState.localFloorState(index));
     for (auto& [name, foe]: localFloorState.graphicFoes()) {
-        foe->draw(m_game.window(), m_camera);
+        foe->draw(m_game.window());
     }
 
     drawSprites(levelView.topSprites());
@@ -300,13 +259,13 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
 
 
 void GameScreen::drawCharacter() {
-    m_player.draw(m_game.window(), m_camera);
+    m_player.draw(m_game.window());
 }
 
 void GameScreen::drawLivings(std::uint8_t index) {
     auto& graphicFoes(m_mapState.localFloorState(index).graphicFoes());
     for (auto& [name, foe]: graphicFoes) {
-        foe->draw(m_game.window(), m_camera);
+        foe->draw(m_game.window());
     }
 }
 

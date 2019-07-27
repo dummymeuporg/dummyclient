@@ -20,7 +20,7 @@ Entity::Entity(const MapView& mapView,
       m_scaleFactor(scaleFactor)
 {
     m_sprite.setTexture(m_chipset);
-    m_sprite.setScale(scaleFactor, scaleFactor);
+    //m_sprite.setScale(scaleFactor, scaleFactor);
 }
 
 Entity::Entity(const Entity& entity) :

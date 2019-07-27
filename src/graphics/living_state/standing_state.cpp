@@ -12,7 +12,7 @@ StandingState::StandingState(Graphics::Living& living) :
 {
 }
 
-void StandingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
+void StandingState::draw(sf::RenderWindow& window) {
     const sf::Vector2u& windowSize(window.getSize());
     sf::Sprite& sprite(m_living.sprite());
     sprite.setTextureRect(sf::IntRect(
@@ -22,10 +22,8 @@ void StandingState::draw(sf::RenderWindow& window, const ::Camera& camera) {
         m_living.h()
     ));
 
-    int xPos = static_cast<int>(windowSize.x / 2) +
-        m_living.x() - camera.centerX();
-    int yPos = static_cast<int>(windowSize.y / 2) +
-        m_living.y() - camera.centerY();
+    int xPos = m_living.x();
+    int yPos = m_living.y();
 
     sprite.setPosition(xPos, yPos);
     window.draw(sprite);

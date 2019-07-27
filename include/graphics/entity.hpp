@@ -57,7 +57,7 @@ public:
     void setY(std::int32_t y);
     void setChipsetName(const std::string&);
 
-    virtual void draw(sf::RenderWindow&, const ::Camera&) = 0;
+    virtual void draw(sf::RenderWindow&) = 0;
 protected:
     const MapView& m_mapView;
     const sf::Texture& m_chipset;

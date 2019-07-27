@@ -8,8 +8,7 @@ using Sprites = std::vector<sf::Sprite>;
 
 class LevelView : public ::GameElement {
 public:
-    LevelView(const Dummy::Local::Level&, std::uint16_t, std::uint16_t,
-              int);
+    LevelView(const Dummy::Local::Level&, std::uint16_t, std::uint16_t);
     Sprites& topSprites() {
         return m_topSprites;
     }
@@ -29,7 +28,6 @@ private:
 
     /* Attributes. */
     const Dummy::Local::Level& m_level;
-    int m_scaleFactor;
     RenderTextures m_topTextures;
     RenderTextures m_bottomTextures;
 
