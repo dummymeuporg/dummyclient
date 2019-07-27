@@ -268,8 +268,10 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
 }
 
 void GameScreen::drawBlockingLayer(unsigned int index, LevelView& levelView) {
-    for (const auto y: boost::irange(0, static_cast<int>(m_mapView->height() * 2))) {
-        for(const auto x: boost::irange(0, static_cast<int>(m_mapView->width() * 2))) {
+    auto maxHeight(static_cast<int>(m_mapView->height() * 2));
+    auto maxWidth(static_cast<int>(m_mapView->width() * 2));
+    for (const auto y: boost::irange(0, maxHeight)) {
+        for(const auto x: boost::irange(0, maxWidth)) {
             std::size_t blockIndex = (y * m_mapView->width() * 2) + x;
             if (m_mapView->blocksAt(index, x*8, y*8)) {
                 auto& blockingSquare(levelView.blockingSquares().at(blockIndex));
