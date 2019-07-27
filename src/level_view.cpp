@@ -10,6 +10,7 @@ LevelView::LevelView(
     m_bottomTextures.resize(m_level.width() * m_level.height());
     m_topSprites.resize(m_level.width() * m_level.height());
     m_bottomSprites.resize(m_level.width() * m_level.height());
+    m_blockingSquares.resize(m_level.width() * m_level.height() * 4);
 
     initSprites();
 
@@ -20,6 +21,8 @@ LevelView::LevelView(
             applySprites(m_bottomTextures, layer, m_bottomSprites);
         }
     }
+
+    initBlockingSprites();
 }
 
 void LevelView::initSprites() {
@@ -33,6 +36,14 @@ void LevelView::initSprites() {
         renderTexture = std::make_unique<sf::RenderTexture>();
         renderTexture->create(16, 16);
         //renderTexture->clear(sf::Color::Black);
+    }
+}
+
+void LevelView::initBlockingSprites()
+{
+    for (unsigned i = 0; i < m_level.blockingLayer().size(); ++i) {
+        m_blockingSquares[i].setSize(sf::Vector2f(8, 8));
+        m_blockingSquares[i].setFillColor(sf::Color(255, 0, 0, 127));
     }
 }
 

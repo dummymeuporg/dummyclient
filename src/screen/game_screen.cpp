@@ -45,7 +45,8 @@ GameScreen::GameScreen(
       m_view(sf::FloatRect(0,
                            0,
                            m_game.width(),
-                           m_game.height()))
+                           m_game.height())),
+      m_debugMode(false)
 {
     m_player.setX(m_client.character()->position().first * 8);
     m_player.setY(m_client.character()->position().second * 8);
@@ -91,6 +92,9 @@ void GameScreen::handleEvent(const sf::Event& event)
         break;
     case sf::Event::KeyReleased:
         onKeyReleased(event);
+        break;
+    case sf::Event::TextEntered:
+        onTextEntered(event);
         break;
     default:
         break;
@@ -183,6 +187,7 @@ void GameScreen::onKeyPressed(const sf::Event& event) {
 		m_characterDirection |= DIRECTION_LEFT;
 	}
 
+
 	if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
 		pushEvent(
 			CustomEvent(
@@ -219,6 +224,12 @@ void GameScreen::onKeyReleased(const sf::Event& event) {
 		);
 		m_isMoving = false;
 	}
+}
+
+void GameScreen::onTextEntered(const sf::Event& event) {
+    if ('a' == event.text.unicode) {
+        m_debugMode = !m_debugMode;
+    }
 }
 
 void GameScreen::drawSprites(Sprites& sprites) {
@@ -258,6 +269,25 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
     }
 
     drawSprites(levelView.topSprites());
+
+    if (m_debugMode) {
+        drawBlockingLayer(index, levelView);
+    }
+}
+
+void GameScreen::drawBlockingLayer(unsigned int index, LevelView& levelView) {
+    for (const auto y: boost::irange(0, static_cast<int>(m_mapView->height() * 2))) {
+        for(const auto x: boost::irange(0, static_cast<int>(m_mapView->width() * 2))) {
+            std::size_t blockIndex = (y * m_mapView->width() * 2) + x;
+            if (m_mapView->blocksAt(index, x*8, y*8)) {
+                auto& blockingSquare(levelView.blockingSquares().at(blockIndex));
+                blockingSquare.setPosition(x * 8, y * 8);
+                m_game.window().draw(blockingSquare);
+
+            }
+
+        }
+    }
 }
 
 

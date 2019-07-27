@@ -5,6 +5,7 @@
 
 using RenderTextures = std::vector<std::unique_ptr<sf::RenderTexture>>;
 using Sprites = std::vector<sf::Sprite>;
+using BlockingSquares = std::vector<sf::RectangleShape>;
 
 class LevelView : public ::GameElement {
 public:
@@ -16,6 +17,11 @@ public:
     Sprites& bottomSprites() {
         return m_bottomSprites;
     }
+
+    BlockingSquares& blockingSquares() {
+        return m_blockingSquares;
+    }
+
 private:
     /* Methods. */
     void applySprites(
@@ -24,6 +30,7 @@ private:
         Sprites&
     );
     void initSprites();
+    void initBlockingSprites();
 
 
     /* Attributes. */
@@ -33,6 +40,9 @@ private:
 
     Sprites m_topSprites;
     Sprites m_bottomSprites;
+
+    BlockingSquares m_blockingSquares;
+
 
     const sf::Texture& m_chipset;
 };
