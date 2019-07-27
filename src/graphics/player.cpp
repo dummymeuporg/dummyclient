@@ -83,34 +83,28 @@ Player::translateCoordsToServ(
 bool Player::blocksLeft() const {
     auto floor(m_client.character()->floor());
     return m_x == 0 ||
-        m_mapView.blocksAt(floor,
-                           m_x - 1,
-                           m_y + 16 /* + 16 for character's feet */
-                           );
+        m_mapView.blocksAt(floor, m_x - 1, m_y);
 }
 
 bool Player::blocksRight() const {
     auto floor(m_client.character()->floor());
     return m_x == ((m_mapView.width() * 16) - 16) ||
-        m_mapView.blocksAt(floor,
-                           m_x + 16 + 1,
-                           m_y + 16 /* + 16 for character's feet */
-                           );
+        m_mapView.blocksAt(floor, m_x + 16, m_y);
 }
 
 bool Player::blocksTop() const {
     auto floor(m_client.character()->floor());
 
     // The character is two "blocking squares" wide.
-    return m_y == 0 || m_mapView.blocksAt(floor, m_x, m_y + 16 - 1) ||
-        m_mapView.blocksAt(floor, m_x + 8, (m_y + 16) - 1);
+    return m_y == 0 || m_mapView.blocksAt(floor, m_x, m_y - 1) ||
+        m_mapView.blocksAt(floor, m_x + 8, m_y - 1);
 }
 
 bool Player::blocksBottom() const {
     auto floor(m_client.character()->floor());
     return m_y == ((m_mapView.height() * 16) - 8) ||
-        m_mapView.blocksAt(floor, m_x, m_y + 16 + 8) ||
-        m_mapView.blocksAt(floor, m_x + 8, m_y + 16 + 8);
+        m_mapView.blocksAt(floor, m_x, m_y + 8 + 1) ||
+        m_mapView.blocksAt(floor, m_x + 8, m_y + 8 + 1);
 }
 
 void Player::moveTowardsRight(int delta) {
@@ -150,11 +144,8 @@ void Player::draw(sf::RenderWindow& window) {
     Living::draw(window);
     const sf::Vector2u& windowSize(window.getSize());
     sf::FloatRect textRect = m_displayName.getLocalBounds();
-    m_displayName.setOrigin(
-        textRect.left + textRect.width / 2.0f,
-        textRect.top
-    );
-    m_displayName.setPosition(m_x + (w()/2) * 1, m_y + h());
+    m_displayName.setOrigin(m_sprite.getOrigin());
+    m_displayName.setPosition(m_x, m_y + m_h);
     window.draw(m_displayName);
 }
 

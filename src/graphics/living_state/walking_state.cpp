@@ -34,7 +34,6 @@ void WalkingState::draw(sf::RenderWindow& window) {
 
     int xPos = m_living.x();
     int yPos = m_living.y();
-
     sprite.setPosition(xPos, yPos);
     window.draw(sprite);
 }

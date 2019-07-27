@@ -292,7 +292,7 @@ void GameScreen::drawBlockingLayer(unsigned int index, LevelView& levelView) {
 
 
 void GameScreen::drawCharacter() {
-    m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
+
     m_player.draw(m_game.window());
 }
 
@@ -311,6 +311,7 @@ void GameScreen::draw() {
 
     // Draw widgets (HUD) if needed.
     UIScreen::draw();
+    m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
     m_game.window().setView(m_view);
 }
 
