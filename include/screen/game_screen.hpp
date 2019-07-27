@@ -10,6 +10,10 @@
 class Client;
 class Game;
 
+namespace Widget {
+class Textbox;
+} // namespace Widget
+
 namespace Screen {
 
 using GraphicLivingsMap = 
@@ -66,8 +70,9 @@ private:
 	unsigned int m_characterDirection;
 	bool m_isMoving;
     ::LocalMapState m_mapState;
-    sf::View m_view;
+    sf::View m_gameView, m_hudView;
     bool m_debugMode;
+    std::shared_ptr<Widget::Textbox> m_textbox;
 };
 
 } // namespace Screen

@@ -6,6 +6,8 @@
 #include <dummy/server/command/ping.hpp>
 #include <dummy/server/response/ping.hpp>
 
+#include "widget/textbox.hpp"
+
 #include "client.hpp"
 #include "game.hpp"
 #include "graphics/foe.hpp"
@@ -40,19 +42,35 @@ GameScreen::GameScreen(
 	  m_characterDirection(DIRECTION_NONE),
 	  m_isMoving(false),
       m_mapState(*m_mapView),
-      m_view(sf::FloatRect(0,
+      m_gameView(sf::FloatRect(0,
                            0,
                            m_game.width(),
                            m_game.height())),
-      m_debugMode(false)
+      m_hudView(sf::FloatRect(0,
+                              0,
+                              m_game.width(),
+                              m_game.height())),
+      m_debugMode(false),
+      m_textbox(std::make_shared<Widget::Textbox>())
 {
     m_player.setX(m_client.character()->position().first * 8);
     m_player.setY(m_client.character()->position().second * 8);
 
     // XXX: find a better way to construct the camera.
-    m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
-    m_view.zoom(0.5);
-    m_game.window().setView(m_view);
+    m_gameView.setCenter(m_player.x() + 12, m_player.y() + 16);
+    m_gameView.zoom(0.5);
+    m_game.window().setView(m_gameView);
+
+    m_textbox
+        ->setFontSize(18)
+        .setColor(sf::Color::Black)
+        .setBackgroundColor(sf::Color(200, 200, 200))
+        .setBorderColor(sf::Color(128, 128, 128))
+        .setRect(230, 90, 420, 40)
+        .setContent("")
+        .setFont("arial.ttf");
+
+    //addWidget(m_textbox);
 }
 
 GameScreen::~GameScreen() {
@@ -225,8 +243,10 @@ void GameScreen::onTextEntered(const sf::Event& event) {
 }
 
 void GameScreen::drawSprites(Sprites& sprites) {
-    for (const auto y: boost::irange(0, static_cast<int>(m_mapView->height()))) {
-        for(const auto x: boost::irange(0, static_cast<int>(m_mapView->width()))) {
+    const auto& height(static_cast<int>(m_mapView->height()));
+    const auto& width(static_cast<int>(m_mapView->width()));
+    for (const auto y: boost::irange(0, height)) {
+        for(const auto x: boost::irange(0, width)) {
             std::size_t index = (y * m_mapView->width()) + x;
             sf::Sprite& sprite = sprites.at(index);
 
@@ -298,15 +318,15 @@ void GameScreen::drawLivings(std::uint8_t index) {
 }
 
 void GameScreen::draw() {
-
+    m_game.window().setView(m_gameView);
+    m_gameView.setCenter(m_player.x() + 12, m_player.y() + 16);
     for (unsigned i = 0; i < m_mapView->levelViews().size(); ++i) {
         drawLevelView(i, m_mapView->levelView(i));
     }
-
     // Draw widgets (HUD) if needed.
+    m_game.window().setView(m_hudView);
     UIScreen::draw();
-    m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
-    m_game.window().setView(m_view);
+
 }
 
 void GameScreen::tick() {
