@@ -17,6 +17,7 @@ namespace Connector {
 class LocalConnector : public Connector {
 public:
     LocalConnector(Dummy::Server::GameSession&);
+    virtual ~LocalConnector();
     virtual void
     sendCommand(const Dummy::Server::Command::Command&) override;
 
