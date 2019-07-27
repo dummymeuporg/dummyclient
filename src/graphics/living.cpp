@@ -1,4 +1,3 @@
-#include "camera.hpp"
 #include "map_view.hpp"
 #include "graphics/living.hpp"
 #include "graphics/living_state/standing_state.hpp"

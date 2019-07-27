@@ -1,7 +1,6 @@
 #include <dummy/server/command/ping.hpp>
 #include <dummy/server/command/set_position.hpp>
 
-#include "camera.hpp"
 #include "client.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"

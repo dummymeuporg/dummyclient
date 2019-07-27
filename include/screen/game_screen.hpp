@@ -2,7 +2,6 @@
 
 #include <memory>
 #include "local_map_state.hpp"
-#include "camera.hpp"
 #include "level_view.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
@@ -58,7 +57,6 @@ private:
 
     /* Private attributes. */
     std::unique_ptr<::MapView> m_mapView;
-    Camera m_camera;
     Graphics::Player m_player;
     GraphicLivingsMap m_livings;
     bool m_isArrowPressed;

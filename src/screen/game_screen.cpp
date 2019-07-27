@@ -24,8 +24,6 @@ GameScreen::GameScreen(
 )
     : UIScreen(game, client),
       m_mapView(std::move(mapView)),
-      m_camera(m_player.x() + 12 * m_game.scaleFactor(),
-               m_player.y() + 16 * m_game.scaleFactor()),
       m_player(
           *m_mapView,
           m_client,
@@ -52,7 +50,6 @@ GameScreen::GameScreen(
     m_player.setY(m_client.character()->position().second * 8);
 
     // XXX: find a better way to construct the camera.
-    m_camera.setCenter(m_player.x() + 12, m_player.y() + 16);
     m_view.setCenter(m_player.x() + 12, m_player.y() + 16);
     m_view.zoom(0.5);
     m_game.window().setView(m_view);
@@ -166,11 +163,6 @@ void GameScreen::moveCharacter(sf::Keyboard::Key key) {
 
     m_player.setXMovement(xVector);
     m_player.setYMovement(yVector);
-
-    m_camera.setCenter(
-        m_player.x() + 12 * m_game.scaleFactor(),
-        m_player.y() + 16 * m_game.scaleFactor()
-    );
 }
 
 void GameScreen::onKeyPressed(const sf::Event& event) {

@@ -1,4 +1,3 @@
-#include "camera.hpp"
 #include "graphics/foe_player.hpp"
 
 namespace Graphics {

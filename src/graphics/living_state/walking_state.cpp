@@ -1,5 +1,4 @@
 #include <iostream>
-#include "camera.hpp"
 #include "graphics/living.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
