@@ -75,6 +75,7 @@ void GameScreen::loaded() {
 }
 
 void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
+    UIScreen::handleCustomEvent(event);
     switch(event.type()) {
     case CustomEvent::Type::MovementActive:
         m_player.changeState(
@@ -85,10 +86,6 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
         m_player.changeState(
             std::make_shared<Graphics::LivingState::StandingState>(m_player)
         );
-        break;
-    case CustomEvent::Type::EnterKeyPressed:
-        // Forward to the chatbox.
-        m_chatbox->handleCustomEvent(event);
         break;
     default:
         break;
