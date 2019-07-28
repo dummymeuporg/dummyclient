@@ -66,9 +66,13 @@ public:
     void walk();
     void stand();
 
+    void say(const std::string&);
+
+
 protected:
     virtual void updatePosition();
     std::pair<std::int16_t, std::int16_t> computeDistance();
+    void drawMessage(sf::RenderWindow&);
 
     std::string m_name;
     std::uint8_t m_floor;
@@ -78,6 +82,13 @@ protected:
     std::uint8_t m_velocity;
     sf::Clock m_movingClock;
     int m_xMovement, m_yMovement;
+
+    // XXX : This looks a bit cumbersome.
+    bool m_isSpeaking;
+    std::string m_messageToSay;
+    sf::Clock m_messageToSayClock;
+    sf::Text m_speech;
+    sf::RectangleShape m_messageRect;
 
 private:
     void _setDisplayName();

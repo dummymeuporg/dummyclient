@@ -24,10 +24,12 @@ Living::Living(const MapView& mapView,
       m_state(std::make_unique<LivingState::StandingState>(*this)),
       m_velocity(velocity),
       m_xMovement(0),
-      m_yMovement(0)
+      m_yMovement(0),
+      m_isSpeaking(false)
 {
     _setDisplayName();
     m_movingClock.restart();
+    m_messageToSayClock.restart();
 }
 
 Living::Living(const Living& living)
@@ -53,6 +55,12 @@ void Living::_setDisplayName() {
     m_displayName.setCharacterSize(10);
     m_displayName.setFont(font("arial.ttf"));
     //m_displayName.setStyle(sf::Text::Bold);
+
+    m_speech.setColor(sf::Color::Black);
+    m_speech.setCharacterSize(10);
+    m_speech.setFont(font("arial.ttf"));
+
+    m_messageRect.setFillColor(sf::Color(255, 255, 255, 200));
 }
 
 Living& Living::setPosition(std::uint16_t x, std::uint16_t y) {
@@ -94,6 +102,8 @@ Living::computeDistance() {
 void Living::draw(sf::RenderWindow& window) {
     // Update position given the ellapsed time and the velocity.
     updatePosition();
+    // XXX: draw message if needed
+    drawMessage(window);
 
     // Update the movement given the effective position
     m_state->draw(window);
@@ -127,6 +137,38 @@ void Living::updatePosition() {
     auto delta = computeDistance();
     m_x += delta.first;
     m_y += delta.second;
+}
+
+void Living::drawMessage(sf::RenderWindow& window) {
+    if (m_isSpeaking) {
+        if (m_messageToSayClock.getElapsedTime().asSeconds() >= 7) {
+            m_isSpeaking = false;
+            return;
+        }
+
+        m_speech.setString(m_messageToSay);
+        const auto& origin(m_sprite.getOrigin());
+        sf::FloatRect textRect = m_speech.getLocalBounds();
+        m_speech.setOrigin(textRect.left + (textRect.width/2.0),
+                           textRect.top);
+        m_speech.setPosition((m_x - origin.x) + m_w/2.0, m_y - m_h);
+        m_messageRect.setPosition(
+            m_speech.getPosition().x - 2,
+            m_speech.getPosition().y - 2
+        );
+        m_messageRect.setOrigin(m_speech.getOrigin().x,
+                                m_messageRect.getOrigin().y);
+        m_messageRect.setSize(sf::Vector2f(textRect.width + 4,
+                                           textRect.height + 4));
+        window.draw(m_messageRect);
+        window.draw(m_speech);
+    }
+}
+
+void Living::say(const std::string& message) {
+    m_isSpeaking = true;
+    m_messageToSay = message;
+    m_messageToSayClock.restart();
 }
 
 } // namespace Graphics

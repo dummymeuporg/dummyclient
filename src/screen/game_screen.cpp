@@ -178,7 +178,6 @@ void GameScreen::moveCharacter(sf::Keyboard::Key key) {
 }
 
 void GameScreen::onKeyPressed(const sf::Event& event) {
-    std::cerr << "Key pressed: " << event.key.code << std::endl;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		m_characterDirection |= DIRECTION_UP;
 	}
@@ -232,6 +231,12 @@ void GameScreen::onKeyReleased(const sf::Event& event) {
 		);
 		m_isMoving = false;
 	}
+
+    // XXX: Ugly.
+    if (m_isTypingMessage) {
+        // Forward the event to the chatbox.
+        m_chatbox->handleEvent(event);
+    }
 }
 
 void GameScreen::onTextEntered(const sf::Event& event) {
@@ -245,7 +250,18 @@ void GameScreen::onTextEntered(const sf::Event& event) {
                 )
             );
             m_isEnterKeyPressed = true;
+            if (m_isTypingMessage) {
+                // XXX: Get message and send it.
+                std::string messageToSend(m_chatbox->typedMessage());
+                m_chatbox->clearMessageInputTextbox();
+                std::cerr << "Sent " << messageToSend << std::endl;
+                m_player.say(messageToSend);
+            }
+            m_isTypingMessage = !m_isTypingMessage;
         }
+    } else if (m_isTypingMessage) {
+        // Forward the event to the chatbox.
+        m_chatbox->handleEvent(event);
     }
 }
 

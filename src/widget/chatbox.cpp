@@ -27,17 +27,50 @@ void Chatbox::paint(sf::RenderWindow& window) {
 }
 
 bool Chatbox::handleEvent(const sf::Event& event) {
-    return true;
+    bool forwardEvent(true);
+    if (m_isTypingMessage) {
+        forwardEvent = m_messageInputTextbox->handleEvent(event);
+    }
+    return false;
 }
 
 void Chatbox::handleCustomEvent(const ::CustomEvent& event) {
+
     switch(event.type()) {
     case CustomEvent::Type::EnterKeyPressed:
         std::cerr << "[CHATBOX] Enter Key Pressed!" << std::endl;
+        if (!m_isTypingMessage) {
+            // XXX: Ugly (for now): simulate a SetFocus to the textbox.
+            m_messageInputTextbox->handleCustomEvent(
+                ::CustomEvent(
+                    reinterpret_cast<void*>(shared_from_this().get()),
+                    CustomEvent::Type::SetFocus,
+                    reinterpret_cast<void*>(m_messageInputTextbox.get())
+                )
+            );
+            m_isTypingMessage = true;
+        } else {
+            m_messageInputTextbox->handleCustomEvent(
+                ::CustomEvent(
+                    reinterpret_cast<void*>(shared_from_this().get()),
+                    CustomEvent::Type::ReleaseFocus,
+                    reinterpret_cast<void*>(m_messageInputTextbox.get())
+                )
+            );
+            m_isTypingMessage = false;
+        }
         break;
     default:
         break;
     }
+}
+
+const std::string& Chatbox::typedMessage() const {
+    return m_messageInputTextbox->content();
+}
+
+void Chatbox::clearMessageInputTextbox() {
+    m_messageInputTextbox->setContent("");
 }
 
 } // namespace Widget

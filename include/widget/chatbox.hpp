@@ -12,6 +12,8 @@ public:
     void paint(sf::RenderWindow&) override;
     bool handleEvent(const sf::Event& event) override;
     void handleCustomEvent(const ::CustomEvent& event) override;
+    const std::string& typedMessage() const;
+    void clearMessageInputTextbox();
 private:
     bool m_isTypingMessage;
     std::shared_ptr<Textbox> m_messageInputTextbox;

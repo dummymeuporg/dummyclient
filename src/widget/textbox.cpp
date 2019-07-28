@@ -77,16 +77,19 @@ void Textbox::_handleTextEntered(const sf::Event& event) {
 
 bool Textbox::_onTextEntered(const sf::Event& event) {
     bool forwardEvent = true;
-    std::cerr << "Text entered: " << event.key.code << std::endl;
+    //std::cerr << "Text entered: " << event.key.code << std::endl;
     if (m_isTextRepeating
          && m_textRepeatClock.getElapsedTime().asMilliseconds() >= 30) {
+        std::cerr << "ONE" << std::endl;
         _handleTextEntered(event);
         m_textRepeatClock.restart();
     } else if (m_lastTextInput != event.key.code) {
+        std::cerr << "TWO" << std::endl;
         _handleTextEntered(event);
         m_textFirstClock.restart();
     } else if (!m_isTextRepeating
                && m_textFirstClock.getElapsedTime().asMilliseconds() >= 300) {
+        std::cerr << "THREE" << std::endl;
         m_isTextRepeating = true;
         _handleTextEntered(event);
         m_textRepeatClock.restart();
@@ -260,6 +263,7 @@ Textbox& Textbox::setContent(const std::string& str)
 {
     m_content = str;
     m_text.setString(m_content);
+    m_carretIndex = 0;
     return *this;
 }
 
