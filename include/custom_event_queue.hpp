@@ -23,6 +23,7 @@ public:
         MapViewLoaded,
         MovementActive,
         MovementInactive,
+        EnterKeyPressed,
 
         Count
     };

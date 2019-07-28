@@ -19,6 +19,7 @@ public:
     Textbox& setBorderColor(const sf::Color& color);
     Textbox& setMaxLength(int);
     Textbox& setContent(const std::string& str);
+    Textbox& setBorderThickness(float);
     const std::string& content() const {
         return m_content;
     }

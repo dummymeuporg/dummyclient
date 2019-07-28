@@ -12,7 +12,8 @@ Textbox::Textbox(std::shared_ptr<Widget> parent)
       m_isTextRepeating(false),
       m_isCarretDrawn(false), m_carretIndex(0)
 {
-
+    // XXX: default
+    m_shape.setOutlineThickness(5);
 }
 
 void Textbox::paint(sf::RenderWindow& renderWindow) {
@@ -245,8 +246,13 @@ Textbox& Textbox::setBackgroundColor(const sf::Color& color) {
 }
 
 Textbox& Textbox::setBorderColor(const sf::Color& color) {
-    m_shape.setOutlineThickness(5);
+
     m_shape.setOutlineColor(color);
+    return *this;
+}
+
+Textbox& Textbox::setBorderThickness(float thickness) {
+    m_shape.setOutlineThickness(thickness);
     return *this;
 }
 

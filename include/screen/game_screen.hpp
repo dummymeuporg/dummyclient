@@ -11,7 +11,7 @@ class Client;
 class Game;
 
 namespace Widget {
-class Textbox;
+class Chatbox;
 } // namespace Widget
 
 namespace Screen {
@@ -72,7 +72,13 @@ private:
     ::LocalMapState m_mapState;
     sf::View m_gameView, m_hudView;
     bool m_debugMode;
-    std::shared_ptr<Widget::Textbox> m_textbox;
+
+    std::shared_ptr<Widget::Chatbox> m_chatbox;
+
+    // XXX: This screen class start to be messy. The different states
+    // managed by a bool should be, well, better handled.
+    bool m_isTypingMessage;
+    bool m_isEnterKeyPressed;
 };
 
 } // namespace Screen

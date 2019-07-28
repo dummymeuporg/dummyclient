@@ -6,7 +6,7 @@
 #include <dummy/server/command/ping.hpp>
 #include <dummy/server/response/ping.hpp>
 
-#include "widget/textbox.hpp"
+#include "widget/chatbox.hpp"
 
 #include "client.hpp"
 #include "game.hpp"
@@ -51,7 +51,9 @@ GameScreen::GameScreen(
                               m_game.width(),
                               m_game.height())),
       m_debugMode(false),
-      m_textbox(std::make_shared<Widget::Textbox>())
+      m_chatbox(std::make_shared<Widget::Chatbox>()),
+      m_isTypingMessage(false),
+      m_isEnterKeyPressed(false)
 {
     m_player.setX(m_client.character()->position().first * 8);
     m_player.setY(m_client.character()->position().second * 8);
@@ -61,16 +63,7 @@ GameScreen::GameScreen(
     m_gameView.zoom(0.5);
     m_game.window().setView(m_gameView);
 
-    m_textbox
-        ->setFontSize(18)
-        .setColor(sf::Color::Black)
-        .setBackgroundColor(sf::Color(200, 200, 200))
-        .setBorderColor(sf::Color(128, 128, 128))
-        .setRect(230, 90, 420, 40)
-        .setContent("")
-        .setFont("arial.ttf");
-
-    //addWidget(m_textbox);
+    addWidget(m_chatbox);
 }
 
 GameScreen::~GameScreen() {
@@ -92,6 +85,10 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
         m_player.changeState(
             std::make_shared<Graphics::LivingState::StandingState>(m_player)
         );
+        break;
+    case CustomEvent::Type::EnterKeyPressed:
+        // Forward to the chatbox.
+        m_chatbox->handleCustomEvent(event);
         break;
     default:
         break;
@@ -184,6 +181,7 @@ void GameScreen::moveCharacter(sf::Keyboard::Key key) {
 }
 
 void GameScreen::onKeyPressed(const sf::Event& event) {
+    std::cerr << "Key pressed: " << event.key.code << std::endl;
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		m_characterDirection |= DIRECTION_UP;
 	}
@@ -211,6 +209,10 @@ void GameScreen::onKeyPressed(const sf::Event& event) {
 }
 
 void GameScreen::onKeyReleased(const sf::Event& event) {
+    if (sf::Keyboard::Enter == event.key.code && m_isEnterKeyPressed) {
+        std::cerr << "Enter key released!" << std::endl;
+        m_isEnterKeyPressed = false;
+    }
 	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_UP);
 	}
@@ -237,8 +239,17 @@ void GameScreen::onKeyReleased(const sf::Event& event) {
 }
 
 void GameScreen::onTextEntered(const sf::Event& event) {
-    if ('a' == event.text.unicode) {
-        m_debugMode = !m_debugMode;
+    if ('\r' == event.text.unicode) {
+        if (!m_isEnterKeyPressed) {
+            pushEvent(
+                ::CustomEvent(
+                    reinterpret_cast<void*>(shared_from_this().get()),
+                    CustomEvent::EnterKeyPressed,
+                    reinterpret_cast<void*>(shared_from_this().get())
+                )
+            );
+            m_isEnterKeyPressed = true;
+        }
     }
 }
 
@@ -297,9 +308,7 @@ void GameScreen::drawBlockingLayer(unsigned int index, LevelView& levelView) {
                 auto& blockingSquare(levelView.blockingSquares().at(blockIndex));
                 blockingSquare.setPosition(x * 8, y * 8);
                 m_game.window().draw(blockingSquare);
-
             }
-
         }
     }
 }
