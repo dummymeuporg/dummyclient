@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "widget/chatbox.hpp"
 #include "widget/textbox.hpp"
 
@@ -31,6 +33,7 @@ bool Chatbox::handleEvent(const sf::Event& event) {
 void Chatbox::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
     case CustomEvent::Type::EnterKeyPressed:
+        std::cerr << "[CHATBOX] Enter Key Pressed!" << std::endl;
         break;
     default:
         break;

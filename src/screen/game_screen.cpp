@@ -195,7 +195,6 @@ void GameScreen::onKeyPressed(const sf::Event& event) {
 		m_characterDirection |= DIRECTION_LEFT;
 	}
 
-
 	if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
 		pushEvent(
 			CustomEvent(
@@ -245,7 +244,7 @@ void GameScreen::onTextEntered(const sf::Event& event) {
                 ::CustomEvent(
                     reinterpret_cast<void*>(shared_from_this().get()),
                     CustomEvent::EnterKeyPressed,
-                    reinterpret_cast<void*>(shared_from_this().get())
+                    reinterpret_cast<void*>(m_chatbox.get())
                 )
             );
             m_isEnterKeyPressed = true;
