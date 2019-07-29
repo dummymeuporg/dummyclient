@@ -54,15 +54,16 @@ void Player::updatePosition() {
 void Player::tick() {
     // XXX: update position and read the others each 333 ms?
     if (m_updatePosClock.getElapsedTime().asMilliseconds() >= 333) {
-        m_client.sendCommand(Dummy::Server::Command::Ping());
+        m_client.sendCommand(std::make_unique<Dummy::Server::Command::Ping>());
 
         // Update position if needed
         auto newPosition = translateCoordsToServ(m_x, m_y);
         if (newPosition != m_serverPosition) {
             std::cerr << "UPDATE POS." << std::endl;
             m_client.sendCommand(
-                Dummy::Server::Command::SetPosition(newPosition.first,
-                                                    newPosition.second)
+                std::make_unique<Dummy::Server::Command::SetPosition>(
+                    newPosition.first, newPosition.second
+                )
             );
             m_serverPosition = newPosition;
         }

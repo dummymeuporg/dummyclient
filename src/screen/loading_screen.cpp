@@ -87,12 +87,13 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
     case CustomEvent::Type::MapViewLoaded: {
         std::cerr << "Can display map." << std::endl;
 
-        Dummy::Server::Command::TeleportMap teleport(
-            m_mapNameToLoad,
-            m_client.character()->position(),
-            m_instance
+        m_client.sendCommand(
+            std::make_unique<const Dummy::Server::Command::TeleportMap>(
+                m_mapNameToLoad,
+                m_client.character()->position(),
+                m_instance
+            )
         );
-        m_client.sendCommand(teleport);
 
     }
         break;

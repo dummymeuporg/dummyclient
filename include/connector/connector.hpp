@@ -29,15 +29,16 @@ public:
     }
 };
 
-using ResponsePtr = std::unique_ptr<const Dummy::Server::Response::Response>;
+using CommandPtr = std::shared_ptr<const Dummy::Server::Command::Command>;
+using ResponsePtr = std::shared_ptr<const Dummy::Server::Response::Response>;
 
 class Connector : public Dummy::Server::Response::Handler {
 public:
     Connector() {}
 
-    void start();
+    virtual void start() = 0;
     
-    virtual void sendCommand(const Dummy::Server::Command::Command&) = 0;
+    virtual void sendCommand(CommandPtr) = 0;
     virtual ResponsePtr getResponse();
 
     void handleResponse(ResponsePtr) override;

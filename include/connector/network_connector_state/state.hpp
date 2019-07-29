@@ -36,17 +36,17 @@ public:
     }
 };
 
+using CommandPtr = std::shared_ptr<const Dummy::Server::Command::Command>;
 
 class State : public std::enable_shared_from_this<State>,
               public Dummy::Server::Command::CommandVisitor {
 public:
     State(NetworkConnector&);
 
-    virtual void
-    sendCommand(const Dummy::Server::Command::Command&) = 0;
+    virtual void sendCommand(CommandPtr) = 0;
 
     virtual
-    std::unique_ptr<const Dummy::Server::Response::Response>
+    std::shared_ptr<const Dummy::Server::Response::Response>
     getResponse(Dummy::Protocol::IncomingPacket&) = 0;
 
 protected:

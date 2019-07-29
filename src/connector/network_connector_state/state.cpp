@@ -1,3 +1,5 @@
+#include <dummy/server/response/response.hpp>
+
 #include "connector/network_connector.hpp"
 #include "connector/network_connector_state/state.hpp"
 

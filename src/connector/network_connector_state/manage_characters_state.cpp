@@ -24,14 +24,12 @@ ManageCharactersState::ManageCharactersState(
 }
 
 void
-ManageCharactersState::sendCommand(
-    const Dummy::Server::Command::Command& command
-) {
-    command.accept(*this);
+ManageCharactersState::sendCommand(CommandPtr command) {
+    command->accept(*this);
 }
 
 
-std::unique_ptr<const Dummy::Server::Response::Response>
+std::shared_ptr<const Dummy::Server::Response::Response>
 ManageCharactersState::getResponse(Dummy::Protocol::IncomingPacket& packet)
 {
     std::uint16_t response;
@@ -71,29 +69,31 @@ void ManageCharactersState::visitCommand(
 
 }
 
-std::unique_ptr<const Dummy::Server::Response::CreateCharacter>
+std::shared_ptr<const Dummy::Server::Response::CreateCharacter>
 ManageCharactersState::_createCharacter(
     Dummy::Protocol::IncomingPacket& packet
 ) {
-    std::unique_ptr<Dummy::Server::Response::CreateCharacter> response =
-        std::make_unique<Dummy::Server::Response::CreateCharacter>();
+    auto response(
+        std::make_shared<Dummy::Server::Response::CreateCharacter>()
+    );
     response->readFrom(packet);
-    return response;
+    return std::move(response);
 }
 
-std::unique_ptr<const Dummy::Server::Response::SelectCharacter>
+std::shared_ptr<const Dummy::Server::Response::SelectCharacter>
 ManageCharactersState::_selectCharacter(
     Dummy::Protocol::IncomingPacket& packet
 ) {
-    std::unique_ptr<Dummy::Server::Response::SelectCharacter> response =
-        std::make_unique<Dummy::Server::Response::SelectCharacter>();
+    auto response(
+        std::make_unique<Dummy::Server::Response::SelectCharacter>()
+    );
     response->readFrom(packet);
     if (response->status() == 0) {
         m_networkConnector.changeState(
             std::make_shared<LoadingState>(m_networkConnector)
         );
     }
-    return response;
+    return std::move(response);
 }
 
 } // namespace NetworkConnectorState

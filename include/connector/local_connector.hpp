@@ -14,13 +14,14 @@ class Response;
 
 namespace Connector {
 
-
+using CommandPtr = std::shared_ptr<const Dummy::Server::Command::Command>;
 
 class LocalConnector : public Connector {
 public:
     LocalConnector(std::shared_ptr<Dummy::Server::GameSessionCommunicator>);
+    void start() override;
     virtual ~LocalConnector();
-    void sendCommand(const Dummy::Server::Command::Command&) override;
+    void sendCommand(CommandPtr) override;
 private:
     std::shared_ptr<Dummy::Server::GameSessionCommunicator>
         m_gameSessionCommunicator;

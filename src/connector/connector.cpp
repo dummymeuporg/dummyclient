@@ -4,18 +4,15 @@
 
 namespace Connector {
 
-void
-Connector::handleResponse(ResponsePtr response) {
+void Connector::handleResponse(ResponsePtr response) {
     m_responses.emplace(std::move(response));
 }
 
 ResponsePtr Connector::getResponse() {
     if (m_responses.size() > 0) {
-        std::unique_ptr<const Dummy::Server::Response::Response> r(
-            std::move(m_responses.front())
-        );
+        auto response(std::move(m_responses.front()));
         m_responses.pop();
-        return r;
+        return response;
     }
     return nullptr; // no response
 }

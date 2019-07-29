@@ -26,13 +26,11 @@ PlayingState::PlayingState(NetworkConnector& networkConnector)
 
 }
 
-void PlayingState::sendCommand(
-    const Dummy::Server::Command::Command& command
-) {
-    command.accept(*this);
+void PlayingState::sendCommand(CommandPtr command) {
+    command->accept(*this);
 }
 
-std::unique_ptr<const Dummy::Server::Response::Response>
+std::shared_ptr<const Dummy::Server::Response::Response>
 PlayingState::getResponse(Dummy::Protocol::IncomingPacket& packet)
 {
     std::uint16_t response;
@@ -78,28 +76,28 @@ void PlayingState::visitCommand(
     m_networkConnector.sendPacket(pkt);
 }
 
-std::unique_ptr<const Dummy::Server::Response::Ping>
+std::shared_ptr<const Dummy::Server::Response::Ping>
 PlayingState::_ping(Dummy::Protocol::IncomingPacket& packet) {
-    std::unique_ptr<Dummy::Server::Response::Ping> response =
-        std::make_unique<Dummy::Server::Response::Ping>();
+    std::shared_ptr<Dummy::Server::Response::Ping> response =
+        std::make_shared<Dummy::Server::Response::Ping>();
     //response->readFrom(packet);
     // XXX: the response contains map updates. parse them manually hiere.
     response->readFrom(packet);
     return std::move(response);
 }
 
-std::unique_ptr<const Dummy::Server::Response::SetPosition>
+std::shared_ptr<const Dummy::Server::Response::SetPosition>
 PlayingState::_setPosition(Dummy::Protocol::IncomingPacket& packet) {
-    std::unique_ptr<Dummy::Server::Response::SetPosition> response =
-    std::make_unique<Dummy::Server::Response::SetPosition>();
+    std::shared_ptr<Dummy::Server::Response::SetPosition> response =
+    std::make_shared<Dummy::Server::Response::SetPosition>();
     response->readFrom(packet);
     return std::move(response);
 }
 
-std::unique_ptr<const Dummy::Server::Response::Message>
+std::shared_ptr<const Dummy::Server::Response::Message>
 PlayingState::message(Dummy::Protocol::IncomingPacket& packet) {
-    std::unique_ptr<Dummy::Server::Response::Message> response =
-    std::make_unique<Dummy::Server::Response::Message>();
+    std::shared_ptr<Dummy::Server::Response::Message> response =
+    std::make_shared<Dummy::Server::Response::Message>();
     response->readFrom(packet);
     return std::move(response);
 }

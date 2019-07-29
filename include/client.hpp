@@ -38,6 +38,8 @@ class Connector;
 
 class MapView;
 
+using CommandPtr = std::unique_ptr<const Dummy::Server::Command::Command>;
+
 class Client {
 public:
     Client(Connector::Connector&,
@@ -75,7 +77,7 @@ public:
         return m_serverPosition;
     }
 
-    void sendCommand(const Dummy::Server::Command::Command&);
+    void sendCommand(CommandPtr);
     void onResponse(const Dummy::Server::Response::Response&);
 
     void setCharacter(std::shared_ptr<Dummy::Core::Character>);

@@ -260,7 +260,9 @@ void GameScreen::onTextEntered(const sf::Event& event) {
                 std::cerr << "Sent " << messageToSend << std::endl;
                 m_player.say(messageToSend);
                 m_client.sendCommand(
-                    Dummy::Server::Command::Message(messageToSend)
+                    std::make_unique<Dummy::Server::Command::Message>(
+                        messageToSend
+                    )
                 );
             }
             m_isTypingMessage = !m_isTypingMessage;
@@ -360,7 +362,7 @@ void GameScreen::tick() {
     m_player.tick();
     m_mapState.tick();
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
-        m_client.sendCommand(Dummy::Server::Command::Ping());
+        m_client.sendCommand(std::make_unique<Dummy::Server::Command::Ping>());
         m_pingClock.restart();
     }
 

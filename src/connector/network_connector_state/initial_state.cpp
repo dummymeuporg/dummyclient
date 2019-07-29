@@ -20,14 +20,12 @@ InitialState::InitialState(NetworkConnector& networkConnector)
 }
 
 void
-InitialState::sendCommand(
-    const Dummy::Server::Command::Command& command
-) {
-    command.accept(*this);
+InitialState::sendCommand(CommandPtr command) {
+    command->accept(*this);
 }
 
 
-std::unique_ptr<const Dummy::Server::Response::Response>
+std::shared_ptr<const Dummy::Server::Response::Response>
 InitialState::getResponse(Dummy::Protocol::IncomingPacket& packet)
 {
     std::uint8_t response;
@@ -51,7 +49,7 @@ void InitialState::visitCommand(
     m_networkConnector.sendPacket(pkt);
 }
 
-std::unique_ptr<const Dummy::Server::Response::ConnectResponse>
+std::shared_ptr<const Dummy::Server::Response::ConnectResponse>
 InitialState::_getConnectResponse(Dummy::Protocol::IncomingPacket& packet) {
     auto self(shared_from_this());
     std::unique_ptr<Dummy::Server::Response::ConnectResponse> response =
@@ -66,7 +64,7 @@ InitialState::_getConnectResponse(Dummy::Protocol::IncomingPacket& packet) {
         // Invalid status. Close the connection.
         m_networkConnector.close();
     }
-    return response;
+    return std::move(response);
 }
 
 } // namespace NetworkConnectorState

@@ -16,6 +16,10 @@ NetworkConnector::NetworkConnector(const std::string& host,
 
 }
 
+void NetworkConnector::start() {
+    connect();
+}
+
 void NetworkConnector::connect() {
     if (sf::Socket::Status::Done != m_socket.connect(m_host, m_port)) {
         throw ConnectionError();
@@ -28,7 +32,7 @@ void NetworkConnector::close() {
 }
 
 void
-NetworkConnector::sendCommand(const Dummy::Server::Command::Command& command) {
+NetworkConnector::sendCommand(CommandPtr command) {
     m_state->sendCommand(command);
 }
 
@@ -39,7 +43,7 @@ void NetworkConnector::changeState(
     m_state = state;
 }
 
-std::unique_ptr<const Dummy::Server::Response::Response>
+std::shared_ptr<const Dummy::Server::Response::Response>
 NetworkConnector::getResponse() {
     sf::Socket::Status status;
     std::size_t receivedBytes;
@@ -65,14 +69,14 @@ NetworkConnector::getResponse() {
         // Everything is fine. Reset the packet size and handle the data.
         Dummy::Protocol::IncomingPacket pkt(buffer);
         m_packetSize = 0;
-        return m_state->getResponse(pkt);
+        m_responses.emplace(m_state->getResponse(pkt));
     } else {
         std::cerr << "Houston, I don't know how to handle this error."
             << std::endl;
         ::exit(EXIT_FAILURE);
     }
 
-    return nullptr;
+    return Connector::getResponse();
 }
 
 void NetworkConnector::sendPacket(const Dummy::Protocol::OutgoingPacket& pkt) {

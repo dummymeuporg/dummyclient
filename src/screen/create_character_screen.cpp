@@ -140,9 +140,11 @@ void CreateCharacterScreen::_onCreateCharacterButton() {
     std::cerr << "Chipset: " << m_skinPreviewer->skin()
         << std::endl;
 
-    Dummy::Server::Command::CreateCharacter create(characterName, skin);
-    m_client.sendCommand(create);
-
+    m_client.sendCommand(
+        std::make_unique<Dummy::Server::Command::CreateCharacter>(
+            characterName, skin
+        )
+    );
 }
 
 void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
