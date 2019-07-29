@@ -26,10 +26,8 @@ class State;
 class NetworkConnector : public Connector {
 public:
     NetworkConnector(const std::string&, unsigned short);
-    virtual void sendCommand(const Dummy::Server::Command::Command&) override;
-
-    virtual std::unique_ptr<const Dummy::Server::Response::Response>
-    getResponse() override;
+    void sendCommand(CommandPtr) override;
+    void handleResponse(ResponsePtr) override;
 
     void close();
     void connect();

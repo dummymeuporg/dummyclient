@@ -3,6 +3,8 @@
 #include <memory>
 #include <queue>
 
+#include <dummy/server/response/handler.hpp>
+
 namespace Dummy {
 namespace Server {
 namespace Response {
@@ -27,17 +29,20 @@ public:
     }
 };
 
-class Connector {
+using ResponsePtr = std::unique_ptr<const Dummy::Server::Response::Response>;
+
+class Connector : public Dummy::Server::Response::Handler {
 public:
     Connector() {}
 
     void start();
     
-    virtual void
-    sendCommand(const Dummy::Server::Command::Command&) = 0;
+    virtual void sendCommand(const Dummy::Server::Command::Command&) = 0;
+    ResponsePtr getResponse();
 
-    virtual std::unique_ptr<const Dummy::Server::Response::Response>
-    getResponse() = 0;
+    void handleResponse(ResponsePtr) override;
+protected:
+    std::queue<ResponsePtr> m_responses;
 };
 
 

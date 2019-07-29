@@ -1,25 +1,36 @@
-#include <dummy/server/game_session.hpp>
+#include <dummy/server/game_session_communicator.hpp>
 #include <dummy/server/response/response.hpp>
 #include "connector/local_connector.hpp"
 
 namespace Connector {
 
+using GameSessionCommunicatorPtr =
+    std::shared_ptr<Dummy::Server::GameSessionCommunicator>;
+
 LocalConnector::LocalConnector(
-    Dummy::Server::GameSession& gameSession
-) : m_gameSession(gameSession) {}
+    GameSessionCommunicatorPtr gameSessionCommunicator
+) : m_gameSessionCommunicator(gameSessionCommunicator) {}
 
 LocalConnector::~LocalConnector() {
-    m_gameSession.close();
+
+    // XXX: inform the game session that we are done.
+    // m_gameSession.close();
 }
 
 void
 LocalConnector::sendCommand(const Dummy::Server::Command::Command& command) {
-    m_gameSession.handleCommand(command);
+    m_gameSessionCommunicator->forwardCommand(command);
+}
+
+void
+LocalConnector::handleResponse(ResponsePtr response) {
+    m_responses.emplace(std::move(response));
 }
 
 std::unique_ptr<const Dummy::Server::Response::Response>
 LocalConnector::getResponse() {
-    return m_gameSession.getResponse();
+    //return m_gameSessionCommugetResponse();
+    return nullptr;
 }
 
 } // namespace Connector
