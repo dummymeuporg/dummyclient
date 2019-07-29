@@ -40,6 +40,8 @@ public:
 
     void
     onResponse(const Dummy::Server::Response::Response& response) override;
+
+    void visitResponse(const Dummy::Server::Response::Message&) override;
     void visitResponse(const Dummy::Server::Response::Ping&) override;
     void visitResponse(const Dummy::Server::Response::SetPosition&) override;
 

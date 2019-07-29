@@ -5,11 +5,13 @@
 namespace Dummy {
 namespace Server {
 namespace Command {
+class Message;
 class Ping;
 class SetPosition;
 } // namespace Command
 
 namespace Response {
+class Message;
 class Ping;
 class SetPosition;
 } // namespace Response
@@ -33,12 +35,16 @@ public:
 
     void visitCommand(const Dummy::Server::Command::Ping&) override;
     void visitCommand(const Dummy::Server::Command::SetPosition&) override;
+    void visitCommand(const Dummy::Server::Command::Message&) override;
 private:
     std::unique_ptr<const Dummy::Server::Response::Ping>
     _ping(Dummy::Protocol::IncomingPacket&);
 
     std::unique_ptr<const Dummy::Server::Response::SetPosition>
     _setPosition(Dummy::Protocol::IncomingPacket&);
+
+    std::unique_ptr<const Dummy::Server::Response::Message>
+    message(Dummy::Protocol::IncomingPacket&);
 };
 
 } // namespace NetworkConnectorState

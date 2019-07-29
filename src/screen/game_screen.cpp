@@ -5,6 +5,8 @@
 
 #include <dummy/server/command/message.hpp>
 #include <dummy/server/command/ping.hpp>
+
+#include <dummy/server/response/message.hpp>
 #include <dummy/server/response/ping.hpp>
 
 #include "widget/chatbox.hpp"
@@ -389,6 +391,13 @@ void GameScreen::visitResponse(
     for (const auto& update: ping.mapUpdates()) {
         m_mapState.update(*update);
     }
+}
+
+void GameScreen::visitResponse(
+    const Dummy::Server::Response::Message& message
+) {
+    std::cerr << message.author() << " said: "
+              << message.content() << std::endl;
 }
 
 } // namespace Screen
