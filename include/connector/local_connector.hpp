@@ -21,7 +21,6 @@ public:
     LocalConnector(std::shared_ptr<Dummy::Server::GameSessionCommunicator>);
     virtual ~LocalConnector();
     void sendCommand(const Dummy::Server::Command::Command&) override;
-    void handleResponse(ResponsePtr) override;
 private:
     std::shared_ptr<Dummy::Server::GameSessionCommunicator>
         m_gameSessionCommunicator;

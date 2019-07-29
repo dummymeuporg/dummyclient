@@ -28,8 +28,8 @@ void NetworkConnector::close() {
 }
 
 void
-NetworkConnector::sendCommand(CommandPtr command) {
-    m_state->sendCommand(*command);
+NetworkConnector::sendCommand(const Dummy::Server::Command::Command& command) {
+    m_state->sendCommand(command);
 }
 
 

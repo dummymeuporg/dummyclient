@@ -38,7 +38,7 @@ public:
     void start();
     
     virtual void sendCommand(const Dummy::Server::Command::Command&) = 0;
-    ResponsePtr getResponse();
+    virtual ResponsePtr getResponse();
 
     void handleResponse(ResponsePtr) override;
 protected:

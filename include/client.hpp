@@ -51,7 +51,6 @@ public:
     sf::TcpSocket& socket() {
         return m_socket;
     }
-    void checkData();
     void checkResponse();
     void connect(const char* host, unsigned short port);
     void authenticate();

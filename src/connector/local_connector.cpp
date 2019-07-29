@@ -22,15 +22,4 @@ LocalConnector::sendCommand(const Dummy::Server::Command::Command& command) {
     m_gameSessionCommunicator->forwardCommand(command);
 }
 
-void
-LocalConnector::handleResponse(ResponsePtr response) {
-    m_responses.emplace(std::move(response));
-}
-
-std::unique_ptr<const Dummy::Server::Response::Response>
-LocalConnector::getResponse() {
-    //return m_gameSessionCommugetResponse();
-    return nullptr;
-}
-
 } // namespace Connector
