@@ -20,16 +20,14 @@ void FoePlayer::draw(sf::RenderWindow& window) {
 
     // XXX: Duplicate with the Player class. Find a way to factorize it.
     sf::FloatRect textRect = m_displayName.getLocalBounds();
+    const auto& origin(m_sprite.getOrigin());
+
     m_displayName.setOrigin(
-        textRect.left + textRect.width / 2.0f,
+        textRect.left + (textRect.width/2.0),
         textRect.top
     );
-    m_displayName.setPosition(
-        static_cast<int>(windowSize.x / 2) + m_x +
-        w() * 1,
-        static_cast<int>(windowSize.y / 2) + m_y +
-        h() * 2
-    );
+
+    m_displayName.setPosition((m_x - origin.x) + m_w/2.0, m_y + (m_h/3.0));
     window.draw(m_displayName);
 }
 

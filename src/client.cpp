@@ -18,8 +18,9 @@ Client::Client(Connector::Connector& connector,
 }
 
 void Client::checkResponse() {
-    std::unique_ptr<const Dummy::Server::Response::Response> response =
-        std::move(m_connector.getResponse());
+    std::unique_ptr<const Dummy::Server::Response::Response> response(
+        m_connector.getResponse()
+    );
 
     if (nullptr != response && m_currentScreen != nullptr) {
         m_currentScreen->onResponse(*response);
