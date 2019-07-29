@@ -65,7 +65,7 @@ ReceivePrimaryInfoState::_getCharactersListResponse(
         std::make_shared<ManageCharactersState>(m_networkConnector)
     );
     
-    return response;
+    return std::move(response);
 }
 
 } // namespace NetworkConnectorState
