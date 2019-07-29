@@ -2,9 +2,11 @@
 #include "local_game_server.hpp"
 
 
-LocalGameServer::LocalGameServer(const fs::path& projectPath,
-                                 const fs::path& serverPath)
-    : Dummy::Server::AbstractGameServer(projectPath, serverPath)
+LocalGameServer::LocalGameServer(
+    boost::asio::io_context& ioContext,
+    const fs::path& projectPath,
+    const fs::path& serverPath
+) : Dummy::Server::AbstractGameServer(ioContext, projectPath, serverPath)
 {
 }
 

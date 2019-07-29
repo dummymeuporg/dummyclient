@@ -3,6 +3,7 @@
 
 #include <boost/range/irange.hpp>
 
+#include <dummy/server/command/message.hpp>
 #include <dummy/server/command/ping.hpp>
 #include <dummy/server/response/ping.hpp>
 
@@ -256,6 +257,9 @@ void GameScreen::onTextEntered(const sf::Event& event) {
                 m_chatbox->clearMessageInputTextbox();
                 std::cerr << "Sent " << messageToSend << std::endl;
                 m_player.say(messageToSend);
+                m_client.sendCommand(
+                    Dummy::Server::Command::Message(messageToSend)
+                );
             }
             m_isTypingMessage = !m_isTypingMessage;
         }

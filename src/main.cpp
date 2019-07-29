@@ -1,7 +1,10 @@
 #include <cstdlib>
 #include <iostream>
 #include <filesystem>
+
+#include <boost/asio.hpp>
 #include <SFML/Graphics.hpp>
+
 #include <dummy/server/game_session.hpp>
 
 #include "config.hpp"
@@ -17,7 +20,8 @@ int run_standalone(const char* projectPath,
                    const char* account,
                    const char* sessionID*/)
 {
-    ::LocalGameServer server(projectPath, serverPath);
+    boost::asio::io_context iocontext;
+    ::LocalGameServer server(iocontext, projectPath, serverPath);
     server.run(); // create the account
     std::shared_ptr<Dummy::Server::GameSession> session =
         server.buildGameSession();
@@ -30,7 +34,18 @@ int run_standalone(const char* projectPath,
         "00000000-0000-0000-0000-000000000000",
         connector
     );
-    return game.run();
+
+    // XXX: this line prevents the iocontext from completing.
+    // Think about a less messy solution on the mean term.
+    auto work = std::make_shared<boost::asio::io_context::work>(iocontext);
+    std::thread serverThread{[&iocontext](){
+        iocontext.run();
+    }};
+
+    int ret = game.run();
+    work.reset();
+    serverThread.join();
+    return ret;
 }
 
 int run_remote(const char* host, unsigned short port, const char* account,
