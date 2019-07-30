@@ -44,6 +44,8 @@ public:
         return m_graphicFoesMap;
     }
 
+    void say(const std::string&, const std::string&);
+
 private:
     const LocalMapState& m_localMapState;
     GraphicFoesMap m_graphicFoesMap;

@@ -46,6 +46,9 @@ public:
     int scaleFactor() const {
         return m_mapView.scaleFactor();
     }
+
+    void say(const std::string&, const std::string&);
+
 private:
     const MapView& m_mapView;
     LocalFloorStates m_localFloorStates;
