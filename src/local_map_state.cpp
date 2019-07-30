@@ -50,8 +50,8 @@ void LocalMapState::visitMapUpdate(
         m_mapView,
         characterOn.chipset(),
         characterOn.name(),
-        8 * characterOn.x() * m_mapView.scaleFactor(),
-        8 * characterOn.y() * m_mapView.scaleFactor(),
+        8 * characterOn.x(),
+        8 * characterOn.y(),
         characterOn.floor(),
         m_mapView.scaleFactor(),
         characterOn.direction()
@@ -75,4 +75,11 @@ void LocalMapState::tick() {
     for (auto& floorState: m_localFloorStates) {
         floorState.tick();
     }
+}
+
+void LocalMapState::say(const std::string& author, const std::string& message)
+{
+    // Get the floor and dispatch.
+    const auto& floor(m_graphicFoesFloor[author]);
+    m_localFloorStates[floor].say(author, message);
 }

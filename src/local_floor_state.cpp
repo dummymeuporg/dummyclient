@@ -11,13 +11,11 @@ LocalFloorState::LocalFloorState(const LocalMapState& localMapState)
 
 void LocalFloorState::tick() {
     // Make graphic livings converge towards their model.
-
-    auto scaleFactor(m_localMapState.scaleFactor());
     for (const auto& [name, graphicFoe]: m_graphicFoesMap) {
         auto& modelLiving(m_localMapState.living(name));
         graphicFoe->tick();
-        auto modelLivingX(modelLiving.x() * 8 * scaleFactor);
-        auto modelLivingY(modelLiving.y() * 8 * scaleFactor);
+        auto modelLivingX(modelLiving.x() * 8);
+        auto modelLivingY(modelLiving.y() * 8);
 
         // XXX: ugly
         if (modelLivingX != graphicFoe->x()) {
@@ -64,9 +62,8 @@ void LocalFloorState::onCharacterPosition(
 
         const auto& modelFoe(m_localMapState.living(name));
         auto& graphicFoe(*m_graphicFoesMap.at(name));
-        auto scaleFactor(graphicFoe.scaleFactor());
-        auto modelFoeX(modelFoe.x() * 8 * scaleFactor);
-        auto modelFoeY(modelFoe.y() * 8 * scaleFactor);
+        auto modelFoeX(modelFoe.x() * 8);
+        auto modelFoeY(modelFoe.y() * 8);
         if (modelFoeX != graphicFoe.x()) {
             graphicFoe.setXDst(modelFoeX);
             graphicFoe.setXMovement(
@@ -81,8 +78,13 @@ void LocalFloorState::onCharacterPosition(
         }
         // XXX: ugly
         graphicFoe.moveTowards(
-            modelFoe.x() * 8 * scaleFactor,
-            modelFoe.y() * 8 * scaleFactor
+            modelFoe.x() * 8,
+            modelFoe.y() * 8
         );
     }
+}
+
+void
+LocalFloorState::say(const std::string& author, const std::string& message) {
+    m_graphicFoesMap[author]->say(message);
 }

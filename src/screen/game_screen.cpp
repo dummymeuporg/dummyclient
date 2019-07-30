@@ -361,10 +361,12 @@ void GameScreen::draw() {
 void GameScreen::tick() {
     m_player.tick();
     m_mapState.tick();
+    /*
     if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
         m_client.sendCommand(std::make_unique<Dummy::Server::Command::Ping>());
         m_pingClock.restart();
     }
+    */
 
     if (!m_isArrowPressed && m_direction != sf::Keyboard::Unknown) {
         onArrowPressed();
@@ -398,8 +400,10 @@ void GameScreen::visitResponse(
 void GameScreen::visitResponse(
     const Dummy::Server::Response::Message& message
 ) {
-    std::cerr << message.author() << " said: "
-              << message.content() << std::endl;
+    // XXX: condition ugly. m_player should have a name attribute.
+    if (message.author() != m_client.character()->name()) {
+        m_mapState.say(message.author(), message.content());
+    }
 }
 
 } // namespace Screen
