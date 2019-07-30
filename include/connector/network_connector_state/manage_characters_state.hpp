@@ -28,11 +28,10 @@ namespace NetworkConnectorState {
 class ManageCharactersState : public State {
 public:
     ManageCharactersState(NetworkConnector&);
-    virtual void
-    sendCommand(const Dummy::Server::Command::Command&) override;
+    virtual void sendCommand(CommandPtr) override;
 
     virtual
-    std::unique_ptr<const Dummy::Server::Response::Response>
+    std::shared_ptr<const Dummy::Server::Response::Response>
     getResponse(Dummy::Protocol::IncomingPacket&) override;
 
     virtual void
@@ -44,12 +43,12 @@ public:
     override;
 
 private:
-    std::unique_ptr<const Dummy::Server::Response::CreateCharacter>
+    std::shared_ptr<const Dummy::Server::Response::CreateCharacter>
     _createCharacter(
         Dummy::Protocol::IncomingPacket& packet
     );
 
-    std::unique_ptr<const Dummy::Server::Response::SelectCharacter>
+    std::shared_ptr<const Dummy::Server::Response::SelectCharacter>
     _selectCharacter(
         Dummy::Protocol::IncomingPacket& packet
     );

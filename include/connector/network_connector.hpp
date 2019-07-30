@@ -23,19 +23,21 @@ namespace NetworkConnectorState {
 class State;
 }
 
+using CommandPtr = std::shared_ptr<const Dummy::Server::Command::Command>;
+
 class NetworkConnector : public Connector {
 public:
     NetworkConnector(const std::string&, unsigned short);
-    virtual void sendCommand(const Dummy::Server::Command::Command&) override;
-
-    virtual std::unique_ptr<const Dummy::Server::Response::Response>
-    getResponse() override;
+    void start() override;
+    void sendCommand(CommandPtr) override;
 
     void close();
-    void connect();
+
     void sendPacket(const Dummy::Protocol::OutgoingPacket&);
     void changeState(std::shared_ptr<NetworkConnectorState::State>);
+    ResponsePtr getResponse() override;
 private:
+    void connect();
     std::string m_host;
     unsigned short m_port;
     sf::TcpSocket m_socket;

@@ -83,11 +83,12 @@ SelectCharacterScreen::~SelectCharacterScreen()
 
 void SelectCharacterScreen::loaded() {
     std::cerr << "Send command for primary info" << std::endl;
-    Dummy::Server::Command::ConnectCommand cmd(
-        m_client.credentials().account(),
-        m_client.credentials().sessionID()
+    m_client.sendCommand(
+        std::make_unique<Dummy::Server::Command::ConnectCommand>(
+            m_client.credentials().account(),
+            m_client.credentials().sessionID()
+        )
     );
-    m_client.sendCommand(cmd);
 }
 
 
@@ -120,11 +121,15 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
         m_selectedCharacter = 
             m_characterSelector->selectedCharacter();
 
-        Dummy::Server::Command::SelectCharacter selectCharacter(
+        std::make_unique<Dummy::Server::Command::SelectCharacter>(
             m_selectedCharacter->name()
         );
 
-        m_client.sendCommand(selectCharacter);
+        m_client.sendCommand(
+            std::make_unique<Dummy::Server::Command::SelectCharacter>(
+                m_selectedCharacter->name()
+            )
+        );
     }
 }
 
@@ -140,12 +145,13 @@ void SelectCharacterScreen::visitResponse(
     std::cerr << "Got connect response." << std::endl;
     switch(response.status()) {
     case 0: /* O.K. */
-        m_client.sendCommand(Dummy::Server::Command::GetPrimaryInfoCommand());
+        m_client.sendCommand(
+            std::make_unique<Dummy::Server::Command::GetPrimaryInfoCommand>()
+        );
         break;
     default: /* Quit the program */
         // XXX: Find a neater way to quit.
         ::exit(-1);
-        break;
     }
 }
 

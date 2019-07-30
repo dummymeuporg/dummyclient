@@ -6,6 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <dummy/server/game_session.hpp>
+#include <dummy/server/game_session_communicator.hpp>
 
 #include "config.hpp"
 #include "connector/local_connector.hpp"
@@ -20,19 +21,26 @@ int run_standalone(const char* projectPath,
                    const char* account,
                    const char* sessionID*/)
 {
+
     boost::asio::io_context iocontext;
+    auto communicator(
+        std::make_shared<Dummy::Server::GameSessionCommunicator>(iocontext)
+    );
+
     ::LocalGameServer server(iocontext, projectPath, serverPath);
     server.run(); // create the account
-    std::shared_ptr<Dummy::Server::GameSession> session =
-        server.buildGameSession();
+
+    auto session = server.buildGameSession(communicator);
     session->start();
-    Connector::LocalConnector connector(*session);
+
+    auto connector(std::make_shared<Connector::LocalConnector>(communicator));
+    connector->start();
     //::Config config("dummyclient.ini");
     //::Game game(account, sessionID, connector);
     ::Game game(
         "TEST.0000",
         "00000000-0000-0000-0000-000000000000",
-        connector
+        *connector
     );
 
     // XXX: this line prevents the iocontext from completing.
@@ -52,7 +60,7 @@ int run_remote(const char* host, unsigned short port, const char* account,
                const char* sessionID)
 {
     Connector::NetworkConnector connector(host, port);
-    connector.connect();
+    connector.start();
     //::Config config("dummyclient.ini");
     ::Game game(account, sessionID, connector);
     return game.run();

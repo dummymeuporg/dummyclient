@@ -28,22 +28,22 @@ namespace NetworkConnectorState {
 class PlayingState : public State {
 public:
     PlayingState(NetworkConnector&);
-    void sendCommand(const Dummy::Server::Command::Command&) override;
+    void sendCommand(CommandPtr) override;
 
-    std::unique_ptr<const Dummy::Server::Response::Response>
+    std::shared_ptr<const Dummy::Server::Response::Response>
     getResponse(Dummy::Protocol::IncomingPacket&) override;
 
     void visitCommand(const Dummy::Server::Command::Ping&) override;
     void visitCommand(const Dummy::Server::Command::SetPosition&) override;
     void visitCommand(const Dummy::Server::Command::Message&) override;
 private:
-    std::unique_ptr<const Dummy::Server::Response::Ping>
+    std::shared_ptr<const Dummy::Server::Response::Ping>
     _ping(Dummy::Protocol::IncomingPacket&);
 
-    std::unique_ptr<const Dummy::Server::Response::SetPosition>
+    std::shared_ptr<const Dummy::Server::Response::SetPosition>
     _setPosition(Dummy::Protocol::IncomingPacket&);
 
-    std::unique_ptr<const Dummy::Server::Response::Message>
+    std::shared_ptr<const Dummy::Server::Response::Message>
     message(Dummy::Protocol::IncomingPacket&);
 };
 

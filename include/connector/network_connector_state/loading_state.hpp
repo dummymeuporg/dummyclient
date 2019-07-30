@@ -26,16 +26,15 @@ namespace NetworkConnectorState {
 class LoadingState : public State {
 public:
     LoadingState(NetworkConnector&);
-    virtual void
-    sendCommand(const Dummy::Server::Command::Command&) override;
+    virtual void sendCommand(CommandPtr) override;
 
-    virtual std::unique_ptr<const Dummy::Server::Response::Response>
+    virtual std::shared_ptr<const Dummy::Server::Response::Response>
     getResponse(Dummy::Protocol::IncomingPacket&) override;
 
     virtual void
     visitCommand(const Dummy::Server::Command::TeleportMap&) override;
 private:
-    std::unique_ptr<const Dummy::Server::Response::TeleportMap>
+    std::shared_ptr<const Dummy::Server::Response::TeleportMap>
     _teleportMap(Dummy::Protocol::IncomingPacket&);
 };
 

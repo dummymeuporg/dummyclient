@@ -4,7 +4,7 @@
 
 namespace Dummy {
 namespace Server {
-class GameSession;
+class GameSessionCommunicator;
 
 namespace Response {
 class Response;
@@ -14,19 +14,18 @@ class Response;
 
 namespace Connector {
 
+using CommandPtr = std::shared_ptr<const Dummy::Server::Command::Command>;
+
 class LocalConnector : public Connector {
 public:
-    LocalConnector(Dummy::Server::GameSession&);
+    LocalConnector(std::shared_ptr<Dummy::Server::GameSessionCommunicator>);
+    void start() override;
     virtual ~LocalConnector();
-    virtual void
-    sendCommand(const Dummy::Server::Command::Command&) override;
-
-    virtual std::unique_ptr<const Dummy::Server::Response::Response>
-    getResponse() override;
+    void sendCommand(CommandPtr) override;
 private:
-    Dummy::Server::GameSession& m_gameSession;
-    std::queue<std::unique_ptr<const Dummy::Server::Response::Response>>
-        m_responses;
+    std::shared_ptr<Dummy::Server::GameSessionCommunicator>
+        m_gameSessionCommunicator;
+
 };
 
 }; // namespace Connector

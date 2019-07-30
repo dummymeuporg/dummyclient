@@ -18,13 +18,11 @@ LoadingState::LoadingState(NetworkConnector& networkConnector)
 }
 
 void
-LoadingState::sendCommand(
-    const Dummy::Server::Command::Command& command
-) {
-    command.accept(*this);
+LoadingState::sendCommand(CommandPtr command) {
+    command->accept(*this);
 }
 
-std::unique_ptr<const Dummy::Server::Response::Response>
+std::shared_ptr<const Dummy::Server::Response::Response>
 LoadingState::getResponse(Dummy::Protocol::IncomingPacket& packet)
 {
     std::uint8_t response;
@@ -51,7 +49,7 @@ void LoadingState::visitCommand(
     m_networkConnector.sendPacket(pkt);
 }
 
-std::unique_ptr<const Dummy::Server::Response::TeleportMap>
+std::shared_ptr<const Dummy::Server::Response::TeleportMap>
 LoadingState::_teleportMap(Dummy::Protocol::IncomingPacket& packet) {
     auto self(shared_from_this());
     std::unique_ptr<Dummy::Server::Response::TeleportMap> response =

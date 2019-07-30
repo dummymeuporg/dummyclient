@@ -25,14 +25,12 @@ ReceivePrimaryInfoState::ReceivePrimaryInfoState(
 }
 
 void
-ReceivePrimaryInfoState::sendCommand(
-    const Dummy::Server::Command::Command& command
-) {
-    command.accept(*this);
+ReceivePrimaryInfoState::sendCommand(CommandPtr command) {
+    command->accept(*this);
 }
 
 
-std::unique_ptr<const Dummy::Server::Response::Response>
+std::shared_ptr<const Dummy::Server::Response::Response>
 ReceivePrimaryInfoState::getResponse(Dummy::Protocol::IncomingPacket& packet)
 {
     std::uint8_t response;
@@ -55,19 +53,19 @@ void ReceivePrimaryInfoState::visitCommand(
     m_networkConnector.sendPacket(pkt);
 }
 
-std::unique_ptr<const Dummy::Server::Response::CharactersListResponse>
+std::shared_ptr<const Dummy::Server::Response::CharactersListResponse>
 ReceivePrimaryInfoState::_getCharactersListResponse(
     Dummy::Protocol::IncomingPacket& packet
 ) {
-    std::unique_ptr<Dummy::Server::Response::CharactersListResponse> response =
-        std::make_unique<Dummy::Server::Response::CharactersListResponse>();
+    std::shared_ptr<Dummy::Server::Response::CharactersListResponse> response =
+        std::make_shared<Dummy::Server::Response::CharactersListResponse>();
     response->readFrom(packet);
 
     m_networkConnector.changeState(
         std::make_shared<ManageCharactersState>(m_networkConnector)
     );
     
-    return response;
+    return std::move(response);
 }
 
 } // namespace NetworkConnectorState

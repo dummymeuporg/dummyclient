@@ -18,9 +18,7 @@ Client::Client(Connector::Connector& connector,
 }
 
 void Client::checkResponse() {
-    std::unique_ptr<const Dummy::Server::Response::Response> response(
-        m_connector.getResponse()
-    );
+    auto response(m_connector.getResponse());
 
     if (nullptr != response && m_currentScreen != nullptr) {
         m_currentScreen->onResponse(*response);
@@ -66,8 +64,8 @@ void Client::_updateServerPosition(
     }
 }
 
-void Client::sendCommand(const Dummy::Server::Command::Command& command) {
-    m_connector.sendCommand(command);
+void Client::sendCommand(CommandPtr command) {
+    m_connector.sendCommand(std::move(command));
 }
 
 void Client::setScreen(std::shared_ptr<Screen::Screen> screen,

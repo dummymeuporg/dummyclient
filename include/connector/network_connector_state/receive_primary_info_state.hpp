@@ -26,18 +26,17 @@ namespace NetworkConnectorState {
 class ReceivePrimaryInfoState : public State {
 public:
     ReceivePrimaryInfoState(NetworkConnector&);
-    virtual void
-    sendCommand(const Dummy::Server::Command::Command&) override;
+    virtual void sendCommand(CommandPtr) override;
 
     virtual
-    std::unique_ptr<const Dummy::Server::Response::Response>
+    std::shared_ptr<const Dummy::Server::Response::Response>
     getResponse(Dummy::Protocol::IncomingPacket&) override;
 
     virtual void
     visitCommand(const Dummy::Server::Command::GetPrimaryInfoCommand&)
     override;
 private:
-    std::unique_ptr<const Dummy::Server::Response::CharactersListResponse>
+    std::shared_ptr<const Dummy::Server::Response::CharactersListResponse>
     _getCharactersListResponse(Dummy::Protocol::IncomingPacket&);
 
     
