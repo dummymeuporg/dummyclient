@@ -53,6 +53,7 @@ int run_standalone(const char* projectPath,
     int ret = game.run();
     work.reset();
     serverThread.join();
+    session->close();
     return ret;
 }
 

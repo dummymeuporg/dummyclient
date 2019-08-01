@@ -42,6 +42,7 @@ public:
     virtual ResponsePtr getResponse();
 
     void handleResponse(ResponsePtr) override;
+    void commandHandlerClosed() override;
 protected:
     std::queue<ResponsePtr> m_responses;
 };

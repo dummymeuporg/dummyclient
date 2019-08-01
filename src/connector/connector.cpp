@@ -17,4 +17,9 @@ ResponsePtr Connector::getResponse() {
     return nullptr; // no response
 }
 
+void Connector::commandHandlerClosed() {
+    //m_gameSessionCommunicator = nullptr;
+}
+
+
 } // namespace Connector
