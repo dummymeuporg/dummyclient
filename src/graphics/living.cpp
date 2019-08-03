@@ -52,12 +52,12 @@ Living::Living(const Living& living)
 void Living::_setDisplayName() {
     m_displayName.setString(m_name);
     m_displayName.setColor(sf::Color::White);
-    m_displayName.setCharacterSize(10);
+    m_displayName.setCharacterSize(12);
     m_displayName.setFont(font("arial.ttf"));
     //m_displayName.setStyle(sf::Text::Bold);
 
     m_speech.setColor(sf::Color::Black);
-    m_speech.setCharacterSize(10);
+    m_speech.setCharacterSize(12);
     m_speech.setFont(font("arial.ttf"));
 
     m_messageRect.setFillColor(sf::Color(255, 255, 255, 200));
