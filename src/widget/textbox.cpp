@@ -61,8 +61,7 @@ void Textbox::_handleTextEntered(const sf::Event& event) {
             m_text.setString(m_content);
             --m_carretIndex;
         }
-    } else if (std::isalpha(event.key.code) ||
-               event.key.code == ' ') {
+    } else if (std::isprint(event.key.code)) {
         if (m_maxLength > 0 && m_content.size() == m_maxLength) {
             return;
         }

@@ -53,6 +53,7 @@ void Living::_setDisplayName() {
     m_displayName.setString(m_name);
     m_displayName.setColor(sf::Color::White);
     m_displayName.setCharacterSize(12);
+    m_displayName.setStyle(sf::Text::Bold);
     m_displayName.setFont(font("arial.ttf"));
     //m_displayName.setStyle(sf::Text::Bold);
 
@@ -151,7 +152,10 @@ void Living::drawMessage(sf::RenderWindow& window) {
         sf::FloatRect textRect = m_speech.getLocalBounds();
         m_speech.setOrigin(textRect.left + (textRect.width/2.0),
                            textRect.top);
-        m_speech.setPosition((m_x - origin.x) + m_w/2.0, m_y - m_h);
+        m_speech.setPosition(
+            (m_x - origin.x) + m_w/2.0,
+            m_y - m_h - textRect.height
+        );
         m_messageRect.setPosition(
             m_speech.getPosition().x - 2,
             m_speech.getPosition().y - 2

@@ -19,6 +19,7 @@ Chatbox::Chatbox(std::shared_ptr<Widget> parent)
         .setBorderColor(sf::Color(103, 64, 38))
         .setRect(0, 720 - 30, 300, 30)
         .setContent("")
+        .setMaxLength(35)
         .setFont("arial.ttf");
 }
 
