@@ -16,6 +16,7 @@ public:
     bool handleEvent(const sf::Event &event) override;
     void addButton(std::shared_ptr<Button>);
     void setMessage(const std::string&);
+    void setSize(std::uint16_t, std::uint16_t) override;
 protected:
     sf::RectangleShape m_backgroundRectangle;
     std::shared_ptr<Label> m_message;

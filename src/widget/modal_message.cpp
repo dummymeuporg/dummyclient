@@ -6,7 +6,7 @@ ModalMessage::ModalMessage(Visual& parent)
     : Abstract::Widget(parent),
       m_message(std::make_shared<Label>(*this))
 {
-    m_backgroundRectangle.setSize(sf::Vector2f(500, 100));
+    setSize(500, 100);
     m_backgroundRectangle.setFillColor(sf::Color(183, 109, 44));
     m_backgroundRectangle.setOutlineColor(sf::Color(94, 47, 6));
     m_backgroundRectangle.setOutlineThickness(10);
@@ -15,6 +15,11 @@ ModalMessage::ModalMessage(Visual& parent)
         textRect.left + (textRect.width/2.0),
         textRect.top + (textRect.height/2.0)
     );
+}
+
+void ModalMessage::setSize(std::uint16_t width, std::uint16_t height) {
+    Widget::setSize(width, height);
+    m_backgroundRectangle.setSize(sf::Vector2f(width, height));
 }
 
 void ModalMessage::onDraw(sf::RenderWindow& window) {
@@ -28,23 +33,6 @@ void ModalMessage::onDraw(sf::RenderWindow& window) {
 
     window.draw(m_backgroundRectangle);
 
-    // draw the label
-    m_message->setOrigin(
-        messageRect.left + (messageRect.width / 2),
-        messageRect.top
-    );
-
-    // - 30 so the message gets a bit on the top of the rectangle.
-    m_message->setPos((windowSize.x/2), windowSize.y/2 - 30);
-
-
-    m_message->draw(window);
-
-    // Draw the buttons.
-    const auto& rectanglePos(m_backgroundRectangle.getPosition());
-    for (auto& button: m_buttons) {
-        button->draw(window);
-    }
 }
 
 bool ModalMessage::handleEvent(const sf::Event &event) {

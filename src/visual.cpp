@@ -10,6 +10,11 @@ void Visual::setPos(std::uint16_t x, std::uint16_t y) {
     m_y = y;
 }
 
+void Visual::setSize(std::uint16_t width, std::uint16_t height) {
+    m_width = width;
+    m_height = height;
+}
+
 void Visual::addChild(std::shared_ptr<Visual> child) {
     m_children.emplace(child);
 }

@@ -210,6 +210,7 @@ bool Textbox::handleEvent(const sf::Event& event) {
 
 Textbox& Textbox::setRect(int x, int y, int width, int height) {
     Widget::setPos(x, y);
+    Widget::setSize(width, height);
     m_shape.setPosition(x, y);
     m_shape.setSize(sf::Vector2f(width, height));
     return *this;

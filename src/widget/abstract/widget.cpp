@@ -26,6 +26,11 @@ void Widget::draw(sf::RenderWindow& window) {
     setPos(m_x + m_parent.x(), m_y + m_parent.y());
     onDraw(window);
     setPos(saveX, saveY);
+
+    // Draw the children.
+    for (auto& child: m_children) {
+        child->shared_from_this()->draw(window);
+    }
 }
 
 bool Widget::handleEvent(const sf::Event& event) {
