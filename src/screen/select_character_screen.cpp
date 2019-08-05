@@ -23,12 +23,12 @@ SelectCharacterScreen::SelectCharacterScreen(::Game& game,
                                              ::Client& client)
     : UIScreen(game, client),
       m_selectedCharacter(nullptr),
-      m_createCharacterButton(std::make_shared<Widget::Button>()),
-      m_playButton(std::make_shared<Widget::Button>()),
-      m_accountLabel(std::make_shared<Widget::Label>()),
-    m_charactersCountLabel(std::make_shared<Widget::Label>()),
-    m_skinPreviewer(std::make_shared<Widget::SkinPreviewer>()),
-    m_characterSelector(std::make_shared<Widget::CharacterSelector>())
+      m_createCharacterButton(std::make_shared<Widget::Button>(*this)),
+      m_playButton(std::make_shared<Widget::Button>(*this)),
+      m_accountLabel(std::make_shared<Widget::Label>(*this)),
+    m_charactersCountLabel(std::make_shared<Widget::Label>(*this)),
+    m_skinPreviewer(std::make_shared<Widget::SkinPreviewer>(*this)),
+    m_characterSelector(std::make_shared<Widget::CharacterSelector>(*this))
 {
     m_playButton->setPos(300, 200);
     m_playButton
@@ -166,9 +166,11 @@ void SelectCharacterScreen::_refreshCharactersList() {
     // Center the label
     sf::Text& caption(m_charactersCountLabel->caption());
     sf::FloatRect textRect = caption.getLocalBounds();
-    caption.setOrigin(textRect.left + textRect.width/2.0f,
-                      textRect.top  + textRect.height/2.0f);
-    caption.setPosition(m_game.width()/2, m_game.height()/2);
+    m_charactersCountLabel->setOrigin(
+        textRect.left + textRect.width/2.0f,
+        textRect.top  + textRect.height/2.0f
+    );
+    m_charactersCountLabel->setPos(m_game.width()/2, m_game.height()/2);
 }
 
 void SelectCharacterScreen::visitResponse(

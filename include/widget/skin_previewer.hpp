@@ -6,9 +6,8 @@ namespace Widget {
 
 class SkinPreviewer : public Abstract::Widget {
 public:
-    SkinPreviewer(std::vector<std::string> = {},
-                  std::shared_ptr<Widget> = nullptr);
-    virtual void paint(sf::RenderWindow&) override;
+    SkinPreviewer(Visual&, std::vector<std::string> = {});
+    virtual void onDraw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
     void showNextSkin();
     void showPreviousSkin();

@@ -6,14 +6,14 @@ namespace Widget {
 
 class Button : public Label {
 public:
-    Button(std::shared_ptr<Widget> = nullptr);
-    virtual void paint(sf::RenderWindow&) override;
+    Button(Visual&);
+    virtual void onDraw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
     Button& setBackgroundColor(const sf::Color&);
     Button& setBorderColor(const sf::Color&);
 	Button& setCaption(const std::string&);
     Button& setEnabled(bool enabled);
-    Button& setPos(int x, int y);
+    virtual void setPos(int x, int y);
     bool enabled() const {
         return m_isEnabled;
     }

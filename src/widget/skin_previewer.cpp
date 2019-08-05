@@ -3,8 +3,8 @@
 
 namespace Widget {
 
-SkinPreviewer::SkinPreviewer(std::vector<std::string> skinList,
-                             std::shared_ptr<Widget> parent)
+SkinPreviewer::SkinPreviewer(Visual& parent,
+                             std::vector<std::string> skinList)
     : Widget(parent),
       m_currentSkinIndex(0),
       m_skinList(std::move(skinList))
@@ -17,7 +17,7 @@ SkinPreviewer& SkinPreviewer::setPos(int x, int y) {
     return *this;
 }
 
-void SkinPreviewer::paint(sf::RenderWindow& window) {
+void SkinPreviewer::onDraw(sf::RenderWindow& window) {
     // draw the sprite
     if (m_currentSkinIndex >= 0 && m_currentSkinIndex < m_skinList.size())
     {

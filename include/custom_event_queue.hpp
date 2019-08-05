@@ -3,6 +3,8 @@
 #include <queue>
 #include <dummy/utils/singleton.hpp>
 
+class Visual;
+
 class CustomEvent {
 public:
 
@@ -29,13 +31,13 @@ public:
         Count
     };
 
-    CustomEvent(void* = nullptr, Type = None, void* = nullptr);
+    CustomEvent(Visual* = nullptr, Type = None, Visual* = nullptr);
 
-    void* source() const {
+    Visual* source() const {
         return m_eventSource;
     }
 
-    void* target() const {
+    Visual* target() const {
         return m_eventTarget;
     }
 
@@ -44,9 +46,9 @@ public:
     }
 
 private:
-    void* m_eventSource;
+    Visual* m_eventSource;
     Type m_type;
-    void* m_eventTarget;
+    Visual* m_eventTarget;
 
 };
 

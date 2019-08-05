@@ -22,10 +22,11 @@ CreateCharacterScreen::CreateCharacterScreen(
     )
     : UIScreen(game, client),
       m_characters(characters),
-      m_characterNameLabel(std::make_shared<Widget::Label>()),
-      m_characterNameTextbox(std::make_shared<Widget::Textbox>()),
-      m_characterSkinLabel(std::make_shared<Widget::Label>()),
+      m_characterNameLabel(std::make_shared<Widget::Label>(*this)),
+      m_characterNameTextbox(std::make_shared<Widget::Textbox>(*this)),
+      m_characterSkinLabel(std::make_shared<Widget::Label>(*this)),
       m_skinPreviewer(std::make_shared<Widget::SkinPreviewer>(
+          *this,
           std::vector<std::string>({"Avanta.png",
                                     "bluewarrior.png",
                                     "Cyana.png",
@@ -35,10 +36,10 @@ CreateCharacterScreen::CreateCharacterScreen(
                                     "WhiteScale.png",
                                     "WhiteScale2.png"})
       )),
-      m_leftSkinButton(std::make_shared<Widget::Button>()),
-      m_rightSkinButton(std::make_shared<Widget::Button>()),
-      m_createCharacterButton(std::make_shared<Widget::Button>()),
-      m_cancelButton(std::make_shared<Widget::Button>())
+      m_leftSkinButton(std::make_shared<Widget::Button>(*this)),
+      m_rightSkinButton(std::make_shared<Widget::Button>(*this)),
+      m_createCharacterButton(std::make_shared<Widget::Button>(*this)),
+      m_cancelButton(std::make_shared<Widget::Button>(*this))
 {
     m_characterNameLabel
         ->setCaption("Name: ")
@@ -182,9 +183,9 @@ void CreateCharacterScreen::visitResponse(
         m_characters.push_back(createCharacter.character());
         pushEvent(
             ::CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
+                this,
                 CustomEvent::CharacterCreated,
-                reinterpret_cast<void*>(shared_from_this().get())
+                this
             )
         );
         break;

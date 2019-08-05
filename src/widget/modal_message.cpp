@@ -2,9 +2,9 @@
 
 namespace Widget {
 
-ModalMessage::ModalMessage(std::shared_ptr<Widget> parent)
+ModalMessage::ModalMessage(Visual& parent)
     : Abstract::Widget(parent),
-      m_message(std::make_shared<Label>())
+      m_message(std::make_shared<Label>(*this))
 {
     m_backgroundRectangle.setSize(sf::Vector2f(500, 100));
     m_backgroundRectangle.setFillColor(sf::Color(183, 109, 44));
@@ -17,7 +17,7 @@ ModalMessage::ModalMessage(std::shared_ptr<Widget> parent)
     );
 }
 
-void ModalMessage::paint(sf::RenderWindow& window) {
+void ModalMessage::onDraw(sf::RenderWindow& window) {
     // XXX: draw a centered rectangle.
     const auto& windowSize(window.getSize());
 
@@ -38,12 +38,12 @@ void ModalMessage::paint(sf::RenderWindow& window) {
     m_message->setPos((windowSize.x/2), windowSize.y/2 - 30);
 
 
-    m_message->paint(window);
+    m_message->draw(window);
 
     // Draw the buttons.
     const auto& rectanglePos(m_backgroundRectangle.getPosition());
     for (auto& button: m_buttons) {
-        button->paint(window);
+        button->draw(window);
     }
 }
 

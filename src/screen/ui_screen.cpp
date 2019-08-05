@@ -20,19 +20,26 @@ UIScreen& UIScreen::addWidget(std::shared_ptr<Widget::Abstract::Widget> widget)
     return *this;
 }
 
-void UIScreen::draw() {
+void UIScreen::draw(sf::RenderWindow& window) {
+    /*
     for (const auto& widget: m_widgets) {
-        widget->paint(m_game.window());
+        widget->draw(window);
+    }
+    */
+    for (auto& child: m_children) {
+        auto self(child->shared_from_this());
+        self->draw(window);
     }
 }
 
-void UIScreen::handleEvent(const sf::Event& event)
+bool UIScreen::handleEvent(const sf::Event& event)
 {
     for(const auto& widget: m_widgets) {
         if(!widget->handleEvent(event)) {
             break;
         }
     }
+    return true;
 }
 
 void UIScreen::handleCustomEvent(const ::CustomEvent& event) {

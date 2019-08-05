@@ -3,16 +3,18 @@
 
 namespace Widget {
 
-Button::Button(std::shared_ptr<Widget> parent)
+Button::Button(Visual& parent)
     : Label(parent),
-      m_isHovered(false), m_isPushed(false), m_isEnabled(true)
+      m_isHovered(false),
+      m_isPushed(false),
+      m_isEnabled(true)
 {    
 }
 
-void Button::paint(sf::RenderWindow& window) {
+void Button::onDraw(sf::RenderWindow& window) {
     // First paint the background, then the label
     window.draw(m_buttonBackground);
-    Label::paint(window);
+    Label::onDraw(window);
 }
 
 bool Button::_onMouseMoved(const sf::Event& event)
@@ -104,11 +106,7 @@ bool Button::_onMouseButtonReleased(const sf::Event& event) {
                 )
             );
             pushEvent(
-                CustomEvent(
-                    reinterpret_cast<void*>(shared_from_this().get()),
-                    CustomEvent::ButtonClicked,
-                    reinterpret_cast<void*>(shared_from_this().get())
-                )
+                CustomEvent(this, CustomEvent::ButtonClicked, this)
             );
             forwardEvent = false;
         }
@@ -161,10 +159,9 @@ Button& Button::setEnabled(bool enabled) {
     return *this;
 }
 
-Button& Button::setPos(int x, int y) {
+void Button::setPos(int x, int y) {
     Label::setPos(x, y);
     adjustRectangle();
-    return *this;
 }
 
 void Button::adjustRectangle() {

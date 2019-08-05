@@ -1,6 +1,6 @@
 #include "custom_event_queue.hpp"
 
-CustomEvent::CustomEvent(void* source, Type type, void* target) :
+CustomEvent::CustomEvent(Visual* source, Type type, Visual* target) :
     m_eventSource(source), m_type(type), m_eventTarget(target)
 {
 }

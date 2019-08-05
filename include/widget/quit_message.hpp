@@ -7,7 +7,7 @@ namespace Widget {
 
 class QuitMessage : public ModalMessage {
 public:
-    QuitMessage(std::shared_ptr<Abstract::Widget> = nullptr);
+    QuitMessage(Visual&);
 private:
     std::shared_ptr<Button> m_quitButton;
     std::shared_ptr<Button> m_changeCharacterButton;

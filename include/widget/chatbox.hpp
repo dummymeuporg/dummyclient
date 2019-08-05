@@ -8,8 +8,8 @@ class Textbox;
 
 class Chatbox : public Abstract::Widget {
 public:
-    Chatbox(std::shared_ptr<Widget> = nullptr);
-    void paint(sf::RenderWindow&) override;
+    Chatbox(Visual&);
+    void onDraw(sf::RenderWindow&) override;
     bool handleEvent(const sf::Event& event) override;
     void handleCustomEvent(const ::CustomEvent& event) override;
     const std::string& typedMessage() const;

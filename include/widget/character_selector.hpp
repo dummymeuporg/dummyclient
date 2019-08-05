@@ -10,10 +10,10 @@ class CharacterSelector : public Abstract::Widget {
 public:
     using CharactersList =
         std::vector<std::shared_ptr<Dummy::Core::Character>>;
-    CharacterSelector(std::shared_ptr<Widget> = nullptr);
-    virtual void paint(sf::RenderWindow&) override;
+    CharacterSelector(Visual& parent);
+    void onDraw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
-    CharacterSelector& setPos(std::uint16_t, std::uint16_t);
+    void setPos(std::uint16_t, std::uint16_t) override;
     CharacterSelector& setCharacters(const CharactersList&);
     const CharactersList& characters() const {
         return m_characters;

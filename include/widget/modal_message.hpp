@@ -11,8 +11,8 @@ namespace Widget {
 
 class ModalMessage : public Abstract::Widget {
 public:
-    ModalMessage(std::shared_ptr<Widget> = nullptr);
-    void paint(sf::RenderWindow&) override;
+    ModalMessage(Visual&);
+    void onDraw(sf::RenderWindow&) override;
     bool handleEvent(const sf::Event &event) override;
     void addButton(std::shared_ptr<Button>);
     void setMessage(const std::string&);
