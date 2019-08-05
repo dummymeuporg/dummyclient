@@ -9,7 +9,9 @@
 #include <dummy/server/response/message.hpp>
 #include <dummy/server/response/ping.hpp>
 
+#include "widget/button.hpp"
 #include "widget/chatbox.hpp"
+#include "widget/quit_message.hpp"
 
 #include "client.hpp"
 #include "game.hpp"
@@ -56,7 +58,9 @@ GameScreen::GameScreen(
       m_debugMode(false),
       m_chatbox(std::make_shared<Widget::Chatbox>()),
       m_isTypingMessage(false),
-      m_isEnterKeyPressed(false)
+      m_isEnterKeyPressed(false),
+      m_isEscapeKeyPressed(false),
+      m_isEscapeMode(false)
 {
     m_player.setX(m_client.character()->position().first * 8);
     m_player.setY(m_client.character()->position().second * 8);
@@ -89,6 +93,9 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
         m_player.changeState(
             std::make_shared<Graphics::LivingState::StandingState>(m_player)
         );
+        break;
+    case CustomEvent::Type::EscapeKeyPressed:
+        toggleEscapeMode();
         break;
     default:
         break;
@@ -240,6 +247,11 @@ void GameScreen::onKeyReleased(const sf::Event& event) {
         // Forward the event to the chatbox.
         m_chatbox->handleEvent(event);
     }
+
+    // XXX: same as above. I should use a fancy state pattern.
+    if (m_isEscapeKeyPressed) {
+        m_isEscapeKeyPressed = false;
+    }
 }
 
 void GameScreen::onTextEntered(const sf::Event& event) {
@@ -267,6 +279,18 @@ void GameScreen::onTextEntered(const sf::Event& event) {
             }
             m_isTypingMessage = !m_isTypingMessage;
         }
+    } else if ('\033' == event.text.unicode) {
+        std::cerr << "Escape pressed" << std::endl;
+        if (!m_isEscapeKeyPressed) {
+            pushEvent(
+                ::CustomEvent(
+                    reinterpret_cast<void*>(shared_from_this().get()),
+                    CustomEvent::EscapeKeyPressed,
+                    reinterpret_cast<void*>(shared_from_this().get())
+                )
+            );
+            m_isEscapeKeyPressed = true;
+        }
     } else if (m_isTypingMessage) {
         // Forward the event to the chatbox.
         m_chatbox->handleEvent(event);
@@ -291,6 +315,21 @@ void GameScreen::drawSprites(Sprites& sprites) {
             }
         }
     }
+}
+
+void GameScreen::toggleEscapeMode() {
+    if (!m_isEscapeMode) {
+        // Instantiate the modal message. Display it.
+        buildEscapeMessage();
+    } else {
+        // Remove the modal message.
+        m_quitMessage.reset();
+    }
+    m_isEscapeMode = !m_isEscapeMode;
+}
+
+void GameScreen::buildEscapeMessage() {
+    m_quitMessage = std::make_shared<Widget::QuitMessage>();
 }
 
 void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
@@ -354,6 +393,11 @@ void GameScreen::draw() {
     }
     // Draw widgets (HUD) if needed.
     m_game.window().setView(m_hudView);
+
+    // XXX: ugly.
+    if (m_isEscapeMode) {
+        m_quitMessage->paint(m_game.window());
+    }
     UIScreen::draw();
 
 }

@@ -152,29 +152,35 @@ Button& Button::setBorderColor(const sf::Color& color) {
 Button& Button::setCaption(const std::string& caption) {
     std::cerr << "Button set caption" << std::endl;
     Label::setCaption(caption);
-    sf::FloatRect textRect = m_caption.getLocalBounds();
-    textRect.left -= 10;
-    textRect.top -= 10;
-    textRect.width += 20;
-    textRect.height += 20;
-    
-    sf::Vector2f labelPos = m_caption.getPosition();
-
-    std::cerr << "Size: " << textRect.width << " " << textRect.height
-        << std::endl;
-    std::cerr << "Coords: " << labelPos.x << " " << labelPos.y << std::endl;
-
-    m_buttonBackground.setSize(sf::Vector2f(textRect.width, textRect.height));
-    m_buttonBackground.setPosition(
-        sf::Vector2f(labelPos.x + textRect.left,
-                     labelPos.y + textRect.top)
-    );
+    adjustRectangle();
     return *this;
 }
 
 Button& Button::setEnabled(bool enabled) {
     m_isEnabled = enabled;
     return *this;
+}
+
+Button& Button::setPos(int x, int y) {
+    Label::setPos(x, y);
+    adjustRectangle();
+    return *this;
+}
+
+void Button::adjustRectangle() {
+    sf::FloatRect textRect = m_caption.getLocalBounds();
+    textRect.left -= 10;
+    textRect.top -= 10;
+    textRect.width += 20;
+    textRect.height += 20;
+
+    sf::Vector2f labelPos = m_caption.getPosition();
+
+    m_buttonBackground.setSize(sf::Vector2f(textRect.width, textRect.height));
+    m_buttonBackground.setPosition(
+        sf::Vector2f(labelPos.x + textRect.left,
+                     labelPos.y + textRect.top)
+    );
 }
 
 } // namespace Widget

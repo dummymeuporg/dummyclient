@@ -24,6 +24,7 @@ public:
         MovementActive,
         MovementInactive,
         EnterKeyPressed,
+        EscapeKeyPressed,
 
         Count
     };

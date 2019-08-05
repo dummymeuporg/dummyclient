@@ -13,13 +13,18 @@ public:
     Button& setBorderColor(const sf::Color&);
 	Button& setCaption(const std::string&);
     Button& setEnabled(bool enabled);
+    Button& setPos(int x, int y);
     bool enabled() const {
         return m_isEnabled;
+    }
+    sf::FloatRect getLocalBounds() const {
+        return m_buttonBackground.getLocalBounds();
     }
 private:
     bool _onMouseMoved(const sf::Event&);
     bool _onMouseButtonPressed(const sf::Event&);
     bool _onMouseButtonReleased(const sf::Event&);
+    void adjustRectangle();
     sf::RectangleShape m_buttonBackground;
     bool m_isHovered;
     bool m_isPushed;

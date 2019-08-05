@@ -18,12 +18,17 @@ public:
         return m_caption;
     }
 
+    sf::FloatRect getLocalBounds() const {
+        return m_caption.getLocalBounds();
+    }
+
     Label& setCaption(const std::string&);
     Label& setFontSize(int);
     Label& setColor(const sf::Color&);
     Label& setStyle(int);
     Label& setFont(const std::string&);
     Label& setPos(int, int);
+    Label& setOrigin(float, float);
 protected:
     /*
     std::string m_caption;

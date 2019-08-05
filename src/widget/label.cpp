@@ -31,6 +31,7 @@ Label& Label::setFont(const std::string& fontName) {
 }
 
 Label& Label::setPos(int x, int y) {
+    Widget::setPos(x, y);
     m_caption.setPosition(x, y);
     return *this;
 }
@@ -41,6 +42,11 @@ void Label::paint(sf::RenderWindow& window) {
 
 bool Label::handleEvent(const sf::Event& event) {
     return true;
+}
+
+Label& Label::setOrigin(float x, float y) {
+    m_caption.setOrigin(x, y);
+    return *this;
 }
 
 } // namespace Widget

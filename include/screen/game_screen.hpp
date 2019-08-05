@@ -12,6 +12,7 @@ class Game;
 
 namespace Widget {
 class Chatbox;
+class QuitMessage;
 } // namespace Widget
 
 namespace Screen {
@@ -60,6 +61,8 @@ private:
     void drawLevelView(unsigned int, LevelView&);
     void drawBlockingLayer(unsigned int, LevelView&);
     void drawSprites(Sprites&);
+    void toggleEscapeMode();
+    void buildEscapeMessage();
 
     /* Private attributes. */
     std::unique_ptr<::MapView> m_mapView;
@@ -81,6 +84,11 @@ private:
     // managed by a bool should be, well, better handled.
     bool m_isTypingMessage;
     bool m_isEnterKeyPressed;
+
+    // XXX: same as above.
+    bool m_isEscapeKeyPressed;
+    bool m_isEscapeMode;
+    std::shared_ptr<Widget::QuitMessage> m_quitMessage;
 };
 
 } // namespace Screen

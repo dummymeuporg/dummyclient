@@ -32,7 +32,7 @@ public:
     std::shared_ptr<Widget> parent() const {
         return m_parent;
     }
-private:
+protected:
     std::shared_ptr<Widget> m_parent;
     ::ResourceProvider& m_resourceProvider;
     ::CustomEventQueue& m_eventQueue;
