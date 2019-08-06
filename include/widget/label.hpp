@@ -6,8 +6,8 @@ namespace Widget {
 
 class Label : public Abstract::Widget {
 public:
-    Label(std::shared_ptr<Widget> = nullptr);
-    virtual void paint(sf::RenderWindow&) override;
+    Label(Visual&);
+    virtual void draw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
 
     const sf::Text& caption() const {
@@ -27,17 +27,9 @@ public:
     Label& setColor(const sf::Color&);
     Label& setStyle(int);
     Label& setFont(const std::string&);
-    Label& setPos(int, int);
+    void setPos(std::uint16_t, std::uint16_t) override;
     Label& setOrigin(float, float);
 protected:
-    /*
-    std::string m_caption;
-    int m_fontSize;
-    sf::Color m_color;
-    std::uint32_t style;
-    std::string m_font;
-*/
-
     sf::Text m_caption;
 };
 

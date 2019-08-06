@@ -11,11 +11,12 @@ namespace Widget {
 
 class ModalMessage : public Abstract::Widget {
 public:
-    ModalMessage(std::shared_ptr<Widget> = nullptr);
-    void paint(sf::RenderWindow&) override;
-    bool handleEvent(const sf::Event &event) override;
+    ModalMessage(Visual&, const std::string&);
+    void draw(sf::RenderWindow&) override;
     void addButton(std::shared_ptr<Button>);
     void setMessage(const std::string&);
+    void setSize(std::uint16_t, std::uint16_t) override;
+    void setPos(std::uint16_t, std::uint16_t) override;
 protected:
     sf::RectangleShape m_backgroundRectangle;
     std::shared_ptr<Label> m_message;

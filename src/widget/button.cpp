@@ -3,22 +3,25 @@
 
 namespace Widget {
 
-Button::Button(std::shared_ptr<Widget> parent)
+Button::Button(Visual& parent)
     : Label(parent),
-      m_isHovered(false), m_isPushed(false), m_isEnabled(true)
+      m_isHovered(false),
+      m_isPushed(false),
+      m_isEnabled(true)
 {    
 }
 
-void Button::paint(sf::RenderWindow& window) {
+void Button::draw(sf::RenderWindow& window) {
     // First paint the background, then the label
     window.draw(m_buttonBackground);
-    Label::paint(window);
+    Label::draw(window);
 }
 
 bool Button::_onMouseMoved(const sf::Event& event)
 {
     bool forwardEvent = true;
-    sf::Vector2f labelPos = m_caption.getPosition();
+    const auto& origin(m_caption.getOrigin());
+    sf::Vector2f labelPos(m_x - origin.x, m_y - origin.y);
     sf::FloatRect textRect = m_caption.getLocalBounds();
     sf::Color bgColor = m_buttonBackground.getFillColor();
     int deltaR = 10, deltaG = 10, deltaB = 10;
@@ -104,11 +107,7 @@ bool Button::_onMouseButtonReleased(const sf::Event& event) {
                 )
             );
             pushEvent(
-                CustomEvent(
-                    reinterpret_cast<void*>(shared_from_this().get()),
-                    CustomEvent::ButtonClicked,
-                    reinterpret_cast<void*>(shared_from_this().get())
-                )
+                CustomEvent(this, CustomEvent::ButtonClicked, this)
             );
             forwardEvent = false;
         }
@@ -161,10 +160,9 @@ Button& Button::setEnabled(bool enabled) {
     return *this;
 }
 
-Button& Button::setPos(int x, int y) {
+void Button::setPos(int x, int y) {
     Label::setPos(x, y);
     adjustRectangle();
-    return *this;
 }
 
 void Button::adjustRectangle() {
@@ -182,5 +180,12 @@ void Button::adjustRectangle() {
                      labelPos.y + textRect.top)
     );
 }
+
+Button& Button::setOrigin(float x, float y) {
+    Label::setOrigin(x, y);
+    m_buttonBackground.setOrigin(x, y);
+    return *this;
+}
+
 
 } // namespace Widget

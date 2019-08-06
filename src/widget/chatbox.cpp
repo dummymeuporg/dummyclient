@@ -7,9 +7,10 @@ namespace fs = std::filesystem;
 
 namespace Widget {
 
-Chatbox::Chatbox(std::shared_ptr<Widget> parent)
-    : m_messageInputTextbox(std::make_shared<Textbox>()),
-      m_isTypingMessage(false)
+Chatbox::Chatbox(Visual& parent)
+    : Widget(parent),
+      m_isTypingMessage(false),
+      m_messageInputTextbox(std::make_shared<Textbox>(*this))
 {
     m_messageInputTextbox
         ->setFontSize(18)
@@ -23,8 +24,8 @@ Chatbox::Chatbox(std::shared_ptr<Widget> parent)
         .setFont("arial.ttf");
 }
 
-void Chatbox::paint(sf::RenderWindow& window) {
-    m_messageInputTextbox->paint(window);
+void Chatbox::draw(sf::RenderWindow& window) {
+    m_messageInputTextbox->draw(window);
 }
 
 bool Chatbox::handleEvent(const sf::Event& event) {
@@ -32,7 +33,7 @@ bool Chatbox::handleEvent(const sf::Event& event) {
     if (m_isTypingMessage) {
         forwardEvent = m_messageInputTextbox->handleEvent(event);
     }
-    return false;
+    return forwardEvent;
 }
 
 void Chatbox::handleCustomEvent(const ::CustomEvent& event) {
@@ -43,20 +44,12 @@ void Chatbox::handleCustomEvent(const ::CustomEvent& event) {
         if (!m_isTypingMessage) {
             // XXX: Ugly (for now): simulate a SetFocus to the textbox.
             m_messageInputTextbox->handleCustomEvent(
-                ::CustomEvent(
-                    reinterpret_cast<void*>(shared_from_this().get()),
-                    CustomEvent::Type::SetFocus,
-                    reinterpret_cast<void*>(m_messageInputTextbox.get())
-                )
+                ::CustomEvent(this, CustomEvent::Type::SetFocus, this)
             );
             m_isTypingMessage = true;
         } else {
             m_messageInputTextbox->handleCustomEvent(
-                ::CustomEvent(
-                    reinterpret_cast<void*>(shared_from_this().get()),
-                    CustomEvent::Type::ReleaseFocus,
-                    reinterpret_cast<void*>(m_messageInputTextbox.get())
-                )
+                ::CustomEvent(this, CustomEvent::Type::ReleaseFocus, this)
             );
             m_isTypingMessage = false;
         }

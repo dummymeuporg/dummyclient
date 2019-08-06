@@ -7,8 +7,8 @@ namespace Widget {
 
 class Textbox : public Abstract::Widget {
 public:
-    Textbox(std::shared_ptr<Widget> = nullptr);
-    virtual void paint(sf::RenderWindow&) override;
+    Textbox(Visual&);
+    virtual void draw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
     virtual void handleCustomEvent(const ::CustomEvent& event) override;
     Textbox& setRect(int, int, int, int);

@@ -4,7 +4,7 @@
 
 namespace Widget {
 
-Textbox::Textbox(std::shared_ptr<Widget> parent)
+Textbox::Textbox(Visual& parent)
     : Widget(parent),
       m_maxLength(-1),
       m_isHovered(false),
@@ -16,7 +16,7 @@ Textbox::Textbox(std::shared_ptr<Widget> parent)
     m_shape.setOutlineThickness(5);
 }
 
-void Textbox::paint(sf::RenderWindow& renderWindow) {
+void Textbox::draw(sf::RenderWindow& renderWindow) {
     int delta = 30;
     sf::Color backgroundColor(m_shape.getFillColor());
     if (m_isFocused) {
@@ -155,23 +155,11 @@ bool Textbox::_onMouseButtonPressed(const sf::Event& event) {
     // release the handle.
     if(!m_isHovered && m_isFocused) {
         std::cerr << "Release for focus." << std::endl;
-        pushEvent(
-            ::CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
-                CustomEvent::ReleaseFocus,
-                reinterpret_cast<void*>(shared_from_this().get())
-            )
-        );
+        pushEvent(::CustomEvent(this, CustomEvent::ReleaseFocus, this));
         return forwardEvent;
     } else if (event.mouseButton.button == sf::Mouse::Left && m_isHovered) {
         // Send a focus message.
-        pushEvent(
-            ::CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
-                CustomEvent::SetFocus,
-                reinterpret_cast<void*>(shared_from_this().get())
-            )
-        );
+        pushEvent(::CustomEvent(this, CustomEvent::SetFocus, this));
         forwardEvent = false;
     }
     return forwardEvent;
@@ -221,6 +209,8 @@ bool Textbox::handleEvent(const sf::Event& event) {
 }
 
 Textbox& Textbox::setRect(int x, int y, int width, int height) {
+    Widget::setPos(x, y);
+    Widget::setSize(width, height);
     m_shape.setPosition(x, y);
     m_shape.setSize(sf::Vector2f(width, height));
     return *this;

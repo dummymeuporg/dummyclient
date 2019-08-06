@@ -34,9 +34,9 @@ public:
                std::unique_ptr<::MapView>);
     virtual ~GameScreen();
     void loaded() override;
-    void handleEvent(const sf::Event&) override;
+    bool handleEvent(const sf::Event&) override;
     void handleCustomEvent(const ::CustomEvent&) override;
-    void draw() override;
+    void draw(sf::RenderWindow&) override;
     void tick() override;
 
     void
@@ -63,6 +63,7 @@ private:
     void drawSprites(Sprites&);
     void toggleEscapeMode();
     void buildEscapeMessage();
+    void removeEscapeMessage();
 
     /* Private attributes. */
     std::unique_ptr<::MapView> m_mapView;

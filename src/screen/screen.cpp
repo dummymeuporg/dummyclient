@@ -1,5 +1,6 @@
 #include "client.hpp"
 
+#include "game.hpp"
 #include "screen/screen.hpp"
 
 namespace Screen {

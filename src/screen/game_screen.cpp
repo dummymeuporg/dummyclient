@@ -48,19 +48,20 @@ GameScreen::GameScreen(
 	  m_isMoving(false),
       m_mapState(*m_mapView),
       m_gameView(sf::FloatRect(0,
-                           0,
-                           m_game.width(),
-                           m_game.height())),
+                               0,
+                               m_game.width(),
+                               m_game.height())),
       m_hudView(sf::FloatRect(0,
                               0,
                               m_game.width(),
                               m_game.height())),
       m_debugMode(false),
-      m_chatbox(std::make_shared<Widget::Chatbox>()),
+      m_chatbox(std::make_shared<Widget::Chatbox>(*this)),
       m_isTypingMessage(false),
       m_isEnterKeyPressed(false),
       m_isEscapeKeyPressed(false),
-      m_isEscapeMode(false)
+      m_isEscapeMode(false),
+      m_quitMessage(nullptr)
 {
     m_player.setX(m_client.character()->position().first * 8);
     m_player.setY(m_client.character()->position().second * 8);
@@ -103,8 +104,11 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
 
 }
 
-void GameScreen::handleEvent(const sf::Event& event)
-{
+bool GameScreen::handleEvent(const sf::Event& event) {
+    bool forward = UIScreen::handleEvent(event);
+    if (!forward) {
+        return forward;
+    }
     switch(event.type) {
     case sf::Event::KeyPressed:
         onKeyPressed(event);
@@ -118,6 +122,7 @@ void GameScreen::handleEvent(const sf::Event& event)
     default:
         break;
     }
+    return true;
 }
 
 void GameScreen::onArrowReleased() {
@@ -129,9 +134,9 @@ void GameScreen::onArrowReleased() {
 	{
         pushEvent(
             CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
+                this,
                 CustomEvent::MovementInactive,
-                reinterpret_cast<void*>(shared_from_this().get())
+                this
             )
         );
         m_isArrowPressed = false;
@@ -143,9 +148,9 @@ void GameScreen::onArrowPressed() {
     if (!m_isArrowPressed) {
         pushEvent(
             CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
+                this,
                 CustomEvent::MovementActive,
-                reinterpret_cast<void*>(shared_from_this().get())
+                this
             )
         );
         m_isArrowPressed = true;
@@ -202,13 +207,7 @@ void GameScreen::onKeyPressed(const sf::Event& event) {
 	}
 
 	if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
-		pushEvent(
-			CustomEvent(
-				reinterpret_cast<void*>(shared_from_this().get()),
-				CustomEvent::MovementActive,
-				reinterpret_cast<void*>(shared_from_this().get())
-			)
-		);
+        pushEvent(CustomEvent(this, CustomEvent::MovementActive, this));
 		m_isMoving = true;
 	}
 }
@@ -232,13 +231,7 @@ void GameScreen::onKeyReleased(const sf::Event& event) {
 	}
 
 	if (m_characterDirection == DIRECTION_NONE && m_isMoving) {
-		pushEvent(
-			CustomEvent(
-				reinterpret_cast<void*>(shared_from_this().get()),
-				CustomEvent::MovementInactive,
-				reinterpret_cast<void*>(shared_from_this().get())
-			)
-		);
+        pushEvent(::CustomEvent(this, CustomEvent::MovementInactive, this));
 		m_isMoving = false;
 	}
 
@@ -257,13 +250,11 @@ void GameScreen::onKeyReleased(const sf::Event& event) {
 void GameScreen::onTextEntered(const sf::Event& event) {
     if ('\r' == event.text.unicode) {
         if (!m_isEnterKeyPressed) {
-            pushEvent(
-                ::CustomEvent(
-                    reinterpret_cast<void*>(shared_from_this().get()),
-                    CustomEvent::EnterKeyPressed,
-                    reinterpret_cast<void*>(m_chatbox.get())
-                )
-            );
+            pushEvent(::CustomEvent(
+                this,
+                CustomEvent::EnterKeyPressed,
+                m_chatbox.get()
+            ));
             m_isEnterKeyPressed = true;
             if (m_isTypingMessage) {
                 // XXX: Get message and send it.
@@ -283,11 +274,7 @@ void GameScreen::onTextEntered(const sf::Event& event) {
         std::cerr << "Escape pressed" << std::endl;
         if (!m_isEscapeKeyPressed) {
             pushEvent(
-                ::CustomEvent(
-                    reinterpret_cast<void*>(shared_from_this().get()),
-                    CustomEvent::EscapeKeyPressed,
-                    reinterpret_cast<void*>(shared_from_this().get())
-                )
+                ::CustomEvent(this, CustomEvent::EscapeKeyPressed, this)
             );
             m_isEscapeKeyPressed = true;
         }
@@ -323,13 +310,18 @@ void GameScreen::toggleEscapeMode() {
         buildEscapeMessage();
     } else {
         // Remove the modal message.
-        m_quitMessage.reset();
+        //m_quitMessage.reset();
+        removeEscapeMessage();
     }
     m_isEscapeMode = !m_isEscapeMode;
 }
 
 void GameScreen::buildEscapeMessage() {
-    m_quitMessage = std::make_shared<Widget::QuitMessage>();
+    m_quitMessage = std::make_shared<Widget::QuitMessage>(*this);
+}
+
+void GameScreen::removeEscapeMessage() {
+    removeChild(m_quitMessage);
 }
 
 void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
@@ -385,21 +377,20 @@ void GameScreen::drawLivings(std::uint8_t index) {
     }
 }
 
-void GameScreen::draw() {
-    m_game.window().setView(m_gameView);
+void GameScreen::draw(sf::RenderWindow& window) {
+    window.setView(m_gameView);
     m_gameView.setCenter(m_player.x() + 12, m_player.y() + 16);
     for (unsigned i = 0; i < m_mapView->levelViews().size(); ++i) {
         drawLevelView(i, m_mapView->levelView(i));
     }
     // Draw widgets (HUD) if needed.
-    m_game.window().setView(m_hudView);
+    window.setView(m_hudView);
 
     // XXX: ugly.
     if (m_isEscapeMode) {
-        m_quitMessage->paint(m_game.window());
+        m_quitMessage->draw(window);
     }
-    UIScreen::draw();
-
+    UIScreen::draw(window);
 }
 
 void GameScreen::tick() {

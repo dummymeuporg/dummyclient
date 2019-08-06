@@ -5,6 +5,7 @@
 
 #include <dummy/server/response/response_visitor.hpp>
 #include "game_element.hpp"
+#include "visual.hpp"
 
 class CustomEvent;
 class Client;
@@ -20,15 +21,12 @@ class Response;
 
 namespace Screen {
 
-class Screen : public std::enable_shared_from_this<Screen>,
-               public ::GameElement,
+class Screen : public ::Visual,
                public Dummy::Server::Response::ResponseVisitor
 {
 public:
     Screen(::Game&, ::Client&);
     virtual ~Screen();
-    virtual void handleEvent(const sf::Event&) = 0;
-    virtual void draw() = 0;
     virtual void tick();
     virtual void loaded();
     virtual void returned();

@@ -2,7 +2,7 @@
 
 namespace Widget {
 
-Label::Label(std::shared_ptr<Widget> parent)
+Label::Label(Visual& parent)
     : Widget(parent) {}
 
 Label& Label::setCaption(const std::string& caption) {
@@ -30,13 +30,12 @@ Label& Label::setFont(const std::string& fontName) {
     return *this;
 }
 
-Label& Label::setPos(int x, int y) {
+void Label::setPos(std::uint16_t x, std::uint16_t y) {
     Widget::setPos(x, y);
-    m_caption.setPosition(x, y);
-    return *this;
+    m_caption.setPosition(m_x, m_y);
 }
 
-void Label::paint(sf::RenderWindow& window) {
+void Label::draw(sf::RenderWindow& window) {
     window.draw(m_caption);
 }
 

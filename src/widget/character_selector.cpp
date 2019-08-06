@@ -6,13 +6,15 @@ namespace fs = std::filesystem;
 
 namespace Widget {
 
-CharacterSelector::CharacterSelector(std::shared_ptr<Widget> parent)
-    : m_selectedCharacter(-1), m_backgroundColor(sf::Color(100, 100, 100))
+CharacterSelector::CharacterSelector(Visual& parent)
+    : Widget(parent),
+      m_selectedCharacter(-1),
+      m_backgroundColor(sf::Color(100, 100, 100))
 {
 }
 
-CharacterSelector& CharacterSelector::setPos(std::uint16_t xPos,
-                                             std::uint16_t yPos)
+void CharacterSelector::setPos(std::uint16_t xPos,
+                               std::uint16_t yPos)
 {
     Widget::setPos(xPos, yPos);
     std::uint16_t xRef(x()), yRef(y());
@@ -27,18 +29,19 @@ CharacterSelector& CharacterSelector::setPos(std::uint16_t xPos,
         if (i < m_characters.size()) {
             const auto character = m_characters[i];
             auto& sprite(m_sprites[i]);
+            /*
             fs::path chipsetPath(character->skin());
             sprite.setTexture(texture(chipsetPath.string()));
             sprite.setScale(3, 3);
             sprite.setTextureRect(sf::IntRect(24, 32 * 2, 24, 32));
+            */
             sprite.setPosition(sf::Vector2f(xRef, yRef));
         }
         xRef += 24*3 + 5;
     }
-    return *this;
 }
 
-void CharacterSelector::paint(sf::RenderWindow& window)
+void CharacterSelector::draw(sf::RenderWindow& window)
 {
     if (m_characters.size() == 0) {
         return;
@@ -79,13 +82,7 @@ bool CharacterSelector::_onMouseButtonPressed(const sf::Event& event)
     {
         m_selectedCharacter = m_hoveredCharacter;
         forwardEvent = false;
-        pushEvent(
-            CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
-                CustomEvent::CharacterSelected,
-                nullptr
-            )
-        );
+        pushEvent(CustomEvent(this, CustomEvent::CharacterSelected, nullptr));
         m_hoveredCharacter = -1;
     }
     return forwardEvent;

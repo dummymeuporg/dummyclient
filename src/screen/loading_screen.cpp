@@ -20,7 +20,7 @@ LoadingScreen::LoadingScreen(
     : UIScreen(game, client),
       m_mapNameToLoad(mapNameToLoad),
       m_instance(instance),
-      m_label(std::make_shared<Widget::Label>()),
+      m_label(std::make_shared<Widget::Label>(*this)),
       m_map(nullptr),
       m_mapView(nullptr)
 {
@@ -45,13 +45,7 @@ LoadingScreen::~LoadingScreen() {
 }
 
 void LoadingScreen::loaded() {
-    pushEvent(
-        CustomEvent(
-            reinterpret_cast<void*>(shared_from_this().get()),
-            CustomEvent::LoadMapFromFile,
-            reinterpret_cast<void*>(shared_from_this().get())
-        )
-    );
+    pushEvent(::CustomEvent(this, CustomEvent::LoadMapFromFile, this));
 }
 
 void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
@@ -62,26 +56,14 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
         std::cerr << "Load map " << m_mapNameToLoad
             << " from file" << std::endl;
         m_map = loadGraphicMap(m_mapNameToLoad);
-        pushEvent(
-            CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
-                CustomEvent::MapFileLoaded,
-                reinterpret_cast<void*>(shared_from_this().get())
-            )
-        );
+        pushEvent(CustomEvent(this, CustomEvent::MapFileLoaded, this));
         break;
     }
     case CustomEvent::Type::MapFileLoaded: {
         std::cerr << "Load map view" << std::endl;
         m_mapView = std::make_unique<::MapView>(std::move(m_map));
         std::cerr << "Loaded map view." << std::endl;
-        pushEvent(
-            CustomEvent(
-                reinterpret_cast<void*>(shared_from_this().get()),
-                CustomEvent::MapViewLoaded,
-                reinterpret_cast<void*>(shared_from_this().get())
-            )
-        );
+        pushEvent(CustomEvent(this, CustomEvent::MapViewLoaded, this));
         break;
     }
     case CustomEvent::Type::MapViewLoaded: {

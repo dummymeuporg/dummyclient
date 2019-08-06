@@ -23,7 +23,6 @@ Game::Game(const char* account,
 
 int Game::run()
 {
-    //m_client.connect(m_config.host().c_str(), m_config.port());
     m_client.setScreen(
         std::make_shared<Screen::SelectCharacterScreen>(
             *this, m_client
@@ -53,7 +52,7 @@ int Game::run()
         }
 
         if (clock.getElapsedTime().asMilliseconds() > 1000/Game::FPS) {
-            m_client.screen()->draw();
+            m_client.screen()->draw(m_window);
             m_window.display();
             clock.restart();
         }
