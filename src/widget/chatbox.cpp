@@ -24,7 +24,7 @@ Chatbox::Chatbox(Visual& parent)
         .setFont("arial.ttf");
 }
 
-void Chatbox::onDraw(sf::RenderWindow& window) {
+void Chatbox::draw(sf::RenderWindow& window) {
     m_messageInputTextbox->draw(window);
 }
 
@@ -33,7 +33,7 @@ bool Chatbox::handleEvent(const sf::Event& event) {
     if (m_isTypingMessage) {
         forwardEvent = m_messageInputTextbox->handleEvent(event);
     }
-    return false;
+    return forwardEvent;
 }
 
 void Chatbox::handleCustomEvent(const ::CustomEvent& event) {

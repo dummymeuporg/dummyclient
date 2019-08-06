@@ -22,3 +22,21 @@ void Visual::addChild(std::shared_ptr<Visual> child) {
 void Visual::removeChild(std::shared_ptr<Visual> child) {
     m_children.erase(child);
 }
+
+bool Visual::handleEvent(const sf::Event& event) {
+    for(auto& child: m_children) {
+        if(!child->handleEvent(event)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+void Visual::handleCustomEvent(const ::CustomEvent& event) {
+    for (auto& child: m_children) {
+        if (event.target() == child.get() || event.target() == nullptr) {
+            child->handleCustomEvent(event);
+        }
+    }
+}

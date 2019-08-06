@@ -32,23 +32,4 @@ void UIScreen::draw(sf::RenderWindow& window) {
     }
 }
 
-bool UIScreen::handleEvent(const sf::Event& event)
-{
-    for(const auto& widget: m_widgets) {
-        if(!widget->handleEvent(event)) {
-            break;
-        }
-    }
-    return true;
-}
-
-void UIScreen::handleCustomEvent(const ::CustomEvent& event) {
-    for (const auto& widget: m_widgets) {
-        if (event.target() == widget.get()) {
-            widget->handleCustomEvent(event);
-            break;
-        }
-    }
-}
-
 } // namespace Screen

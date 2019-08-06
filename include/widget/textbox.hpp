@@ -8,7 +8,7 @@ namespace Widget {
 class Textbox : public Abstract::Widget {
 public:
     Textbox(Visual&);
-    virtual void onDraw(sf::RenderWindow&) override;
+    virtual void draw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
     virtual void handleCustomEvent(const ::CustomEvent& event) override;
     Textbox& setRect(int, int, int, int);

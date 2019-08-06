@@ -17,7 +17,7 @@ SkinPreviewer& SkinPreviewer::setPos(int x, int y) {
     return *this;
 }
 
-void SkinPreviewer::onDraw(sf::RenderWindow& window) {
+void SkinPreviewer::draw(sf::RenderWindow& window) {
     // draw the sprite
     if (m_currentSkinIndex >= 0 && m_currentSkinIndex < m_skinList.size())
     {

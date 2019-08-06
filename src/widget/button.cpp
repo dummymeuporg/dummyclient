@@ -11,16 +11,17 @@ Button::Button(Visual& parent)
 {    
 }
 
-void Button::onDraw(sf::RenderWindow& window) {
+void Button::draw(sf::RenderWindow& window) {
     // First paint the background, then the label
     window.draw(m_buttonBackground);
-    Label::onDraw(window);
+    Label::draw(window);
 }
 
 bool Button::_onMouseMoved(const sf::Event& event)
 {
     bool forwardEvent = true;
-    sf::Vector2f labelPos = m_caption.getPosition();
+    const auto& origin(m_caption.getOrigin());
+    sf::Vector2f labelPos(m_x - origin.x, m_y - origin.y);
     sf::FloatRect textRect = m_caption.getLocalBounds();
     sf::Color bgColor = m_buttonBackground.getFillColor();
     int deltaR = 10, deltaG = 10, deltaB = 10;
@@ -179,5 +180,12 @@ void Button::adjustRectangle() {
                      labelPos.y + textRect.top)
     );
 }
+
+Button& Button::setOrigin(float x, float y) {
+    Label::setOrigin(x, y);
+    m_buttonBackground.setOrigin(x, y);
+    return *this;
+}
+
 
 } // namespace Widget

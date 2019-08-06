@@ -41,7 +41,7 @@ void CharacterSelector::setPos(std::uint16_t xPos,
     }
 }
 
-void CharacterSelector::onDraw(sf::RenderWindow& window)
+void CharacterSelector::draw(sf::RenderWindow& window)
 {
     if (m_characters.size() == 0) {
         return;

@@ -16,9 +16,7 @@ class Widget : public ::Visual
 {
 public:
     Widget(Visual&);
-    void draw(sf::RenderWindow&);
-    virtual void onDraw(sf::RenderWindow&) = 0;
-    virtual bool handleEvent(const sf::Event& event);
+    void draw(sf::RenderWindow&) override;
     virtual void setPos(std::uint16_t, std::uint16_t);
 
     std::uint16_t x() const {

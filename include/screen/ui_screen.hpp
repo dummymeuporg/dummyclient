@@ -9,8 +9,8 @@ class UIScreen : public Screen {
 public:
     UIScreen(::Game&, ::Client&);
     virtual ~UIScreen();
-    bool handleEvent(const sf::Event&) override;
-    void handleCustomEvent(const ::CustomEvent&) override;
+    //bool handleEvent(const sf::Event&) override;
+    //void handleCustomEvent(const ::CustomEvent&) override;
     void draw(sf::RenderWindow&) override;
 protected:
     UIScreen& addWidget(std::shared_ptr<Widget::Abstract::Widget>);

@@ -3,20 +3,20 @@
 namespace Widget {
 
 QuitMessage::QuitMessage(Visual& parent)
-    : ModalMessage(parent),
+    : ModalMessage(parent, "Do you want to quit?"),
       m_quitButton(std::make_shared<Button>(*this)),
       m_changeCharacterButton(std::make_shared<Button>(*this)),
       m_cancelButton(std::make_shared<Button>(*this))
 {
 
-    const auto& rectanglePosition(m_backgroundRectangle.getPosition());
-
+    const auto& rectOrigin(m_backgroundRectangle.getOrigin());
     m_quitButton->setFont("arial.ttf");
     m_quitButton->setFontSize(18);
     m_quitButton->setBackgroundColor(sf::Color(183, 109, 44));
     m_quitButton->setBorderColor(sf::Color(94, 47, 6));
     m_quitButton->setColor(sf::Color::Black);
-    m_quitButton->setPos(20, 70); // Relative posision.
+    m_quitButton->setPos(20, 55); // Relative posision.
+    m_quitButton->setOrigin(rectOrigin.x, rectOrigin.y);
     m_quitButton->setCaption("Quit");
 
     m_changeCharacterButton->setFont("arial.ttf");
@@ -24,7 +24,8 @@ QuitMessage::QuitMessage(Visual& parent)
     m_changeCharacterButton->setBackgroundColor(sf::Color(183, 109, 44));
     m_changeCharacterButton->setBorderColor(sf::Color(94, 47, 6));
     m_changeCharacterButton->setColor(sf::Color::Black);
-    m_changeCharacterButton->setPos(90, 70); // Relative posision.
+    m_changeCharacterButton->setPos(130, 55); // Relative posision.
+    m_changeCharacterButton->setOrigin(rectOrigin.x, rectOrigin.y);
     m_changeCharacterButton->setCaption("Change character");
 
     m_cancelButton->setFont("arial.ttf");
@@ -32,13 +33,9 @@ QuitMessage::QuitMessage(Visual& parent)
     m_cancelButton->setBackgroundColor(sf::Color(183, 109, 44));
     m_cancelButton->setBorderColor(sf::Color(94, 47, 6));
     m_cancelButton->setColor(sf::Color::Black);
-    m_cancelButton->setPos(200, 70); // Relative posision.
+    m_cancelButton->setPos(375, 55); // Relative posision.
+    m_cancelButton->setOrigin(rectOrigin.x, rectOrigin.y);
     m_cancelButton->setCaption("Cancel");
-
-    m_message->setFont("arial.ttf");
-    m_message->setFontSize(18);
-    m_message->setCaption("Do you want to quit?");
-    m_message->setColor(sf::Color::Black);
 
     addButton(m_quitButton);
     addButton(m_changeCharacterButton);

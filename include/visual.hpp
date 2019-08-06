@@ -13,7 +13,8 @@ class Visual : public std::enable_shared_from_this<Visual>,
 public:
     Visual();
     virtual void draw(sf::RenderWindow&) = 0;
-    virtual bool handleEvent(const sf::Event&) = 0;
+    virtual bool handleEvent(const sf::Event&);
+    void handleCustomEvent(const ::CustomEvent&);
 
     virtual void setPos(std::uint16_t, std::uint16_t);
     virtual void setSize(std::uint16_t, std::uint16_t);

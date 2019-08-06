@@ -35,7 +35,7 @@ void Label::setPos(std::uint16_t x, std::uint16_t y) {
     m_caption.setPosition(m_x, m_y);
 }
 
-void Label::onDraw(sf::RenderWindow& window) {
+void Label::draw(sf::RenderWindow& window) {
     window.draw(m_caption);
 }
 

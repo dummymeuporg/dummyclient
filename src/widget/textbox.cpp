@@ -16,7 +16,7 @@ Textbox::Textbox(Visual& parent)
     m_shape.setOutlineThickness(5);
 }
 
-void Textbox::onDraw(sf::RenderWindow& renderWindow) {
+void Textbox::draw(sf::RenderWindow& renderWindow) {
     int delta = 30;
     sf::Color backgroundColor(m_shape.getFillColor());
     if (m_isFocused) {

@@ -7,7 +7,7 @@ namespace Widget {
 class Label : public Abstract::Widget {
 public:
     Label(Visual&);
-    virtual void onDraw(sf::RenderWindow&) override;
+    virtual void draw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
 
     const sf::Text& caption() const {

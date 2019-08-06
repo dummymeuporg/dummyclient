@@ -105,6 +105,10 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
 }
 
 bool GameScreen::handleEvent(const sf::Event& event) {
+    bool forward = UIScreen::handleEvent(event);
+    if (!forward) {
+        return forward;
+    }
     switch(event.type) {
     case sf::Event::KeyPressed:
         onKeyPressed(event);
@@ -246,7 +250,11 @@ void GameScreen::onKeyReleased(const sf::Event& event) {
 void GameScreen::onTextEntered(const sf::Event& event) {
     if ('\r' == event.text.unicode) {
         if (!m_isEnterKeyPressed) {
-            pushEvent(::CustomEvent(this, CustomEvent::EnterKeyPressed, this));
+            pushEvent(::CustomEvent(
+                this,
+                CustomEvent::EnterKeyPressed,
+                m_chatbox.get()
+            ));
             m_isEnterKeyPressed = true;
             if (m_isTypingMessage) {
                 // XXX: Get message and send it.

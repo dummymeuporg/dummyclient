@@ -9,7 +9,7 @@ class Textbox;
 class Chatbox : public Abstract::Widget {
 public:
     Chatbox(Visual&);
-    void onDraw(sf::RenderWindow&) override;
+    void draw(sf::RenderWindow&) override;
     bool handleEvent(const sf::Event& event) override;
     void handleCustomEvent(const ::CustomEvent& event) override;
     const std::string& typedMessage() const;
