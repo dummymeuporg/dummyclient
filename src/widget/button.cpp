@@ -107,7 +107,7 @@ bool Button::_onMouseButtonReleased(const sf::Event& event) {
                 )
             );
             pushEvent(
-                CustomEvent(this, CustomEvent::ButtonClicked, this)
+                CustomEvent(this, CustomEvent::ButtonClicked, nullptr)
             );
             forwardEvent = false;
         }

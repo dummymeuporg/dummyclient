@@ -18,7 +18,8 @@ Game::Game(const char* account,
 		       sf::Style::Titlebar | sf::Style::Close),
       m_customEventQueue(CustomEventQueue::instance()),
       m_resourceProvider(ResourceProvider::instance()),
-      m_width(width), m_height(height), m_scaleFactor(scaleFactor)
+      m_width(width), m_height(height), m_scaleFactor(scaleFactor),
+      m_isRunning(true)
 { }
 
 int Game::run()
@@ -31,7 +32,7 @@ int Game::run()
     sf::Clock clock;
     m_window.setKeyRepeatEnabled(false);
     m_window.setFramerateLimit(Game::FPS);
-    while (m_window.isOpen())
+    while (m_window.isOpen() && m_isRunning)
     {
         sf::Event event;
         while (m_window.pollEvent(event))
@@ -61,4 +62,8 @@ int Game::run()
     }
 
     return EXIT_SUCCESS;
+}
+
+void Game::quit() {
+    m_isRunning = false;
 }

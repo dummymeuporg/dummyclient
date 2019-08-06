@@ -37,6 +37,8 @@ public:
     std::size_t scaleFactor() const {
         return m_scaleFactor;
     }
+
+    void quit();
 private:
     Client m_client;
     sf::RenderWindow m_window;
@@ -44,4 +46,5 @@ private:
     ::ResourceProvider& m_resourceProvider;
     std::size_t m_width, m_height;
     std::size_t m_scaleFactor;
+    bool m_isRunning;
 };

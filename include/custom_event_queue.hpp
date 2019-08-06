@@ -27,6 +27,9 @@ public:
         MovementInactive,
         EnterKeyPressed,
         EscapeKeyPressed,
+        QuitButtonClicked,
+        ChangeCharacterButtonClicked,
+        CancelButtonClicked,
 
         Count
     };

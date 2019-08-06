@@ -98,6 +98,15 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
     case CustomEvent::Type::EscapeKeyPressed:
         toggleEscapeMode();
         break;
+    // From escape modal box:
+    case CustomEvent::CancelButtonClicked:
+        if (m_isEscapeMode) {
+            removeEscapeMessage();
+            m_isEscapeMode = false;
+        }
+        break;
+    case CustomEvent::QuitButtonClicked:
+        m_game.quit();
     default:
         break;
     }

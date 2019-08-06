@@ -1,3 +1,4 @@
+#include <iostream>
 #include "widget/quit_message.hpp"
 
 namespace Widget {
@@ -42,4 +43,22 @@ QuitMessage::QuitMessage(Visual& parent)
     addButton(m_cancelButton);
 }
 
+void QuitMessage::handleCustomEvent(const ::CustomEvent& event) {
+    if (event.source() == m_quitButton.get()) {
+        std::cerr << "Quit button clicked!" << std::endl;
+        pushEvent(::CustomEvent(
+            this, ::CustomEvent::Type::QuitButtonClicked, &m_parent)
+        );
+    } else if (event.source() == m_changeCharacterButton.get()) {
+        std::cerr << "Change character button clicked!" << std::endl;
+        pushEvent(::CustomEvent(
+            this, ::CustomEvent::Type::ChangeCharacterButtonClicked, &m_parent)
+        );
+    } else if (event.source() == m_cancelButton.get()) {
+        pushEvent(::CustomEvent(
+            this, ::CustomEvent::Type::CancelButtonClicked, &m_parent)
+        );
+        std::cerr << "Cancel button clicked!";
+    }
+}
 } // namespace Widget
