@@ -37,10 +37,10 @@ PlayingState::getResponse(Dummy::Protocol::IncomingPacket& packet)
     packet >> response;
     switch(response) {
     case Dummy::Protocol::Bridge::PING:
-        return _ping(packet);
+        return ping(packet);
         break;
     case Dummy::Protocol::Bridge::SET_POSITION:
-        return _setPosition(packet);
+        return setPosition(packet);
         break;
     case Dummy::Protocol::Bridge::MESSAGE:
         return message(packet);
@@ -76,8 +76,16 @@ void PlayingState::visitCommand(
     m_networkConnector.sendPacket(pkt);
 }
 
+void PlayingState::visitCommand(
+    const Dummy::Server::Command::ChangeCharacter&
+) {
+    Dummy::Protocol::OutgoingPacket pkt;
+    pkt << Dummy::Protocol::Bridge::CHANGE_CHARACTER;
+    m_networkConnector.sendPacket(pkt);
+}
+
 std::shared_ptr<const Dummy::Server::Response::Ping>
-PlayingState::_ping(Dummy::Protocol::IncomingPacket& packet) {
+PlayingState::ping(Dummy::Protocol::IncomingPacket& packet) {
     std::shared_ptr<Dummy::Server::Response::Ping> response =
         std::make_shared<Dummy::Server::Response::Ping>();
     //response->readFrom(packet);
@@ -87,7 +95,7 @@ PlayingState::_ping(Dummy::Protocol::IncomingPacket& packet) {
 }
 
 std::shared_ptr<const Dummy::Server::Response::SetPosition>
-PlayingState::_setPosition(Dummy::Protocol::IncomingPacket& packet) {
+PlayingState::setPosition(Dummy::Protocol::IncomingPacket& packet) {
     std::shared_ptr<Dummy::Server::Response::SetPosition> response =
     std::make_shared<Dummy::Server::Response::SetPosition>();
     response->readFrom(packet);

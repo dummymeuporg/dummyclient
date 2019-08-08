@@ -36,15 +36,18 @@ public:
     void visitCommand(const Dummy::Server::Command::Ping&) override;
     void visitCommand(const Dummy::Server::Command::SetPosition&) override;
     void visitCommand(const Dummy::Server::Command::Message&) override;
+    void visitCommand(const Dummy::Server::Command::ChangeCharacter&) override;
 private:
     std::shared_ptr<const Dummy::Server::Response::Ping>
-    _ping(Dummy::Protocol::IncomingPacket&);
+    ping(Dummy::Protocol::IncomingPacket&);
 
     std::shared_ptr<const Dummy::Server::Response::SetPosition>
-    _setPosition(Dummy::Protocol::IncomingPacket&);
+    setPosition(Dummy::Protocol::IncomingPacket&);
 
     std::shared_ptr<const Dummy::Server::Response::Message>
     message(Dummy::Protocol::IncomingPacket&);
+
+    //std::shared_ptr<const Dummy::Server::Response::ChangeCharacter>
 };
 
 } // namespace NetworkConnectorState
