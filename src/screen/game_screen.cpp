@@ -79,7 +79,7 @@ GameScreen::~GameScreen() {
 }
 
 void GameScreen::loaded() {
-    m_client.ping();
+    //m_client.ping();
     m_pingClock.restart();
 }
 
@@ -114,6 +114,7 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
         break;
     case CustomEvent::QuitButtonClicked:
         m_game.quit();
+        break;
     default:
         break;
     }

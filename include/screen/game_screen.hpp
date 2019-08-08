@@ -92,6 +92,8 @@ private:
     bool m_isEscapeKeyPressed;
     bool m_isEscapeMode;
     std::shared_ptr<Widget::QuitMessage> m_quitMessage;
+
+    // XXX: I am going to puke. LOL.
 };
 
 } // namespace Screen
