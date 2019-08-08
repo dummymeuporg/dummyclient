@@ -5,12 +5,14 @@
 namespace Dummy {
 namespace Server {
 namespace Command {
+class ChangeCharacter;
 class Message;
 class Ping;
 class SetPosition;
 } // namespace Command
 
 namespace Response {
+class ChangeCharacter;
 class Message;
 class Ping;
 class SetPosition;
@@ -47,7 +49,8 @@ private:
     std::shared_ptr<const Dummy::Server::Response::Message>
     message(Dummy::Protocol::IncomingPacket&);
 
-    //std::shared_ptr<const Dummy::Server::Response::ChangeCharacter>
+    std::shared_ptr<const Dummy::Server::Response::ChangeCharacter>
+    changeCharacter(Dummy::Protocol::IncomingPacket&);
 };
 
 } // namespace NetworkConnectorState

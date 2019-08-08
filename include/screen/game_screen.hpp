@@ -45,6 +45,8 @@ public:
     void visitResponse(const Dummy::Server::Response::Message&) override;
     void visitResponse(const Dummy::Server::Response::Ping&) override;
     void visitResponse(const Dummy::Server::Response::SetPosition&) override;
+    void
+    visitResponse(const Dummy::Server::Response::ChangeCharacter&) override;
 
 private:
     /* Private methods. */

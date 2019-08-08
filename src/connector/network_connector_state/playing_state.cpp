@@ -12,6 +12,7 @@
 #include <dummy/server/response/message.hpp>
 #include <dummy/server/response/ping.hpp>
 #include <dummy/server/response/set_position.hpp>
+#include <dummy/server/response/change_character.hpp>
 
 #include "connector/network_connector.hpp"
 #include "connector/network_connector_state/loading_state.hpp"
@@ -38,12 +39,12 @@ PlayingState::getResponse(Dummy::Protocol::IncomingPacket& packet)
     switch(response) {
     case Dummy::Protocol::Bridge::PING:
         return ping(packet);
-        break;
     case Dummy::Protocol::Bridge::SET_POSITION:
         return setPosition(packet);
-        break;
     case Dummy::Protocol::Bridge::MESSAGE:
         return message(packet);
+    case Dummy::Protocol::Bridge::CHANGE_CHARACTER:
+        return changeCharacter(packet);
     default:
         UnknownResponseError();
         break;
@@ -106,6 +107,15 @@ std::shared_ptr<const Dummy::Server::Response::Message>
 PlayingState::message(Dummy::Protocol::IncomingPacket& packet) {
     std::shared_ptr<Dummy::Server::Response::Message> response =
     std::make_shared<Dummy::Server::Response::Message>();
+    response->readFrom(packet);
+    return std::move(response);
+}
+
+std::shared_ptr<const Dummy::Server::Response::ChangeCharacter>
+PlayingState::changeCharacter(Dummy::Protocol::IncomingPacket& packet) {
+    auto response(
+        std::make_shared<Dummy::Server::Response::ChangeCharacter>()
+    );
     response->readFrom(packet);
     return std::move(response);
 }

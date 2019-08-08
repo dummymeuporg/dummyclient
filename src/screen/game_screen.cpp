@@ -3,6 +3,7 @@
 
 #include <boost/range/irange.hpp>
 
+#include <dummy/server/command/change_character.hpp>
 #include <dummy/server/command/message.hpp>
 #include <dummy/server/command/ping.hpp>
 
@@ -104,6 +105,12 @@ void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
             removeEscapeMessage();
             m_isEscapeMode = false;
         }
+        break;
+    case CustomEvent::ChangeCharacterButtonClicked:
+        m_client.sendCommand(
+            std::make_unique<const Dummy::Server::Command::ChangeCharacter>()
+        );
+        // XXX: Lock the screen?
         break;
     case CustomEvent::QuitButtonClicked:
         m_game.quit();
@@ -449,5 +456,14 @@ void GameScreen::visitResponse(
         m_mapState.say(message.author(), message.content());
     }
 }
+
+void GameScreen::visitResponse(
+    const Dummy::Server::Response::ChangeCharacter&
+)
+{
+    auto self(shared_from_this());
+    m_client.returnToPreviousScreen();
+}
+
 
 } // namespace Screen
