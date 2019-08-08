@@ -93,12 +93,18 @@ void LoadingScreen::onResponse(
 void LoadingScreen::visitResponse(
     const Dummy::Server::Response::TeleportMap& response
 ) {
+    auto self(shared_from_this());
     std::cerr << "Got teleport map response" << std::endl;
-    // Switch to game screen
-    std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
-        m_game, m_client, std::move(m_mapView)
-    );
-    m_client.setScreen(screen);
+    if (0 == response.status()) {
+        // Switch to game screen
+        std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
+            m_game, m_client, std::move(m_mapView)
+        );
+        m_client.setScreen(screen);
+    } else {
+        std::cerr << "Error: status = " << static_cast<int>(response.status())
+                  << std::endl;
+    }
 }
 
 } // namespace Screen
