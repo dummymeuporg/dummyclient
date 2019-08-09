@@ -1,15 +1,15 @@
 #pragma once
 
 #include "game_element.hpp"
-#include <dummy/local/level.hpp>
+#include <dummy/local/floor.hpp>
 
 using RenderTextures = std::vector<std::unique_ptr<sf::RenderTexture>>;
 using Sprites = std::vector<sf::Sprite>;
 using BlockingSquares = std::vector<sf::RectangleShape>;
 
-class LevelView : public ::GameElement {
+class FloorView : public ::GameElement {
 public:
-    LevelView(const Dummy::Local::Level&, std::uint16_t, std::uint16_t);
+    FloorView(const Dummy::Local::Floor&, std::uint16_t, std::uint16_t);
     Sprites& topSprites() {
         return m_topSprites;
     }
@@ -34,7 +34,7 @@ private:
 
 
     /* Attributes. */
-    const Dummy::Local::Level& m_level;
+    const Dummy::Local::Floor& m_floor;
     RenderTextures m_topTextures;
     RenderTextures m_bottomTextures;
 

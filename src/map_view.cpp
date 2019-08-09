@@ -16,9 +16,9 @@ MapView::MapView(std::unique_ptr<const Graphics::Map> graphicMap)
 
 void MapView::load() {
     // XXX: fix this.
-    for (const auto& level: m_map->levels()) {
-        m_levelViews.push_back(
-            LevelView(level, level.width(), level.height())
+    for (const auto& floor: m_map->floors()) {
+        m_floorViews.push_back(
+            FloorView(floor, floor.width(), floor.height())
         );
     }
 }

@@ -13,7 +13,7 @@ LocalMapState::LocalMapState(const MapView& mapView)
     : m_mapView(mapView)
 {
     // Instantiate floor states.
-    for (const auto& floor: m_mapView.levelViews()) {
+    for (const auto& floor: m_mapView.floorViews()) {
         m_localFloorStates.push_back(LocalFloorState(*this));
     }
 }
@@ -36,7 +36,7 @@ void LocalMapState::visitMapUpdate(
     // Check that its floor is valid.
     const auto& floor(characterOn.floor());
 
-    if (floor >= m_mapView.levelViews().size()) {
+    if (floor >= m_mapView.floorViews().size()) {
         // XXX: throw exception?
     }
 
