@@ -38,13 +38,13 @@ public:
         Dummy::Local::Map::load();
     }
 
-    const Dummy::Local::Levels& levels() const {
-        return Dummy::Local::Map::levels();
+    const Dummy::Local::Floors& floors() const {
+        return Dummy::Local::Map::floors();
     }
 
     const bool
     isBlocking(std::uint8_t floor, std::uint16_t x, std::uint16_t y) const {
-        return m_levels[floor].isBlocking(x, y);
+        return m_floors[floor].isBlocking(x, y);
     }
 };
 

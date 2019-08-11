@@ -19,7 +19,7 @@
 #include "graphics/foe.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
-#include "level_view.hpp"
+#include "floor_view.hpp"
 
 #include "screen/game_screen.hpp"
 
@@ -341,10 +341,10 @@ void GameScreen::removeEscapeMessage() {
     removeChild(m_quitMessage);
 }
 
-void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
+void GameScreen::drawFloorView(unsigned int index, FloorView& floorView)
 {
     // Draw the lower layers.
-    drawSprites(levelView.bottomSprites());
+    drawSprites(floorView.bottomSprites());
 
     drawLivings(index);
 
@@ -359,21 +359,21 @@ void GameScreen::drawLevelView(unsigned int index, LevelView& levelView)
         foe->draw(m_game.window());
     }
 
-    drawSprites(levelView.topSprites());
+    drawSprites(floorView.topSprites());
 
     if (m_debugMode) {
-        drawBlockingLayer(index, levelView);
+        drawBlockingLayer(index, floorView);
     }
 }
 
-void GameScreen::drawBlockingLayer(unsigned int index, LevelView& levelView) {
+void GameScreen::drawBlockingLayer(unsigned int index, FloorView& floorView) {
     auto maxHeight(static_cast<int>(m_mapView->height() * 2));
     auto maxWidth(static_cast<int>(m_mapView->width() * 2));
     for (const auto y: boost::irange(0, maxHeight)) {
         for(const auto x: boost::irange(0, maxWidth)) {
             std::size_t blockIndex = (y * m_mapView->width() * 2) + x;
             if (m_mapView->blocksAt(index, x*8, y*8)) {
-                auto& blockingSquare(levelView.blockingSquares().at(blockIndex));
+                auto& blockingSquare(floorView.blockingSquares().at(blockIndex));
                 blockingSquare.setPosition(x * 8, y * 8);
                 m_game.window().draw(blockingSquare);
             }
@@ -397,8 +397,8 @@ void GameScreen::drawLivings(std::uint8_t index) {
 void GameScreen::draw(sf::RenderWindow& window) {
     window.setView(m_gameView);
     m_gameView.setCenter(m_player.x() + 12, m_player.y() + 16);
-    for (unsigned i = 0; i < m_mapView->levelViews().size(); ++i) {
-        drawLevelView(i, m_mapView->levelView(i));
+    for (unsigned i = 0; i < m_mapView->floorViews().size(); ++i) {
+        drawFloorView(i, m_mapView->floorView(i));
     }
     // Draw widgets (HUD) if needed.
     window.setView(m_hudView);

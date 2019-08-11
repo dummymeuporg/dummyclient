@@ -1,13 +1,13 @@
 #pragma once
 #include <memory>
 
-#include "level_view.hpp"
+#include "floor_view.hpp"
 #include "graphics/map.hpp"
 #include "game_element.hpp"
 
 
 using Sprites = std::vector<sf::Sprite>;
-using LevelViews = std::vector<::LevelView>;
+using FloorViews = std::vector<::FloorView>;
 
 class MapView : public GameElement {
 public:
@@ -27,12 +27,12 @@ public:
         return m_scaleFactor;
     }
 
-    const LevelViews& levelViews() const {
-        return m_levelViews;
+    const FloorViews& floorViews() const {
+        return m_floorViews;
     }
 
-    LevelView& levelView(unsigned i) {
-        return m_levelViews[i];
+    FloorView& floorView(unsigned i) {
+        return m_floorViews[i];
     }
 
 private:
@@ -42,6 +42,6 @@ private:
     std::unique_ptr<const Graphics::Map> m_map;
     int m_scaleFactor;
     const sf::Texture& m_chipset;
-    LevelViews m_levelViews;
+    FloorViews m_floorViews;
 
 };
