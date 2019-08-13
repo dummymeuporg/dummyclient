@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "local_map_state.hpp"
-#include "level_view.hpp"
+#include "floor_view.hpp"
 #include "map_view.hpp"
 #include "graphics/player.hpp"
 #include "screen/ui_screen.hpp"
@@ -60,8 +60,8 @@ private:
     void moveCharacter(sf::Keyboard::Key);
     void drawLivings(std::uint8_t);
     void syncLivings();
-    void drawLevelView(unsigned int, LevelView&);
-    void drawBlockingLayer(unsigned int, LevelView&);
+    void drawFloorView(unsigned int, FloorView&);
+    void drawBlockingLayer(unsigned int, FloorView&);
     void drawSprites(Sprites&);
     void toggleEscapeMode();
     void buildEscapeMessage();

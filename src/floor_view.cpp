@@ -1,20 +1,20 @@
-#include "level_view.hpp"
+#include "floor_view.hpp"
 
-LevelView::LevelView(
-    const Dummy::Local::Level& level,
+FloorView::FloorView(
+    const Dummy::Local::Floor& floor,
     std::uint16_t width,
     std::uint16_t height)
-    : m_level(level), m_chipset(texture(m_level.map().chipset()))
+    : m_floor(floor), m_chipset(texture(m_floor.map().chipset()))
 {
-    m_topTextures.resize(m_level.width() * m_level.height());
-    m_bottomTextures.resize(m_level.width() * m_level.height());
-    m_topSprites.resize(m_level.width() * m_level.height());
-    m_bottomSprites.resize(m_level.width() * m_level.height());
-    m_blockingSquares.resize(m_level.width() * m_level.height() * 4);
+    m_topTextures.resize(m_floor.width() * m_floor.height());
+    m_bottomTextures.resize(m_floor.width() * m_floor.height());
+    m_topSprites.resize(m_floor.width() * m_floor.height());
+    m_bottomSprites.resize(m_floor.width() * m_floor.height());
+    m_blockingSquares.resize(m_floor.width() * m_floor.height() * 4);
 
     initSprites();
 
-    for (const auto& [position, layer]: m_level.graphicLayers()) {
+    for (const auto& [position, layer]: m_floor.graphicLayers()) {
         if (position > 0) {
             applySprites(m_topTextures, layer, m_topSprites);
         } else {
@@ -25,7 +25,7 @@ LevelView::LevelView(
     initBlockingSprites();
 }
 
-void LevelView::initSprites() {
+void FloorView::initSprites() {
     for (auto& renderTexture : m_topTextures) {
         renderTexture = std::make_unique<sf::RenderTexture>();
         renderTexture->create(16, 16);
@@ -39,15 +39,15 @@ void LevelView::initSprites() {
     }
 }
 
-void LevelView::initBlockingSprites()
+void FloorView::initBlockingSprites()
 {
-    for (unsigned i = 0; i < m_level.blockingLayer().size(); ++i) {
+    for (unsigned i = 0; i < m_floor.blockingLayer().size(); ++i) {
         m_blockingSquares[i].setSize(sf::Vector2f(8, 8));
         m_blockingSquares[i].setFillColor(sf::Color(255, 0, 0, 127));
     }
 }
 
-void LevelView::applySprites(
+void FloorView::applySprites(
     RenderTextures& renderTextures,
     const Dummy::Core::GraphicLayer& graphicLayer,
     Sprites& sprites
