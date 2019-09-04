@@ -28,6 +28,7 @@ public:
            std::uint8_t velocity = 5);
     Living(const Living&);
     void draw(sf::RenderWindow&) override;
+    void drawHUD(sf::RenderWindow&, const sf::View&) override;
     const Dummy::Core::Character::Direction& direction() const {
         return m_direction;
     }
@@ -72,7 +73,7 @@ public:
 protected:
     virtual void updatePosition();
     std::pair<std::int16_t, std::int16_t> computeDistance();
-    void drawMessage(sf::RenderWindow&);
+    void drawMessage(sf::RenderWindow&, const sf::View&);
 
     std::string m_name;
     std::uint8_t m_floor;

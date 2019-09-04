@@ -58,6 +58,7 @@ public:
     void setChipsetName(const std::string&);
 
     virtual void draw(sf::RenderWindow&) = 0;
+    virtual void drawHUD(sf::RenderWindow&, const sf::View&) = 0;
 protected:
     const MapView& m_mapView;
     const sf::Texture& m_chipset;

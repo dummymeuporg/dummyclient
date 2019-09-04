@@ -341,12 +341,33 @@ void GameScreen::removeEscapeMessage() {
     removeChild(m_quitMessage);
 }
 
+void GameScreen::drawFloorViewHUD(unsigned int index, FloorView& floorView) {
+    /*
+    drawLivingsHUD(index);
+    if (m_player.floor() == index) {
+        drawCharacterHUD();
+    }
+    */
+
+    // Draw the character HUD, if needed
+    if (m_player.floor() == index) {
+        drawCharacterHUD();
+    }
+
+    // Draw the living HUD on the current floor
+    const auto& localFloorState(m_mapState.localFloorState(index));
+    for (auto& [name, foe]: localFloorState.graphicFoes()) {
+        foe->drawHUD(m_game.window(), m_gameView);
+    }
+
+}
+
 void GameScreen::drawFloorView(unsigned int index, FloorView& floorView)
 {
     // Draw the lower layers.
     drawSprites(floorView.bottomSprites());
 
-    drawLivings(index);
+    //drawLivings(index);
 
     // Draw the character if needed.
     if (m_player.floor() == index) {
@@ -387,6 +408,10 @@ void GameScreen::drawCharacter() {
     m_player.draw(m_game.window());
 }
 
+void GameScreen::drawCharacterHUD() {
+    m_player.drawHUD(m_game.window(), m_gameView);
+}
+
 void GameScreen::drawLivings(std::uint8_t index) {
     auto& graphicFoes(m_mapState.localFloorState(index).graphicFoes());
     for (auto& [name, foe]: graphicFoes) {
@@ -395,13 +420,19 @@ void GameScreen::drawLivings(std::uint8_t index) {
 }
 
 void GameScreen::draw(sf::RenderWindow& window) {
-    window.setView(m_gameView);
     m_gameView.setCenter(m_player.x() + 12, m_player.y() + 16);
+    window.setView(m_gameView);
+
     for (unsigned i = 0; i < m_mapView->floorViews().size(); ++i) {
         drawFloorView(i, m_mapView->floorView(i));
     }
+    //m_gameView.setCenter(m_player.x() + 12, m_player.y() + 16);
     // Draw widgets (HUD) if needed.
     window.setView(m_hudView);
+
+    for (unsigned i = 0; i < m_mapView->floorViews().size(); ++i) {
+        drawFloorViewHUD(i, m_mapView->floorView(i));
+    }
 
     // XXX: ugly.
     if (m_isEscapeMode) {

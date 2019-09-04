@@ -21,6 +21,7 @@ public:
 
     void tick() override;
     void draw(sf::RenderWindow&) override;
+    void drawHUD(sf::RenderWindow&, const sf::View&) override;
 protected:
     void updatePosition() override;
 

@@ -16,18 +16,28 @@ FoePlayer::FoePlayer(
 
 void FoePlayer::draw(sf::RenderWindow& window) {
     Living::draw(window);
+}
+
+void FoePlayer::drawHUD(sf::RenderWindow& window, const sf::View& worldView) {
+    // XXX: duplicate with Player::drawHUD class.
+    Living::drawHUD(window, worldView);
     const sf::Vector2u& windowSize(window.getSize());
-
-    // XXX: Duplicate with the Player class. Find a way to factorize it.
     sf::FloatRect textRect = m_displayName.getLocalBounds();
-    const auto& origin(m_sprite.getOrigin());
-
+    const auto screenCoords = window.mapCoordsToPixel(
+        m_sprite.getPosition(),
+        worldView
+    );
+    const auto characterOrigin(m_sprite.getOrigin());
+    m_displayName.setPosition(
+        screenCoords.x + m_w/2.0,
+        screenCoords.y
+    );
+    std::cerr << m_w << ", " << m_h << std::endl;
     m_displayName.setOrigin(
-        textRect.left + (textRect.width/2.0),
-        textRect.top
+        (textRect.left + textRect.width/2.0) - characterOrigin.x,
+        textRect.top - characterOrigin.y
     );
 
-    m_displayName.setPosition((m_x - origin.x) + m_w/2.0, m_y + (m_h/3.0));
     window.draw(m_displayName);
 }
 

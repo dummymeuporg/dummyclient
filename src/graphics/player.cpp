@@ -139,19 +139,39 @@ void Player::moveTowardsBottom(int delta) {
     }
 }
 
+void Player::drawHUD(sf::RenderWindow& window, const sf::View& worldView) {
+    Living::drawHUD(window, worldView);
+    const sf::Vector2u& windowSize(window.getSize());
+    sf::FloatRect textRect = m_displayName.getLocalBounds();
+    const auto screenCoords = window.mapCoordsToPixel(
+        m_sprite.getPosition(),
+        worldView
+    );
+    const auto characterOrigin(m_sprite.getOrigin());
+    m_displayName.setPosition(
+        screenCoords.x + m_w/2.0,
+        screenCoords.y
+    );
+    std::cerr << m_w << ", " << m_h << std::endl;
+    m_displayName.setOrigin(
+        (textRect.left + textRect.width/2.0) - characterOrigin.x,
+        textRect.top - characterOrigin.y
+    );
+
+    window.draw(m_displayName);
+
+}
+
 void Player::draw(sf::RenderWindow& window) {
     Living::draw(window);
+    /*
     const sf::Vector2u& windowSize(window.getSize());
     sf::FloatRect textRect = m_displayName.getLocalBounds();
     const auto& origin(m_sprite.getOrigin());
+    */
+    const auto screenCoords = window.mapCoordsToPixel(m_sprite.getPosition());
+    std::cerr << "DRAW screenCoords: " << screenCoords.x << ", " << screenCoords.y << std::endl;
 
-    m_displayName.setOrigin(
-        textRect.left + (textRect.width/2.0),
-        textRect.top
-    );
-
-    m_displayName.setPosition((m_x - origin.x) + m_w/2.0, m_y + (m_h/3.0));
-    window.draw(m_displayName);
 }
 
 

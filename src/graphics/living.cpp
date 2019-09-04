@@ -52,13 +52,12 @@ Living::Living(const Living& living)
 void Living::_setDisplayName() {
     m_displayName.setString(m_name);
     m_displayName.setColor(sf::Color::White);
-    m_displayName.setCharacterSize(12);
-    m_displayName.setStyle(sf::Text::Bold);
+    m_displayName.setCharacterSize(20);
     m_displayName.setFont(font("arial.ttf"));
     //m_displayName.setStyle(sf::Text::Bold);
 
     m_speech.setColor(sf::Color::Black);
-    m_speech.setCharacterSize(12);
+    m_speech.setCharacterSize(20);
     m_speech.setFont(font("arial.ttf"));
 
     m_messageRect.setFillColor(sf::Color(255, 255, 255, 200));
@@ -103,11 +102,13 @@ Living::computeDistance() {
 void Living::draw(sf::RenderWindow& window) {
     // Update position given the ellapsed time and the velocity.
     updatePosition();
-    // XXX: draw message if needed
-    drawMessage(window);
 
     // Update the movement given the effective position
     m_state->draw(window);
+}
+
+void Living::drawHUD(sf::RenderWindow& window, const sf::View& view) {
+    drawMessage(window, view);
 }
 
 void Living::moveTowards(std::uint16_t x, std::uint16_t y) {
@@ -140,7 +141,7 @@ void Living::updatePosition() {
     m_y += delta.second;
 }
 
-void Living::drawMessage(sf::RenderWindow& window) {
+void Living::drawMessage(sf::RenderWindow& window, const sf::View& view) {
     if (m_isSpeaking) {
         if (m_messageToSayClock.getElapsedTime().asSeconds() >= 7) {
             m_isSpeaking = false;
@@ -149,21 +150,30 @@ void Living::drawMessage(sf::RenderWindow& window) {
 
         m_speech.setString(m_messageToSay);
         const auto& origin(m_sprite.getOrigin());
+        const auto screenCoords = window.mapCoordsToPixel(
+            m_sprite.getPosition(),
+            view
+        );
         sf::FloatRect textRect = m_speech.getLocalBounds();
-        m_speech.setOrigin(textRect.left + (textRect.width/2.0),
-                           textRect.top);
+        m_speech.setOrigin(
+            textRect.left + ((textRect.width+10)/2.0) - origin.x,
+            textRect.top - origin.y
+        );
+
         m_speech.setPosition(
-            (m_x - origin.x) + m_w/2.0,
-            m_y - m_h - textRect.height
+            screenCoords.x + m_w/2.0,
+            screenCoords.y - m_h*2 - textRect.height
         );
         m_messageRect.setPosition(
-            m_speech.getPosition().x - 2,
-            m_speech.getPosition().y - 2
+            m_speech.getPosition().x - 5,
+            m_speech.getPosition().y - 5
         );
-        m_messageRect.setOrigin(m_speech.getOrigin().x,
-                                m_messageRect.getOrigin().y);
-        m_messageRect.setSize(sf::Vector2f(textRect.width + 4,
-                                           textRect.height + 4));
+        m_messageRect.setOrigin(
+            m_speech.getOrigin().x,
+            m_speech.getOrigin().y
+        );
+        m_messageRect.setSize(sf::Vector2f(textRect.width + 10,
+                                           textRect.height + 10));
         window.draw(m_messageRect);
         window.draw(m_speech);
     }

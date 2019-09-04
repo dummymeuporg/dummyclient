@@ -52,6 +52,7 @@ private:
     /* Private methods. */
     void drawLayer(::Sprites&);
     void drawCharacter();
+    void drawCharacterHUD();
     void onKeyPressed(const sf::Event&);
     void onKeyReleased(const sf::Event&);
     void onTextEntered(const sf::Event&);
@@ -61,6 +62,7 @@ private:
     void drawLivings(std::uint8_t);
     void syncLivings();
     void drawFloorView(unsigned int, FloorView&);
+    void drawFloorViewHUD(unsigned int, FloorView&);
     void drawBlockingLayer(unsigned int, FloorView&);
     void drawSprites(Sprites&);
     void toggleEscapeMode();

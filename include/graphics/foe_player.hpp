@@ -18,6 +18,7 @@ public:
     );
 
     void draw(sf::RenderWindow&) override;
+    void drawHUD(sf::RenderWindow&, const sf::View&) override;
 };
 
 } // namespace Graphics
