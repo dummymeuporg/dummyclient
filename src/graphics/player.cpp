@@ -33,7 +33,6 @@ Player::Player(const ::MapView& mapView,
 }
 
 void Player::updatePosition() {
-    std::cerr << "POS: " << m_x/8 << ", " << m_y/8 << std::endl;
     auto delta = computeDistance();
     int xStep(delta.first != 0 ? (2 * (delta.first > 0) - 1) : 0);
     int yStep(delta.second != 0 ? (2 * (delta.second > 0) - 1) : 0);
@@ -153,7 +152,6 @@ void Player::drawHUD(sf::RenderWindow& window, const sf::View& worldView) {
         screenCoords.x + m_w/2.0,
         screenCoords.y
     );
-    std::cerr << m_w << ", " << m_h << std::endl;
     m_displayName.setOrigin(
         (textRect.left + textRect.width/2.0) - characterOrigin.x,
         textRect.top - characterOrigin.y

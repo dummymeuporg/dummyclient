@@ -32,7 +32,6 @@ void FoePlayer::drawHUD(sf::RenderWindow& window, const sf::View& worldView) {
         screenCoords.x + m_w/2.0,
         screenCoords.y
     );
-    std::cerr << m_w << ", " << m_h << std::endl;
     m_displayName.setOrigin(
         (textRect.left + textRect.width/2.0) - characterOrigin.x,
         textRect.top - characterOrigin.y
