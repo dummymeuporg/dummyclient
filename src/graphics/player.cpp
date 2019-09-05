@@ -33,6 +33,7 @@ Player::Player(const ::MapView& mapView,
 }
 
 void Player::updatePosition() {
+    std::cerr << "POS: " << m_x/8 << ", " << m_y/8 << std::endl;
     auto delta = computeDistance();
     int xStep(delta.first != 0 ? (2 * (delta.first > 0) - 1) : 0);
     int yStep(delta.second != 0 ? (2 * (delta.second > 0) - 1) : 0);
@@ -102,8 +103,8 @@ bool Player::blocksTop() const {
 bool Player::blocksBottom() const {
     auto floor(m_client.character()->floor());
     return m_y == ((m_mapView.height() * 16) - 8) ||
-        m_mapView.blocksAt(floor, m_x, m_y + 8 + 1) ||
-        m_mapView.blocksAt(floor, m_x + 8, m_y + 8 + 1);
+        m_mapView.blocksAt(floor, m_x, m_y + 8) ||
+        m_mapView.blocksAt(floor, m_x + 8, m_y + 8);
 }
 
 void Player::moveTowardsRight(int delta) {
@@ -164,14 +165,6 @@ void Player::drawHUD(sf::RenderWindow& window, const sf::View& worldView) {
 
 void Player::draw(sf::RenderWindow& window) {
     Living::draw(window);
-    /*
-    const sf::Vector2u& windowSize(window.getSize());
-    sf::FloatRect textRect = m_displayName.getLocalBounds();
-    const auto& origin(m_sprite.getOrigin());
-    */
-    const auto screenCoords = window.mapCoordsToPixel(m_sprite.getPosition());
-    std::cerr << "DRAW screenCoords: " << screenCoords.x << ", " << screenCoords.y << std::endl;
-
 }
 
 

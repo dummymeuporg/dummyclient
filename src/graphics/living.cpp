@@ -85,15 +85,15 @@ void Living::tick() {
 std::pair<std::int16_t, std::int16_t>
 Living::computeDistance() {
     // If the character is going in a diagonal way, divide its browsed
-    // distance by square root of 2 (Pythagor theorem).
+    // distance by square root of 2 (Pythagorean theorem).
     float divisor = m_xMovement != 0 && m_yMovement != 0 ? SQRT_2 : 1.0;
     int ellapsedMs = m_movingClock.getElapsedTime().asMilliseconds();
-
+    auto velocity = static_cast<float>(m_velocity) / 100.0;
     std::int16_t xDistance(static_cast<unsigned>(
-        ((ellapsedMs/9) * m_xMovement) / divisor
+        ((ellapsedMs/8.0) * m_xMovement * velocity) / divisor
     ));
     std::int16_t yDistance(static_cast<unsigned>(
-        ((ellapsedMs/9) * m_yMovement) / divisor
+        ((ellapsedMs/8.0) * m_yMovement * velocity) / divisor
     ));
     m_movingClock.restart();
     return std::pair<std::int16_t, std::int16_t>(xDistance, yDistance);

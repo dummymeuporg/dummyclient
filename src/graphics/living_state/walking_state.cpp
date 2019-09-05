@@ -16,7 +16,8 @@ WalkingState::WalkingState(Graphics::Living& living) :
 void WalkingState::draw(sf::RenderWindow& window) {
     const sf::Vector2u& windowSize(window.getSize());
     static const int FRAMES[] = {1, 2, 1, 0};
-    if (m_clock.getElapsedTime().asMilliseconds() >= 140) {
+    const auto refreshFrame(240 - m_living.velocity());
+    if (m_clock.getElapsedTime().asMilliseconds() >= refreshFrame) {
         ++m_currentFrame;
         if (m_currentFrame >= 4) {
             m_currentFrame = 0;

@@ -7,6 +7,7 @@
 #include <dummy/server/command/message.hpp>
 #include <dummy/server/command/ping.hpp>
 
+#include <dummy/server/response/change_character.hpp>
 #include <dummy/server/response/message.hpp>
 #include <dummy/server/response/ping.hpp>
 
@@ -490,10 +491,12 @@ void GameScreen::visitResponse(
 }
 
 void GameScreen::visitResponse(
-    const Dummy::Server::Response::ChangeCharacter&
+    const Dummy::Server::Response::ChangeCharacter& changeCharacter
 )
 {
     auto self(shared_from_this());
+    m_client.character()->setPosition(changeCharacter.position());
+    m_client.character()->setMapLocation(changeCharacter.mapLocation());
     m_client.returnToPreviousScreen();
 }
 

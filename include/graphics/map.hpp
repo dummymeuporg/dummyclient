@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <dummy/core/graphic_layer.hpp>
 #include <dummy/local/map.hpp>
 
@@ -42,7 +44,7 @@ public:
         return Dummy::Local::Map::floors();
     }
 
-    const bool
+    bool
     isBlocking(std::uint8_t floor, std::uint16_t x, std::uint16_t y) const {
         return m_floors[floor].isBlocking(x, y);
     }
