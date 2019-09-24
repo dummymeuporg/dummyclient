@@ -35,6 +35,10 @@ public:
         return m_floorViews[i];
     }
 
+    const Graphics::Map& map() const {
+        return *m_map;
+    }
+
 private:
     void load();
 

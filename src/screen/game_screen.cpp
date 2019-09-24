@@ -445,17 +445,27 @@ void GameScreen::draw(sf::RenderWindow& window) {
 void GameScreen::tick() {
     m_player.tick();
     m_mapState.tick();
-    /*
-    if (m_pingClock.getElapsedTime().asMilliseconds() >= 100) {
-        m_client.sendCommand(std::make_unique<Dummy::Server::Command::Ping>());
-        m_pingClock.restart();
-    }
-    */
 
     if (!m_isArrowPressed && m_direction != sf::Keyboard::Unknown) {
         onArrowPressed();
     } else {
         moveCharacter(m_direction);
+    }
+
+    //XXX: Ugly. Too much dereferencing to access a simple property.
+    const auto& touchEvents(
+        m_mapView->map().floors()[m_player.floor()].touchEvents()
+    );
+    auto pos = m_player.serverPosition();
+    std::pair<std::uint16_t, std::uint16_t> normalizedPos{
+        pos.first / 2,
+        pos.second/2
+    };
+    std::uint16_t eventIndex(
+        normalizedPos.second * m_mapView->width() + normalizedPos.first
+    );
+    if (touchEvents.find(eventIndex) != std::end(touchEvents)) {
+        std::cerr << "There is a touch event!" << std::endl;
     }
 }
 
