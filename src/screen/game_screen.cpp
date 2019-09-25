@@ -510,5 +510,20 @@ void GameScreen::visitResponse(
     m_client.returnToPreviousScreen();
 }
 
+void GameScreen::onMessage(const std::string& message) {
+    std::cerr << "Message: " << message << std::endl;
+}
+
+
+void GameScreen::onTeleport(
+    const std::string& destinationMap,
+    std::uint16_t x,
+    std::uint16_t y,
+    std::uint8_t floor
+) {
+    std::cerr << "Teleport to: " << destinationMap << "("
+        << x << ", " << y << ", " << floor << std::endl;
+}
+
 
 } // namespace Screen

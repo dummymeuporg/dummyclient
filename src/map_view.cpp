@@ -4,7 +4,7 @@
 #include "graphics/map.hpp"
 #include "map_view.hpp"
 
-MapView::MapView(std::unique_ptr<const Graphics::Map> graphicMap)
+MapView::MapView(std::unique_ptr<Graphics::Map> graphicMap)
     : m_map(std::move(graphicMap)),
       m_chipset(texture(m_map->chipset()))
 {

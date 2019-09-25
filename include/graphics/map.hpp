@@ -48,6 +48,12 @@ public:
     isBlocking(std::uint8_t floor, std::uint16_t x, std::uint16_t y) const {
         return m_floors[floor].isBlocking(x, y);
     }
+
+    void setEventObserver(
+        std::shared_ptr<Dummy::Local::EventObserver> observer
+    ) {
+        Dummy::Local::Map::setEventObserver(observer);
+    }
 };
 
 } // namespace Graphics

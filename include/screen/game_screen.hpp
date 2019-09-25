@@ -1,5 +1,7 @@
 #pragma once
 
+#include <dummy/local/event_observer.hpp>
+
 #include <memory>
 #include "local_map_state.hpp"
 #include "floor_view.hpp"
@@ -20,7 +22,7 @@ namespace Screen {
 using GraphicLivingsMap = 
     std::map<std::string, std::unique_ptr<Graphics::Living>>;
 
-class GameScreen : public UIScreen {
+class GameScreen : public UIScreen, public Dummy::Local::EventObserver {
 public:
 	static const int DIRECTION_NONE = 0x00;
 	static const int DIRECTION_UP = 0x01;
@@ -47,6 +49,15 @@ public:
     void visitResponse(const Dummy::Server::Response::SetPosition&) override;
     void
     visitResponse(const Dummy::Server::Response::ChangeCharacter&) override;
+
+    // EventObserver
+    void onMessage(const std::string&) override;
+    void onTeleport(
+        const std::string&,
+        std::uint16_t,
+        std::uint16_t,
+        std::uint8_t
+    ) override;
 
 private:
     /* Private methods. */
