@@ -49,9 +49,7 @@ public:
         return m_floors[floor].isBlocking(x, y);
     }
 
-    void setEventObserver(
-        std::shared_ptr<Dummy::Local::EventObserver> observer
-    ) {
+    void setEventObserver(Dummy::Local::EventObserver* observer) {
         Dummy::Local::Map::setEventObserver(observer);
     }
 };

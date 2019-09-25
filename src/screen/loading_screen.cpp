@@ -100,7 +100,6 @@ void LoadingScreen::visitResponse(
         std::shared_ptr<GameScreen> screen = std::make_shared<GameScreen>(
             m_game, m_client, std::move(m_mapView)
         );
-        m_mapView->map().setEventObserver(screen);
         m_client.setScreen(screen);
     } else {
         std::cerr << "Error: status = " << static_cast<int>(response.status())

@@ -74,6 +74,8 @@ GameScreen::GameScreen(
     m_game.window().setView(m_gameView);
 
     addWidget(m_chatbox);
+
+    m_mapView->map().setEventObserver(this);
 }
 
 GameScreen::~GameScreen() {
@@ -466,6 +468,7 @@ void GameScreen::tick() {
     );
     if (touchEvents.find(eventIndex) != std::end(touchEvents)) {
         std::cerr << "There is a touch event!" << std::endl;
+        touchEvents.at(eventIndex)->execute();
     }
 }
 
@@ -522,7 +525,8 @@ void GameScreen::onTeleport(
     std::uint8_t floor
 ) {
     std::cerr << "Teleport to: " << destinationMap << "("
-        << x << ", " << y << ", " << floor << std::endl;
+        << x << ", " << y << ", " << static_cast<int>(floor) << ")"
+        << std::endl;
 }
 
 
