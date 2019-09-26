@@ -549,11 +549,11 @@ void GameScreen::onTeleport(
             << std::endl;
         m_client.sendCommand(
             std::make_unique<const Dummy::Server::Command::TeleportMap>(
-                destinationMap, x, y, floor, "main"
+                destinationMap, x*2, y*2, floor, "main"
             )
         );
         m_client.character()->setMapLocation(destinationMap);
-        m_client.character()->setPosition({x, y});
+        m_client.character()->setPosition({x*2, y*2});
         m_isTeleporting = true;
     }
 }
