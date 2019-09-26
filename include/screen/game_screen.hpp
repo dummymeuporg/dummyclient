@@ -49,6 +49,7 @@ public:
     void visitResponse(const Dummy::Server::Response::SetPosition&) override;
     void
     visitResponse(const Dummy::Server::Response::ChangeCharacter&) override;
+    void visitResponse(const Dummy::Server::Response::TeleportMap&) override;
 
     // EventObserver
     void onMessage(const std::string&) override;
@@ -104,6 +105,7 @@ private:
     // XXX: same as above.
     bool m_isEscapeKeyPressed;
     bool m_isEscapeMode;
+    bool m_isTeleporting;
     std::shared_ptr<Widget::QuitMessage> m_quitMessage;
 
     // XXX: I am going to puke. LOL.

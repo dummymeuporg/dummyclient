@@ -6,10 +6,12 @@
 #include <dummy/server/command/change_character.hpp>
 #include <dummy/server/command/message.hpp>
 #include <dummy/server/command/ping.hpp>
+#include <dummy/server/command/teleport_map.hpp>
 
 #include <dummy/server/response/change_character.hpp>
 #include <dummy/server/response/message.hpp>
 #include <dummy/server/response/ping.hpp>
+#include <dummy/server/response/teleport_map.hpp>
 
 #include "widget/button.hpp"
 #include "widget/chatbox.hpp"
@@ -23,6 +25,7 @@
 #include "floor_view.hpp"
 
 #include "screen/game_screen.hpp"
+#include "screen/loading_screen.hpp"
 
 namespace Screen {
 
@@ -63,6 +66,7 @@ GameScreen::GameScreen(
       m_isEnterKeyPressed(false),
       m_isEscapeKeyPressed(false),
       m_isEscapeMode(false),
+      m_isTeleporting(false),
       m_quitMessage(nullptr)
 {
     m_player.setX(m_client.character()->position().first * 8);
@@ -513,6 +517,21 @@ void GameScreen::visitResponse(
     m_client.returnToPreviousScreen();
 }
 
+void GameScreen::visitResponse(
+    const Dummy::Server::Response::TeleportMap& teleportMap
+)
+{
+    auto self(shared_from_this());
+    std::cerr << "Teleport map response" << std::endl;
+    if (teleportMap.status() == 0) {
+        auto screen = std::make_shared<LoadingScreen>(
+            m_game, m_client, m_client.character()->mapLocation(), "main"
+        );
+        m_client.setScreen(screen);
+    }
+
+}
+
 void GameScreen::onMessage(const std::string& message) {
     std::cerr << "Message: " << message << std::endl;
 }
@@ -524,10 +543,21 @@ void GameScreen::onTeleport(
     std::uint16_t y,
     std::uint8_t floor
 ) {
-    std::cerr << "Teleport to: " << destinationMap << "("
-        << x << ", " << y << ", " << static_cast<int>(floor) << ")"
-        << std::endl;
+    if (!m_isTeleporting) {
+        std::cerr << "Teleport to: " << destinationMap << "("
+            << x << ", " << y << ", " << static_cast<int>(floor) << ")"
+            << std::endl;
+        m_client.sendCommand(
+            std::make_unique<const Dummy::Server::Command::TeleportMap>(
+                destinationMap, x, y, floor, "main"
+            )
+        );
+        m_client.character()->setMapLocation(destinationMap);
+        m_client.character()->setPosition({x, y});
+        m_isTeleporting = true;
+    }
 }
+
 
 
 } // namespace Screen
