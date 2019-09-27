@@ -1,16 +1,62 @@
+#include <memory>
 #include <boost/range/irange.hpp>
 
+#include <dummy/server/command/change_character.hpp>
+#include <dummy/server/command/message.hpp>
+#include <dummy/server/command/ping.hpp>
+#include <dummy/server/command/teleport_map.hpp>
+
+#include <dummy/server/response/change_character.hpp>
+#include <dummy/server/response/message.hpp>
+#include <dummy/server/response/ping.hpp>
+#include <dummy/server/response/teleport_map.hpp>
+
+
+#include "custom_event_queue.hpp"
 #include "game.hpp"
 
 #include "graphics/foe.hpp"
 
-#include "widget/quit_message.hpp"
-
 #include "screen/game_screen.hpp"
 #include "screen/game_screen_state/playing_state.hpp"
+#include "screen/loading_screen.hpp"
+
+#include "widget/quit_message.hpp"
 
 namespace Screen {
 namespace GameScreenState {
+
+PlayingState::PlayingState(GameScreen& gameScreen)
+    : State(gameScreen),
+      m_characterDirection(DIRECTION_NONE),
+      m_direction(sf::Keyboard::Unknown),
+      m_isArrowPressed(false),
+      m_isMoving(false),
+      m_debugMode(false),
+      m_isTypingMessage(false),
+      m_isEnterKeyPressed(false),
+      m_isEscapeKeyPressed(false),
+      m_isEscapeMode(false),
+      m_isTeleporting(false),
+      m_chatbox(std::make_shared<Widget::Chatbox>(*this)),
+      m_quitMessage(nullptr)
+{
+    m_player.setX(m_client.character()->position().first * 8);
+    m_player.setY(m_client.character()->position().second * 8);
+
+    // XXX: find a better way to construct the camera.
+    m_gameView.setCenter(m_player.x() + 12, m_player.y() + 16);
+    m_gameView.zoom(0.5);
+    m_game.window().setView(m_gameView);
+
+    m_gameScreen.addWidget(m_chatbox);
+
+    m_mapView.map().setEventObserver(&m_gameScreen);
+}
+
+void PlayingState::loaded() {
+    m_pingClock.restart();
+}
 
 void PlayingState::draw(sf::RenderWindow& window) {
 
@@ -19,8 +65,6 @@ void PlayingState::draw(sf::RenderWindow& window) {
     auto& player(m_gameScreen.player());
     auto& mapView(m_gameScreen.mapView());
     auto& hudView(m_gameScreen.hudView());
-    auto& isEscapeMode(m_gameScreen.isEscapeMode());
-    auto quitMessage(m_gameScreen.quitMessage());
 
     gameView.setCenter(player.x() + 12, player.y() + 16);
     window.setView(gameView);
@@ -37,15 +81,13 @@ void PlayingState::draw(sf::RenderWindow& window) {
     }
 
     // XXX: ugly.
-    if (isEscapeMode) {
-        quitMessage->draw(window);
+    if (m_isEscapeMode) {
+        m_quitMessage->draw(window);
     }
     m_gameScreen.drawUI(window);
 }
 
 void PlayingState::drawFloorView(unsigned int index, ::FloorView& floorView) {
-
-    auto& debugMode(m_gameScreen.debugMode());
     auto& game(m_gameScreen.game());
     auto& mapState(m_gameScreen.mapState());
     auto& player(m_gameScreen.player());
@@ -68,7 +110,7 @@ void PlayingState::drawFloorView(unsigned int index, ::FloorView& floorView) {
 
     drawSprites(floorView.topSprites());
 
-    if (debugMode) {
+    if (m_debugMode) {
         drawBlockingLayer(index, floorView);
     }
 }
@@ -148,6 +190,206 @@ void PlayingState::drawCharacterHUD() {
     auto& gameView(m_gameScreen.gameView());
 
     player.drawHUD(game.window(), gameView);
+}
+
+void PlayingState::tick() {
+
+    m_player.tick();
+    m_mapState.tick();
+
+    if (!m_isArrowPressed && m_direction != sf::Keyboard::Unknown) {
+        onArrowPressed();
+    } else {
+        moveCharacter(m_direction);
+    }
+
+    //XXX: Ugly. Too much dereferencing to access a simple property.
+    const auto& touchEvents(
+        m_mapView.map().floors()[m_player.floor()].touchEvents()
+    );
+    auto pos = m_player.serverPosition();
+    std::pair<std::uint16_t, std::uint16_t> normalizedPos{
+        pos.first / 2,
+        pos.second/2
+    };
+    std::uint16_t eventIndex(
+        normalizedPos.second * m_mapView.width() + normalizedPos.first
+    );
+    if (touchEvents.find(eventIndex) != std::end(touchEvents)) {
+        std::cerr << "There is a touch event!" << std::endl;
+        touchEvents.at(eventIndex)->execute();
+    }
+}
+
+void PlayingState::moveCharacter(sf::Keyboard::Key key) {
+    auto& player(m_gameScreen.player());
+    int xVector = 0;
+    int yVector = 0;
+
+    if (m_characterDirection & DIRECTION_RIGHT) {
+        ++xVector;
+    }
+
+    if (m_characterDirection & DIRECTION_LEFT) {
+        --xVector;
+    }
+
+    if (m_characterDirection & DIRECTION_UP) {
+        --yVector;
+    }
+
+    if (m_characterDirection & DIRECTION_DOWN) {
+        ++yVector;
+    }
+
+    if (yVector < 0) {
+        player.setDirection(Dummy::Core::Character::Direction::UP);
+    } else if (yVector > 0) {
+        player.setDirection(Dummy::Core::Character::Direction::DOWN);
+    } else if (xVector < 0) {
+        player.setDirection(Dummy::Core::Character::Direction::LEFT);
+    } else if (xVector > 0) {
+        player.setDirection(Dummy::Core::Character::Direction::RIGHT);
+    }
+
+    player.setXMovement(xVector);
+    player.setYMovement(yVector);
+}
+
+void PlayingState::onKeyPressed(const sf::Event& event) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+        m_characterDirection |= DIRECTION_UP;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+        m_characterDirection |= DIRECTION_RIGHT;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+        m_characterDirection |= DIRECTION_DOWN;
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+        m_characterDirection |= DIRECTION_LEFT;
+    }
+
+    if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
+        m_gameScreen.pushEvent(
+            CustomEvent(
+                &m_gameScreen,
+                CustomEvent::MovementActive,
+                &m_gameScreen
+            )
+        );
+        m_isMoving = true;
+    }
+}
+
+void
+PlayingState::visitResponse(const Dummy::Server::Response::Message& message) {
+    // XXX: condition ugly. m_player should have a name attribute.
+    if (message.author() != m_client.character()->name()) {
+        m_mapState.say(message.author(), message.content());
+    }
+}
+
+void
+PlayingState::visitResponse(const Dummy::Server::Response::Ping& ping) {
+    for (const auto& update: ping.mapUpdates()) {
+        m_mapState.update(*update);
+    }
+}
+
+void
+PlayingState::visitResponse(
+    const Dummy::Server::Response::SetPosition& setPosition
+) {
+
+}
+
+void
+PlayingState::visitResponse(
+    const Dummy::Server::Response::ChangeCharacter& changeCharacter
+) {
+    m_client.character()->setPosition(changeCharacter.position());
+    m_client.character()->setMapLocation(changeCharacter.mapLocation());
+    m_client.returnToPreviousScreen();
+}
+
+void
+PlayingState::visitResponse(
+    const Dummy::Server::Response::TeleportMap& teleportMap
+) {
+    std::cerr << "Teleport map response" << std::endl;
+    if (teleportMap.status() == 0) {
+        auto screen = std::make_shared<LoadingScreen>(
+            m_game, m_client, m_client.character()->mapLocation(), "main"
+        );
+        m_client.setScreen(screen);
+    }
+}
+
+void PlayingState::onTeleport(
+    const std::string& destinationMap,
+    std::uint16_t x,
+    std::uint16_t y,
+    std::uint8_t floor
+) {
+    std::cerr << "Teleport to: " << destinationMap << "("
+        << x << ", " << y << ", " << static_cast<int>(floor) << ")"
+        << std::endl;
+    m_client.sendCommand(
+        std::make_unique<const Dummy::Server::Command::TeleportMap>(
+            destinationMap, x*2, y*2, floor, "main"
+        )
+    );
+    m_client.character()->setMapLocation(destinationMap);
+    m_client.character()->setPosition({x*2, y*2});
+
+    // XXX: Change state!
+
+}
+
+void PlayingState::onMessage(const std::string& message) {
+    std::cerr << "Message: " << message << std::endl;
+}
+
+void PlayingState::buildEscapeMessage() {
+    m_quitMessage = std::make_shared<Widget::QuitMessage>(*this);
+}
+
+void PlayingState::removeEscapeMessage() {
+    m_gameScreen.removeChild(m_quitMessage);
+}
+
+void PlayingState::toggleEscapeMode() {
+    if (!m_isEscapeMode) {
+        // Instantiate the modal message. Display it.
+        buildEscapeMessage();
+    } else {
+        // Remove the modal message.
+        //m_quitMessage.reset();
+        removeEscapeMessage();
+    }
+    m_isEscapeMode = !m_isEscapeMode;
+}
+
+bool PlayingState::handleEvent(const sf::Event& event) {
+    switch(event.type) {
+    case sf::Event::KeyPressed:
+        onKeyPressed(event);
+        break;
+    case sf::Event::KeyReleased:
+        onKeyReleased(event);
+        break;
+    case sf::Event::TextEntered:
+        onTextEntered(event);
+        break;
+    default:
+        break;
+    }
+    return true;
+}
+
+void PlayingState::handleCustomEvent(const ::CustomEvent&) {
+
 }
 
 } // namespace GameScreenState

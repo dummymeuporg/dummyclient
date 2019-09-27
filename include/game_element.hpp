@@ -33,6 +33,10 @@ protected:
         m_customEventQueue.pushEvent(event);
     }
 
+    void pushEvent(CustomEvent&& event) {
+        m_customEventQueue.pushEvent(std::move(event));
+    }
+
 private:
     ::CustomEventQueue& m_customEventQueue;
     ::ResourceProvider& m_resourceProvider;
