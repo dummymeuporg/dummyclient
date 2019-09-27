@@ -34,7 +34,7 @@ public:
     GameScreen(::Game&,
                ::Client&,
                std::unique_ptr<::MapView>);
-    virtual ~GameScreen();
+    ~GameScreen() override;
     void loaded() override;
     bool handleEvent(const sf::Event&) override;
     void handleCustomEvent(const ::CustomEvent&) override;
@@ -60,11 +60,49 @@ public:
         std::uint8_t
     ) override;
 
+    void drawUI(sf::RenderWindow&);
+
+    // XXX: Accessors: should only be accessed by the GameScreenStates.
+    sf::View& gameView() {
+        return m_gameView;
+    }
+
+    sf::View& hudView() {
+        return m_hudView;
+    }
+
+    ::LocalMapState& mapState() {
+        return m_mapState;
+    }
+
+    bool& isEscapeMode() {
+        return m_isEscapeMode;
+    }
+
+    Graphics::Player& player() {
+        return m_player;
+    }
+
+    std::shared_ptr<Widget::QuitMessage> quitMessage() {
+        return m_quitMessage;
+    }
+
+    ::MapView& mapView() {
+        return *m_mapView;
+    }
+
+    bool& debugMode() {
+        return m_debugMode;
+    }
+
+    // XXX: End of accessors.
+
+
+
 private:
     /* Private methods. */
     void drawLayer(::Sprites&);
-    void drawCharacter();
-    void drawCharacterHUD();
+
     void onKeyPressed(const sf::Event&);
     void onKeyReleased(const sf::Event&);
     void onTextEntered(const sf::Event&);
@@ -73,10 +111,15 @@ private:
     void moveCharacter(sf::Keyboard::Key);
     void drawLivings(std::uint8_t);
     void syncLivings();
+    /* XXX: To remove:
     void drawFloorView(unsigned int, FloorView&);
     void drawFloorViewHUD(unsigned int, FloorView&);
-    void drawBlockingLayer(unsigned int, FloorView&);
     void drawSprites(Sprites&);
+    void drawBlockingLayer(unsigned int, FloorView&);
+    void drawCharacter();
+    void drawCharacterHUD();
+    XXX*/
+
     void toggleEscapeMode();
     void buildEscapeMessage();
     void removeEscapeMessage();

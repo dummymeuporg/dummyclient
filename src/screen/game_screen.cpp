@@ -445,6 +445,10 @@ void GameScreen::draw(sf::RenderWindow& window) {
     if (m_isEscapeMode) {
         m_quitMessage->draw(window);
     }
+    drawUI(window);
+}
+
+void GameScreen::drawUI(sf::RenderWindow& window) {
     UIScreen::draw(window);
 }
 
@@ -557,6 +561,7 @@ void GameScreen::onTeleport(
         m_isTeleporting = true;
     }
 }
+
 
 
 
