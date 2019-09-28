@@ -20,7 +20,7 @@
 #include "graphics/living_state/walking_state.hpp"
 
 #include "screen/game_screen.hpp"
-#include "screen/game_screen_state/playing_state.hpp"
+#include "screen/game_screen_state/playing.hpp"
 #include "screen/loading_screen.hpp"
 
 #include "widget/quit_message.hpp"
@@ -28,7 +28,7 @@
 namespace Screen {
 namespace GameScreenState {
 
-PlayingState::PlayingState(GameScreen& gameScreen)
+Playing::Playing(GameScreen& gameScreen)
     : State(gameScreen),
       m_characterDirection(DIRECTION_NONE),
       m_direction(sf::Keyboard::Unknown),
@@ -56,11 +56,11 @@ PlayingState::PlayingState(GameScreen& gameScreen)
     m_mapView.map().setEventObserver(&m_gameScreen);
 }
 
-void PlayingState::loaded() {
+void Playing::loaded() {
     m_pingClock.restart();
 }
 
-void PlayingState::draw(sf::RenderWindow& window) {
+void Playing::draw(sf::RenderWindow& window) {
 
     // Properties of GameScreen
     auto& gameView(m_gameScreen.gameView());
@@ -89,7 +89,7 @@ void PlayingState::draw(sf::RenderWindow& window) {
     m_gameScreen.drawUI(window);
 }
 
-void PlayingState::drawFloorView(unsigned int index, ::FloorView& floorView) {
+void Playing::drawFloorView(unsigned int index, ::FloorView& floorView) {
     auto& game(m_gameScreen.game());
     auto& mapState(m_gameScreen.mapState());
     auto& player(m_gameScreen.player());
@@ -117,7 +117,7 @@ void PlayingState::drawFloorView(unsigned int index, ::FloorView& floorView) {
     }
 }
 
-void PlayingState::drawFloorViewHUD(unsigned int index, ::FloorView& floorView)
+void Playing::drawFloorViewHUD(unsigned int index, ::FloorView& floorView)
 {
     auto& game(m_gameScreen.game());
     auto& mapState(m_gameScreen.mapState());
@@ -137,7 +137,7 @@ void PlayingState::drawFloorViewHUD(unsigned int index, ::FloorView& floorView)
     }
 }
 
-void PlayingState::drawSprites(Sprites& sprites) {
+void Playing::drawSprites(Sprites& sprites) {
     auto& game(m_gameScreen.game());
     auto& mapView(m_gameScreen.mapView());
 
@@ -160,7 +160,7 @@ void PlayingState::drawSprites(Sprites& sprites) {
     }
 }
 
-void PlayingState::drawBlockingLayer(unsigned int index, FloorView& floorView)
+void Playing::drawBlockingLayer(unsigned int index, FloorView& floorView)
 {
     auto& game(m_gameScreen.game());
     auto& mapView(m_gameScreen.mapView());
@@ -180,13 +180,13 @@ void PlayingState::drawBlockingLayer(unsigned int index, FloorView& floorView)
 }
 
 
-void PlayingState::drawCharacter() {
+void Playing::drawCharacter() {
     auto& player(m_gameScreen.player());
     auto& game(m_gameScreen.game());
     player.draw(game.window());
 }
 
-void PlayingState::drawCharacterHUD() {
+void Playing::drawCharacterHUD() {
     auto& player(m_gameScreen.player());
     auto& game(m_gameScreen.game());
     auto& gameView(m_gameScreen.gameView());
@@ -194,7 +194,7 @@ void PlayingState::drawCharacterHUD() {
     player.drawHUD(game.window(), gameView);
 }
 
-void PlayingState::tick() {
+void Playing::tick() {
 
     m_player.tick();
     m_mapState.tick();
@@ -223,7 +223,7 @@ void PlayingState::tick() {
     }
 }
 
-void PlayingState::moveCharacter(sf::Keyboard::Key) {
+void Playing::moveCharacter(sf::Keyboard::Key) {
     auto& player(m_gameScreen.player());
     int xVector = 0;
     int yVector = 0;
@@ -258,7 +258,7 @@ void PlayingState::moveCharacter(sf::Keyboard::Key) {
     player.setYMovement(yVector);
 }
 
-void PlayingState::onKeyPressed(const sf::Event&) {
+void Playing::onKeyPressed(const sf::Event&) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         m_characterDirection |= DIRECTION_UP;
     }
@@ -285,7 +285,7 @@ void PlayingState::onKeyPressed(const sf::Event&) {
 }
 
 void
-PlayingState::visitResponse(const Dummy::Server::Response::Message& message) {
+Playing::visitResponse(const Dummy::Server::Response::Message& message) {
     // XXX: condition ugly. m_player should have a name attribute.
     if (message.author() != m_client.character()->name()) {
         m_mapState.say(message.author(), message.content());
@@ -293,19 +293,19 @@ PlayingState::visitResponse(const Dummy::Server::Response::Message& message) {
 }
 
 void
-PlayingState::visitResponse(const Dummy::Server::Response::Ping& ping) {
+Playing::visitResponse(const Dummy::Server::Response::Ping& ping) {
     for (const auto& update: ping.mapUpdates()) {
         m_mapState.update(*update);
     }
 }
 
 void
-PlayingState::visitResponse(const Dummy::Server::Response::SetPosition&) {
+Playing::visitResponse(const Dummy::Server::Response::SetPosition&) {
     // Nothing to do.
 }
 
 void
-PlayingState::visitResponse(
+Playing::visitResponse(
     const Dummy::Server::Response::ChangeCharacter& changeCharacter
 ) {
     m_client.character()->setPosition(changeCharacter.position());
@@ -314,7 +314,7 @@ PlayingState::visitResponse(
 }
 
 void
-PlayingState::visitResponse(
+Playing::visitResponse(
     const Dummy::Server::Response::TeleportMap& teleportMap
 ) {
     std::cerr << "Teleport map response" << std::endl;
@@ -326,7 +326,7 @@ PlayingState::visitResponse(
     }
 }
 
-void PlayingState::onTeleport(
+void Playing::onTeleport(
     const std::string& destinationMap,
     std::uint16_t x,
     std::uint16_t y,
@@ -347,19 +347,19 @@ void PlayingState::onTeleport(
 
 }
 
-void PlayingState::onMessage(const std::string& message) {
+void Playing::onMessage(const std::string& message) {
     std::cerr << "Message: " << message << std::endl;
 }
 
-void PlayingState::buildEscapeMessage() {
+void Playing::buildEscapeMessage() {
     m_quitMessage = std::make_shared<Widget::QuitMessage>(m_gameScreen);
 }
 
-void PlayingState::removeEscapeMessage() {
+void Playing::removeEscapeMessage() {
     m_gameScreen.removeChild(m_quitMessage);
 }
 
-void PlayingState::toggleEscapeMode() {
+void Playing::toggleEscapeMode() {
     if (!m_isEscapeMode) {
         // Instantiate the modal message. Display it.
         buildEscapeMessage();
@@ -371,7 +371,7 @@ void PlayingState::toggleEscapeMode() {
     m_isEscapeMode = !m_isEscapeMode;
 }
 
-bool PlayingState::handleEvent(const sf::Event& event) {
+bool Playing::handleEvent(const sf::Event& event) {
     switch(event.type) {
     case sf::Event::KeyPressed:
         onKeyPressed(event);
@@ -388,7 +388,7 @@ bool PlayingState::handleEvent(const sf::Event& event) {
     return true;
 }
 
-void PlayingState::handleCustomEvent(const ::CustomEvent& event) {
+void Playing::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
     case CustomEvent::Type::MovementActive:
         m_player.changeState(
@@ -424,7 +424,7 @@ void PlayingState::handleCustomEvent(const ::CustomEvent& event) {
     }
 }
 
-void PlayingState::onArrowReleased() {
+void Playing::onArrowReleased() {
 
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
         !sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
@@ -443,7 +443,7 @@ void PlayingState::onArrowReleased() {
     }
 }
 
-void PlayingState::onArrowPressed() {
+void Playing::onArrowPressed() {
     if (!m_isArrowPressed) {
         m_gameScreen.pushEvent(
             CustomEvent(
@@ -456,7 +456,7 @@ void PlayingState::onArrowPressed() {
     }
 }
 
-void PlayingState::onKeyReleased(const sf::Event& event) {
+void Playing::onKeyReleased(const sf::Event& event) {
     if (sf::Keyboard::Enter == event.key.code && m_isEnterKeyPressed) {
         std::cerr << "Enter key released!" << std::endl;
         m_isEnterKeyPressed = false;
@@ -497,7 +497,7 @@ void PlayingState::onKeyReleased(const sf::Event& event) {
     }
 }
 
-void PlayingState::onTextEntered(const sf::Event& event) {
+void Playing::onTextEntered(const sf::Event& event) {
     if ('\r' == event.text.unicode) {
         if (!m_isEnterKeyPressed) {
             m_gameScreen.pushEvent(::CustomEvent(

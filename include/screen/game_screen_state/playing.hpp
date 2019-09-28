@@ -10,7 +10,7 @@
 namespace Screen {
 namespace GameScreenState {
 
-class PlayingState : public State {
+class Playing : public State {
 public:
     static const int DIRECTION_NONE = 0x00;
     static const int DIRECTION_UP = 0x01;
@@ -19,7 +19,7 @@ public:
     static const int DIRECTION_LEFT = 0x08;
     static const int DIRECTION_ALL = 0x0f;
 
-    PlayingState(GameScreen&);
+    Playing(GameScreen&);
     void draw(sf::RenderWindow&) override;
     void tick() override;
     void loaded() override;

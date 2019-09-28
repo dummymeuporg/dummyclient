@@ -27,7 +27,7 @@
 #include "screen/game_screen.hpp"
 #include "screen/loading_screen.hpp"
 
-#include "screen/game_screen_state/playing_state.hpp"
+#include "screen/game_screen_state/playing.hpp"
 
 namespace Screen {
 
@@ -58,7 +58,7 @@ GameScreen::GameScreen(
                               0,
                               m_game.width(),
                               m_game.height())),
-      m_state(std::make_shared<GameScreenState::PlayingState>(*this))
+      m_state(std::make_shared<GameScreenState::Playing>(*this))
 
 {
 }
