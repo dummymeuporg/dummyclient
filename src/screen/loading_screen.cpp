@@ -73,6 +73,7 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
             std::make_unique<const Dummy::Server::Command::TeleportMap>(
                 m_mapNameToLoad,
                 m_client.character()->position(),
+                m_client.character()->floor(),
                 m_instance
             )
         );

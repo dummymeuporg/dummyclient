@@ -22,3 +22,7 @@ void CustomEventQueue::pollEvent(CustomEvent& event) {
 void CustomEventQueue::pushEvent(const CustomEvent& event) {
     m_eventsQueue.push(event);
 }
+
+void CustomEventQueue::pushEvent(CustomEvent&& event) {
+    m_eventsQueue.push(std::move(event));
+}

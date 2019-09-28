@@ -60,6 +60,7 @@ public:
     CustomEventQueue();
     void pollEvent(CustomEvent&);
     void pushEvent(const CustomEvent&);
+    void pushEvent(CustomEvent&&);
 
 private:
     std::queue<CustomEvent> m_eventsQueue;

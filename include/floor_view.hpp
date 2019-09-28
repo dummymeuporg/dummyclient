@@ -22,6 +22,10 @@ public:
         return m_blockingSquares;
     }
 
+    const Dummy::Local::Events& touchEvents() const {
+        return m_floor.touchEvents();
+    }
+
 private:
     /* Methods. */
     void applySprites(

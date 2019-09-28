@@ -1,3 +1,5 @@
+#pragma once
+
 #include "graphics/living.hpp"
 
 class Client;
@@ -22,6 +24,9 @@ public:
     void tick() override;
     void draw(sf::RenderWindow&) override;
     void drawHUD(sf::RenderWindow&, const sf::View&) override;
+    const std::pair<std::uint16_t, std::uint16_t>& serverPosition() const {
+        return m_serverPosition;
+    }
 protected:
     void updatePosition() override;
 
