@@ -76,10 +76,11 @@ public:
 protected:
     GameScreen& m_gameScreen;
     ::MapView& m_mapView;
-    Graphics::Player m_player;
-    GraphicLivingsMap m_livings;
-    ::LocalMapState m_mapState;
-    sf::View m_gameView, m_hudView;
+    Graphics::Player& m_player;
+    GraphicLivingsMap& m_livings;
+    ::LocalMapState& m_mapState;
+    sf::View& m_gameView;
+    sf::View& m_hudView;
     ::Client& m_client;
     ::Game& m_game;
 

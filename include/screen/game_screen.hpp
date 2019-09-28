@@ -86,7 +86,7 @@ public:
         return *m_mapView;
     }
 
-    GraphicLivingsMap livings() {
+    GraphicLivingsMap& livings() {
         return m_livings;
     }
 

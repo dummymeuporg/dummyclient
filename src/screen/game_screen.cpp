@@ -72,40 +72,7 @@ void GameScreen::loaded() {
 
 void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
     UIScreen::handleCustomEvent(event);
-    switch(event.type()) {
-    case CustomEvent::Type::MovementActive:
-        m_player.changeState(
-            std::make_shared<Graphics::LivingState::WalkingState>(m_player)
-        );
-        break;
-    case CustomEvent::Type::MovementInactive:
-        m_player.changeState(
-            std::make_shared<Graphics::LivingState::StandingState>(m_player)
-        );
-        break;
-    case CustomEvent::Type::EscapeKeyPressed:
-        toggleEscapeMode();
-        break;
-    // From escape modal box:
-    case CustomEvent::CancelButtonClicked:
-        if (m_isEscapeMode) {
-            removeEscapeMessage();
-            m_isEscapeMode = false;
-        }
-        break;
-    case CustomEvent::ChangeCharacterButtonClicked:
-        m_client.sendCommand(
-            std::make_unique<const Dummy::Server::Command::ChangeCharacter>()
-        );
-        // XXX: Lock the screen?
-        break;
-    case CustomEvent::QuitButtonClicked:
-        m_game.quit();
-        break;
-    default:
-        break;
-    }
-
+    m_state->handleCustomEvent(event);
 }
 
 bool GameScreen::handleEvent(const sf::Event& event) {
@@ -114,130 +81,6 @@ bool GameScreen::handleEvent(const sf::Event& event) {
         return forward;
     }
     return m_state->handleEvent(event);
-}
-
-void GameScreen::onArrowReleased() {
-	
-	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
-		!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
-		!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
-		!sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-        pushEvent(
-            CustomEvent(
-                this,
-                CustomEvent::MovementInactive,
-                this
-            )
-        );
-        m_isArrowPressed = false;
-		m_direction = sf::Keyboard::Unknown;
-    }
-}
-
-void GameScreen::onArrowPressed() {
-    if (!m_isArrowPressed) {
-        pushEvent(
-            CustomEvent(
-                this,
-                CustomEvent::MovementActive,
-                this
-            )
-        );
-        m_isArrowPressed = true;
-    }
-}
-
-void GameScreen::onKeyPressed(const sf::Event& event) {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		m_characterDirection |= DIRECTION_UP;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		m_characterDirection |= DIRECTION_RIGHT;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		m_characterDirection |= DIRECTION_DOWN;
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		m_characterDirection |= DIRECTION_LEFT;
-	}
-
-	if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
-        pushEvent(CustomEvent(this, CustomEvent::MovementActive, this));
-		m_isMoving = true;
-	}
-}
-
-void GameScreen::onKeyReleased(const sf::Event& event) {
-    if (sf::Keyboard::Enter == event.key.code && m_isEnterKeyPressed) {
-        std::cerr << "Enter key released!" << std::endl;
-        m_isEnterKeyPressed = false;
-    }
-	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_UP);
-	}
-	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_RIGHT);
-	}
-	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_DOWN);
-	}
-	if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_LEFT);
-	}
-
-	if (m_characterDirection == DIRECTION_NONE && m_isMoving) {
-        pushEvent(::CustomEvent(this, CustomEvent::MovementInactive, this));
-		m_isMoving = false;
-	}
-
-    // XXX: Ugly.
-    if (m_isTypingMessage) {
-        // Forward the event to the chatbox.
-        m_chatbox->handleEvent(event);
-    }
-
-    // XXX: same as above. I should use a fancy state pattern.
-    if (m_isEscapeKeyPressed) {
-        m_isEscapeKeyPressed = false;
-    }
-}
-
-void GameScreen::onTextEntered(const sf::Event& event) {
-    if ('\r' == event.text.unicode) {
-        if (!m_isEnterKeyPressed) {
-            pushEvent(::CustomEvent(
-                this,
-                CustomEvent::EnterKeyPressed,
-                m_chatbox.get()
-            ));
-            m_isEnterKeyPressed = true;
-            if (m_isTypingMessage) {
-                // XXX: Get message and send it.
-                std::string messageToSend(m_chatbox->typedMessage());
-                m_chatbox->clearMessageInputTextbox();
-                std::cerr << "Sent " << messageToSend << std::endl;
-                m_player.say(messageToSend);
-                m_client.sendCommand(
-                    std::make_unique<Dummy::Server::Command::Message>(
-                        messageToSend
-                    )
-                );
-            }
-            m_isTypingMessage = !m_isTypingMessage;
-        }
-    } else if ('\033' == event.text.unicode) {
-        std::cerr << "Escape pressed" << std::endl;
-        if (!m_isEscapeKeyPressed) {
-            pushEvent(
-                ::CustomEvent(this, CustomEvent::EscapeKeyPressed, this)
-            );
-            m_isEscapeKeyPressed = true;
-        }
-    } else if (m_isTypingMessage) {
-        // Forward the event to the chatbox.
-        m_chatbox->handleEvent(event);
-    }
 }
 
 
@@ -315,6 +158,7 @@ void GameScreen::onTeleport(
 void GameScreen::pushEvent(CustomEvent&& customEvent) {
     GameElement::pushEvent(std::move(customEvent));
 }
+
 
 
 } // namespace Screen
