@@ -1,3 +1,5 @@
+#pragma once
+
 #include "graphics/living.hpp"
 
 class Client;
