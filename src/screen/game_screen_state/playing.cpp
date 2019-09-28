@@ -21,7 +21,8 @@
 
 #include "screen/game_screen.hpp"
 #include "screen/game_screen_state/playing.hpp"
-#include "screen/loading_screen.hpp"
+#include "screen/game_screen_state/teleporting.hpp"
+
 
 #include "widget/quit_message.hpp"
 
@@ -315,15 +316,9 @@ Playing::visitResponse(
 
 void
 Playing::visitResponse(
-    const Dummy::Server::Response::TeleportMap& teleportMap
+    const Dummy::Server::Response::TeleportMap&
 ) {
-    std::cerr << "Teleport map response" << std::endl;
-    if (teleportMap.status() == 0) {
-        auto screen = std::make_shared<LoadingScreen>(
-            m_game, m_client, m_client.character()->mapLocation(), "main"
-        );
-        m_client.setScreen(screen);
-    }
+    // Should be handled by the 'Teleporting' state.
 }
 
 void Playing::onTeleport(
@@ -332,6 +327,7 @@ void Playing::onTeleport(
     std::uint16_t y,
     std::uint8_t floor
 ) {
+    auto self(shared_from_this());
     std::cerr << "Teleport to: " << destinationMap << "("
         << x << ", " << y << ", " << static_cast<int>(floor) << ")"
         << std::endl;
@@ -344,7 +340,7 @@ void Playing::onTeleport(
     m_client.character()->setPosition({x*2, y*2});
 
     // XXX: Change state!
-
+    m_gameScreen.setState(std::make_shared<Teleporting>(m_gameScreen));
 }
 
 void Playing::onMessage(const std::string& message) {

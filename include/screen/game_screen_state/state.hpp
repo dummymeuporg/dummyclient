@@ -39,7 +39,7 @@ namespace GameScreenState {
 using GraphicLivingsMap =
     std::map<std::string, std::unique_ptr<Graphics::Living>>;
 
-class State {
+class State : public std::enable_shared_from_this<State> {
 public:
     State(GameScreen&);
     virtual ~State();

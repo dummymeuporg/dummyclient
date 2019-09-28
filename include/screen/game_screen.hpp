@@ -64,6 +64,7 @@ public:
     void drawUI(sf::RenderWindow&);
     void pushEvent(CustomEvent&&);
     void addWidget(std::shared_ptr<Widget::Abstract::Widget>);
+    void setState(std::shared_ptr<GameScreenState::State>);
 
     // XXX: Accessors: should only be accessed by the GameScreenStates.
     sf::View& gameView() {

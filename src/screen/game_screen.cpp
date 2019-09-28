@@ -159,6 +159,8 @@ void GameScreen::pushEvent(CustomEvent&& customEvent) {
     GameElement::pushEvent(std::move(customEvent));
 }
 
-
+void GameScreen::setState(std::shared_ptr<GameScreenState::State> state) {
+    m_state = state;
+}
 
 } // namespace Screen
