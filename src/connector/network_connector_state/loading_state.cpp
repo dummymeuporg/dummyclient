@@ -52,8 +52,8 @@ void LoadingState::visitCommand(
 std::shared_ptr<const Dummy::Server::Response::TeleportMap>
 LoadingState::_teleportMap(Dummy::Protocol::IncomingPacket& packet) {
     auto self(shared_from_this());
-    std::unique_ptr<Dummy::Server::Response::TeleportMap> response =
-        std::make_unique<Dummy::Server::Response::TeleportMap>();
+    auto response =
+        std::make_shared<Dummy::Server::Response::TeleportMap>();
     response->readFrom(packet);
     if (response->status() == 0) {
         m_networkConnector.changeState(

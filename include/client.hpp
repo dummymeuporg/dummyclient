@@ -38,7 +38,7 @@ class Connector;
 
 class MapView;
 
-using CommandPtr = std::unique_ptr<const Dummy::Server::Command::Command>;
+using CommandPtr = std::shared_ptr<const Dummy::Server::Command::Command>;
 
 class Client {
 public:

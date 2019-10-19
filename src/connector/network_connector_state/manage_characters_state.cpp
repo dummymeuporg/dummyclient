@@ -85,7 +85,7 @@ ManageCharactersState::_selectCharacter(
     Dummy::Protocol::IncomingPacket& packet
 ) {
     auto response(
-        std::make_unique<Dummy::Server::Response::SelectCharacter>()
+        std::make_shared<Dummy::Server::Response::SelectCharacter>()
     );
     response->readFrom(packet);
     if (response->status() == 0) {
