@@ -52,8 +52,8 @@ void InitialState::visitCommand(
 std::shared_ptr<const Dummy::Server::Response::ConnectResponse>
 InitialState::_getConnectResponse(Dummy::Protocol::IncomingPacket& packet) {
     auto self(shared_from_this());
-    std::unique_ptr<Dummy::Server::Response::ConnectResponse> response =
-        std::make_unique<Dummy::Server::Response::ConnectResponse>();
+    auto response =
+        std::make_shared<Dummy::Server::Response::ConnectResponse>();
     response->readFrom(packet);
 
     if (response->status() == 0) {

@@ -54,7 +54,7 @@ void Player::updatePosition() {
 void Player::tick() {
     // XXX: update position and read the others each 333 ms?
     if (m_updatePosClock.getElapsedTime().asMilliseconds() >= 333) {
-        m_client.sendCommand(std::make_unique<Dummy::Server::Command::Ping>());
+        m_client.sendCommand(std::make_shared<Dummy::Server::Command::Ping>());
 
         // Update position if needed
         auto newPosition = translateCoordsToServ(m_x, m_y);
