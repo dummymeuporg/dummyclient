@@ -29,6 +29,7 @@ void FloorView::initSprites() {
     for (auto& renderTexture : m_topTextures) {
         renderTexture = std::make_unique<sf::RenderTexture>();
         renderTexture->create(16, 16);
+        renderTexture->clear(sf::Color::Transparent);
         //renderTexture->clear(sf::Color::Black);
     }
 
