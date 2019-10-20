@@ -100,15 +100,15 @@ void Playing::drawFloorView(unsigned int index, ::FloorView& floorView) {
 
     //drawLivings(index);
 
-    // Draw the character if needed.
-    if (player.floor() == index) {
-        drawCharacter();
-    }
-
     // Draw the livings on the current floor.
     const auto& localFloorState(mapState.localFloorState(index));
     for (auto& [name, foe]: localFloorState.graphicFoes()) {
         foe->draw(game.window());
+    }
+
+    // Draw the character if needed.
+    if (player.floor() == index) {
+        drawCharacter();
     }
 
     drawSprites(floorView.topSprites());
