@@ -1,5 +1,3 @@
-#pragma once
-
 #include <screen/game_screen.hpp>
 #include <screen/game_screen_state/state.hpp>
 
