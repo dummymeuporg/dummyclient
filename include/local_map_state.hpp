@@ -26,11 +26,11 @@ public:
     ) override;
 
     void visitMapUpdate(
-        const Dummy::Protocol::MapUpdate::CharacterOff&
+        const Dummy::Protocol::MapUpdate::LivingOff&
     ) override;
 
     void visitMapUpdate(
-        const Dummy::Protocol::MapUpdate::CharacterOn&
+        const Dummy::Protocol::MapUpdate::LivingOn&
     ) override;
 
     void tick();

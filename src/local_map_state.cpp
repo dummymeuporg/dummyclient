@@ -1,7 +1,7 @@
 #include <set>
 
-#include <dummy/protocol/map_update/character_off.hpp>
-#include <dummy/protocol/map_update/character_on.hpp>
+#include <dummy/protocol/map_update/named_living_off.hpp>
+#include <dummy/protocol/map_update/named_living_on.hpp>
 #include <dummy/protocol/map_update/character_position.hpp>
 #include <dummy/protocol/living.hpp>
 
@@ -29,12 +29,12 @@ void LocalMapState::visitMapUpdate(
 
 
 void LocalMapState::visitMapUpdate(
-    const Dummy::Protocol::MapUpdate::CharacterOn& characterOn
+    const Dummy::Protocol::MapUpdate::LivingOn& namedLivingOn
 ) {
-    Dummy::Server::MapState::visitMapUpdate(characterOn);
+    Dummy::Server::MapState::visitMapUpdate(namedLivingOn);
 
     // Check that its floor is valid.
-    const auto& floor(characterOn.floor());
+    const auto& floor(namedLivingOn.floor());
 
     if (floor >= m_mapView.floorViews().size()) {
         // XXX: throw exception?
@@ -42,33 +42,33 @@ void LocalMapState::visitMapUpdate(
 
     auto& localFloorState(m_localFloorStates[floor]);
 
-    if (localFloorState.containsLiving(characterOn.name())) {
+    if (localFloorState.containsLiving(namedLivingOn.name())) {
         // XXX: throw exception?
     }
 
     auto foe = std::make_shared<Graphics::FoePlayer>(
         m_mapView,
-        characterOn.chipset(),
-        characterOn.name(),
-        8 * characterOn.x(),
-        8 * characterOn.y(),
-        characterOn.floor(),
+        namedLivingOn.chipset(),
+        namedLivingOn.name(),
+        8 * namedLivingOn.x(),
+        8 * namedLivingOn.y(),
+        namedLivingOn.floor(),
         m_mapView.scaleFactor(),
-        characterOn.direction()
+        namedLivingOn.direction()
     );
 
-    localFloorState.addFoe(characterOn.name(), foe);
-    m_graphicFoesFloor[characterOn.name()] = floor;
+    localFloorState.addFoe(namedLivingOn.name(), foe);
+    m_graphicFoesFloor[namedLivingOn.name()] = floor;
 }
 
 void LocalMapState::visitMapUpdate(
-    const Dummy::Protocol::MapUpdate::CharacterOff& characterOff
+    const Dummy::Protocol::MapUpdate::LivingOff& namedLivingOff
 ) {
-    Dummy::Server::MapState::visitMapUpdate(characterOff);
+    Dummy::Server::MapState::visitMapUpdate(namedLivingOff);
 
     // Get the appropriate floor and dispatch.
-    const auto& floor(m_graphicFoesFloor[characterOff.name()]);
-    m_localFloorStates[floor].removeFoe(characterOff.name());
+    const auto& floor(m_graphicFoesFloor[namedLivingOff.name()]);
+    m_localFloorStates[floor].removeFoe(namedLivingOff.name());
 }
 
 void LocalMapState::tick() {

@@ -10,7 +10,7 @@ class LocalMapState;
 namespace Dummy {
 namespace Protocol {
 namespace MapUpdate {
-class CharacterOff;
+class LivingOff;
 class CharacterPosition;
 } // namespace MapUpdate
 } // namespace Protocol
