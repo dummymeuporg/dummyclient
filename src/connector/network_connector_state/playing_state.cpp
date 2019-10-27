@@ -8,11 +8,13 @@
 #include <dummy/server/command/message.hpp>
 #include <dummy/server/command/ping.hpp>
 #include <dummy/server/command/set_position.hpp>
+#include <dummy/server/command/teleport_map.hpp>
 
 #include <dummy/server/response/message.hpp>
 #include <dummy/server/response/ping.hpp>
 #include <dummy/server/response/set_position.hpp>
 #include <dummy/server/response/change_character.hpp>
+#include <dummy/server/response/teleport_map.hpp>
 
 #include "connector/network_connector.hpp"
 #include "connector/network_connector_state/loading_state.hpp"
@@ -45,6 +47,8 @@ PlayingState::getResponse(Dummy::Protocol::IncomingPacket& packet)
         return message(packet);
     case Dummy::Protocol::Bridge::CHANGE_CHARACTER:
         return changeCharacter(packet);
+    case Dummy::Protocol::Bridge::PLAYING_TELEPORT_MAP:
+        return teleportMap(packet);
     default:
         UnknownResponseError();
         break;
@@ -85,6 +89,17 @@ void PlayingState::visitCommand(
     m_networkConnector.sendPacket(pkt);
 }
 
+void PlayingState::visitCommand(
+    const Dummy::Server::Command::TeleportMap& teleportMap
+) {
+    Dummy::Protocol::OutgoingPacket pkt;
+    pkt << Dummy::Protocol::Bridge::PLAYING_TELEPORT_MAP
+        << teleportMap.mapName() << teleportMap.x() <<
+           teleportMap.y() << teleportMap.floor() <<
+           teleportMap.instance();
+    m_networkConnector.sendPacket(pkt);
+}
+
 std::shared_ptr<const Dummy::Server::Response::Ping>
 PlayingState::ping(Dummy::Protocol::IncomingPacket& packet) {
     std::shared_ptr<Dummy::Server::Response::Ping> response =
@@ -115,6 +130,15 @@ std::shared_ptr<const Dummy::Server::Response::ChangeCharacter>
 PlayingState::changeCharacter(Dummy::Protocol::IncomingPacket& packet) {
     auto response(
         std::make_shared<Dummy::Server::Response::ChangeCharacter>()
+    );
+    response->readFrom(packet);
+    return std::move(response);
+}
+
+std::shared_ptr<const Dummy::Server::Response::TeleportMap>
+PlayingState::teleportMap(Dummy::Protocol::IncomingPacket& packet) {
+    auto response(
+        std::make_shared<Dummy::Server::Response::TeleportMap>()
     );
     response->readFrom(packet);
     return std::move(response);

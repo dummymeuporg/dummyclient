@@ -45,6 +45,7 @@ void LoadingState::visitCommand(
         << teleportMap.mapName()
         << teleportMap.destination().first
         << teleportMap.destination().second
+        << teleportMap.floor()
         << teleportMap.instance();
     m_networkConnector.sendPacket(pkt);
 }
