@@ -288,9 +288,9 @@ void Playing::onKeyPressed(const sf::Event&) {
 void
 Playing::visitResponse(const Dummy::Server::Response::Message& message) {
     // XXX: condition ugly. m_player should have a name attribute.
-    if (message.author() != m_client.character()->name()) {
+    //if (message.author() != m_client.character()->id()) {
         m_mapState.say(message.author(), message.content());
-    }
+    //}
 }
 
 void

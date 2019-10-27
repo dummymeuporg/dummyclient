@@ -11,8 +11,8 @@ LocalFloorState::LocalFloorState(const LocalMapState& localMapState)
 
 void LocalFloorState::tick() {
     // Make graphic livings converge towards their model.
-    for (const auto& [name, graphicFoe]: m_graphicFoesMap) {
-        auto& modelLiving(m_localMapState.living(name));
+    for (const auto& [id, graphicFoe]: m_graphicFoesMap) {
+        auto& modelLiving(m_localMapState.living(id));
         graphicFoe->tick();
         auto modelLivingX(modelLiving.x() * 8);
         auto modelLivingY(modelLiving.y() * 8);
@@ -38,30 +38,30 @@ void LocalFloorState::tick() {
 
 void
 LocalFloorState::addFoe(
-    const std::string& name,
+    std::uint32_t id,
     std::shared_ptr<Graphics::Foe> living
 ) {
-    m_graphicFoesMap.emplace(name, living);
+    m_graphicFoesMap.emplace(id, living);
 }
 
 void
-LocalFloorState::removeFoe(const std::string& name) {
-    m_graphicFoesMap.erase(name);
+LocalFloorState::removeFoe(const std::uint32_t id) {
+    m_graphicFoesMap.erase(id);
 }
 
 void LocalFloorState::onCharacterPosition(
     const Dummy::Protocol::MapUpdate::CharacterPosition& characterPosition
 ) {
     std::cerr << "LocalFloorState::onCharacterPosition" << std::endl;
-    const std::string& name(characterPosition.name());
+    const auto& id(characterPosition.id());
     int xVector = 0, yVector = 0;
-    if (m_localMapState.livings().find(name) !=
+    if (m_localMapState.livings().find(id) !=
         std::end(m_localMapState.livings()) &&
-        m_graphicFoesMap.find(name) != std::end(m_graphicFoesMap))
+        m_graphicFoesMap.find(id) != std::end(m_graphicFoesMap))
     {
 
-        const auto& modelFoe(m_localMapState.living(name));
-        auto& graphicFoe(*m_graphicFoesMap.at(name));
+        const auto& modelFoe(m_localMapState.living(id));
+        auto& graphicFoe(*m_graphicFoesMap.at(id));
         auto modelFoeX(modelFoe.x() * 8);
         auto modelFoeY(modelFoe.y() * 8);
         if (modelFoeX != graphicFoe.x()) {
@@ -85,6 +85,6 @@ void LocalFloorState::onCharacterPosition(
 }
 
 void
-LocalFloorState::say(const std::string& author, const std::string& message) {
-    m_graphicFoesMap[author]->say(message);
+LocalFloorState::say(std::uint32_t id, const std::string& message) {
+    m_graphicFoesMap[id]->say(message);
 }

@@ -1,7 +1,8 @@
 #include <set>
 
-#include <dummy/protocol/map_update/character_off.hpp>
-#include <dummy/protocol/map_update/character_on.hpp>
+#include <dummy/protocol/map_update/living_on.hpp>
+#include <dummy/protocol/map_update/living_off.hpp>
+#include <dummy/protocol/map_update/named_living_on.hpp>
 #include <dummy/protocol/map_update/character_position.hpp>
 #include <dummy/protocol/living.hpp>
 
@@ -23,18 +24,18 @@ void LocalMapState::visitMapUpdate(
 ) {
     Dummy::Server::MapState::visitMapUpdate(characterPosition);
     // Get the character's floor.
-    const auto& floor(m_graphicFoesFloor[characterPosition.name()]);
+    const auto& floor(m_graphicFoesFloor[characterPosition.id()]);
     m_localFloorStates[floor].onCharacterPosition(characterPosition);
 }
 
 
 void LocalMapState::visitMapUpdate(
-    const Dummy::Protocol::MapUpdate::CharacterOn& characterOn
+    const Dummy::Protocol::MapUpdate::LivingOn& namedLivingOn
 ) {
-    Dummy::Server::MapState::visitMapUpdate(characterOn);
+    Dummy::Server::MapState::visitMapUpdate(namedLivingOn);
 
     // Check that its floor is valid.
-    const auto& floor(characterOn.floor());
+    const auto& floor(namedLivingOn.floor());
 
     if (floor >= m_mapView.floorViews().size()) {
         // XXX: throw exception?
@@ -42,33 +43,33 @@ void LocalMapState::visitMapUpdate(
 
     auto& localFloorState(m_localFloorStates[floor]);
 
-    if (localFloorState.containsLiving(characterOn.name())) {
+    if (localFloorState.containsLiving(namedLivingOn.id())) {
         // XXX: throw exception?
     }
 
     auto foe = std::make_shared<Graphics::FoePlayer>(
         m_mapView,
-        characterOn.chipset(),
-        characterOn.name(),
-        8 * characterOn.x(),
-        8 * characterOn.y(),
-        characterOn.floor(),
+        namedLivingOn.chipset(),
+        namedLivingOn.name(),
+        8 * namedLivingOn.x(),
+        8 * namedLivingOn.y(),
+        namedLivingOn.floor(),
         m_mapView.scaleFactor(),
-        characterOn.direction()
+        namedLivingOn.direction()
     );
 
-    localFloorState.addFoe(characterOn.name(), foe);
-    m_graphicFoesFloor[characterOn.name()] = floor;
+    localFloorState.addFoe(namedLivingOn.id(), foe);
+    m_graphicFoesFloor[namedLivingOn.id()] = floor;
 }
 
 void LocalMapState::visitMapUpdate(
-    const Dummy::Protocol::MapUpdate::CharacterOff& characterOff
+    const Dummy::Protocol::MapUpdate::LivingOff& livingOff
 ) {
-    Dummy::Server::MapState::visitMapUpdate(characterOff);
+    Dummy::Server::MapState::visitMapUpdate(livingOff);
 
     // Get the appropriate floor and dispatch.
-    const auto& floor(m_graphicFoesFloor[characterOff.name()]);
-    m_localFloorStates[floor].removeFoe(characterOff.name());
+    const auto& floor(m_graphicFoesFloor[livingOff.id()]);
+    m_localFloorStates[floor].removeFoe(livingOff.id());
 }
 
 void LocalMapState::tick() {
@@ -77,9 +78,9 @@ void LocalMapState::tick() {
     }
 }
 
-void LocalMapState::say(const std::string& author, const std::string& message)
+void LocalMapState::say(std::uint32_t id, const std::string& message)
 {
     // Get the floor and dispatch.
-    const auto& floor(m_graphicFoesFloor[author]);
-    m_localFloorStates[floor].say(author, message);
+    const auto& floor(m_graphicFoesFloor[id]);
+    m_localFloorStates[floor].say(id, message);
 }
