@@ -1,6 +1,7 @@
 #include <set>
 
-#include <dummy/protocol/map_update/named_living_off.hpp>
+#include <dummy/protocol/map_update/living_on.hpp>
+#include <dummy/protocol/map_update/living_off.hpp>
 #include <dummy/protocol/map_update/named_living_on.hpp>
 #include <dummy/protocol/map_update/character_position.hpp>
 #include <dummy/protocol/living.hpp>
@@ -23,7 +24,7 @@ void LocalMapState::visitMapUpdate(
 ) {
     Dummy::Server::MapState::visitMapUpdate(characterPosition);
     // Get the character's floor.
-    const auto& floor(m_graphicFoesFloor[characterPosition.name()]);
+    const auto& floor(m_graphicFoesFloor[characterPosition.id()]);
     m_localFloorStates[floor].onCharacterPosition(characterPosition);
 }
 
@@ -42,7 +43,7 @@ void LocalMapState::visitMapUpdate(
 
     auto& localFloorState(m_localFloorStates[floor]);
 
-    if (localFloorState.containsLiving(namedLivingOn.name())) {
+    if (localFloorState.containsLiving(namedLivingOn.id())) {
         // XXX: throw exception?
     }
 
@@ -57,18 +58,18 @@ void LocalMapState::visitMapUpdate(
         namedLivingOn.direction()
     );
 
-    localFloorState.addFoe(namedLivingOn.name(), foe);
-    m_graphicFoesFloor[namedLivingOn.name()] = floor;
+    localFloorState.addFoe(namedLivingOn.id(), foe);
+    m_graphicFoesFloor[namedLivingOn.id()] = floor;
 }
 
 void LocalMapState::visitMapUpdate(
-    const Dummy::Protocol::MapUpdate::LivingOff& namedLivingOff
+    const Dummy::Protocol::MapUpdate::LivingOff& livingOff
 ) {
-    Dummy::Server::MapState::visitMapUpdate(namedLivingOff);
+    Dummy::Server::MapState::visitMapUpdate(livingOff);
 
     // Get the appropriate floor and dispatch.
-    const auto& floor(m_graphicFoesFloor[namedLivingOff.name()]);
-    m_localFloorStates[floor].removeFoe(namedLivingOff.name());
+    const auto& floor(m_graphicFoesFloor[livingOff.id()]);
+    m_localFloorStates[floor].removeFoe(livingOff.id());
 }
 
 void LocalMapState::tick() {
@@ -77,9 +78,9 @@ void LocalMapState::tick() {
     }
 }
 
-void LocalMapState::say(const std::string& author, const std::string& message)
+void LocalMapState::say(std::uint32_t id, const std::string& message)
 {
     // Get the floor and dispatch.
-    const auto& floor(m_graphicFoesFloor[author]);
-    m_localFloorStates[floor].say(author, message);
+    const auto& floor(m_graphicFoesFloor[id]);
+    m_localFloorStates[floor].say(id, message);
 }

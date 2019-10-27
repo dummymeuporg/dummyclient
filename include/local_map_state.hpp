@@ -16,7 +16,7 @@ class Living;
 
 using LocalFloorStates = std::vector<LocalFloorState>;
 using GraphicLivingFloors =
-    std::map<std::string, std::uint8_t>;
+    std::map<std::uint32_t, std::uint8_t>;
 
 class LocalMapState : public Dummy::Server::MapState {
 public:
@@ -47,7 +47,7 @@ public:
         return m_mapView.scaleFactor();
     }
 
-    void say(const std::string&, const std::string&);
+    void say(std::uint32_t, const std::string&);
 
 private:
     const MapView& m_mapView;

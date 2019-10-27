@@ -22,7 +22,7 @@ class Foe;
 
 
 using GraphicFoesMap =
-    std::map<std::string, std::shared_ptr<Graphics::Foe>>;
+    std::map<std::uint32_t, std::shared_ptr<Graphics::Foe>>;
 
 class LocalFloorState {
 public:
@@ -30,12 +30,12 @@ public:
 
     void tick();
 
-    bool containsLiving(const std::string& name) const {
-        return m_graphicFoesMap.find(name) != std::end(m_graphicFoesMap);
+    bool containsLiving(std::uint32_t id) const {
+        return m_graphicFoesMap.find(id) != std::end(m_graphicFoesMap);
     }
 
-    void addFoe(const std::string&, std::shared_ptr<Graphics::Foe>);
-    void removeFoe(const std::string&);
+    void addFoe(std::uint32_t, std::shared_ptr<Graphics::Foe>);
+    void removeFoe(std::uint32_t);
     void onCharacterPosition(
         const Dummy::Protocol::MapUpdate::CharacterPosition&
     );
@@ -44,7 +44,7 @@ public:
         return m_graphicFoesMap;
     }
 
-    void say(const std::string&, const std::string&);
+    void say(std::uint32_t, const std::string&);
 
 private:
     const LocalMapState& m_localMapState;
