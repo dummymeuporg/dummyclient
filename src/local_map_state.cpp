@@ -30,12 +30,12 @@ void LocalMapState::visitMapUpdate(
 
 
 void LocalMapState::visitMapUpdate(
-    const Dummy::Protocol::MapUpdate::LivingOn& namedLivingOn
+    const Dummy::Protocol::MapUpdate::LivingOn& livingOn
 ) {
-    Dummy::Server::MapState::visitMapUpdate(namedLivingOn);
+    Dummy::Server::MapState::visitMapUpdate(livingOn);
 
     // Check that its floor is valid.
-    const auto& floor(namedLivingOn.floor());
+    const auto& floor(livingOn.floor());
 
     if (floor >= m_mapView.floorViews().size()) {
         // XXX: throw exception?
@@ -43,23 +43,26 @@ void LocalMapState::visitMapUpdate(
 
     auto& localFloorState(m_localFloorStates[floor]);
 
-    if (localFloorState.containsLiving(namedLivingOn.id())) {
+    if (localFloorState.containsLiving(livingOn.id())) {
         // XXX: throw exception?
     }
 
-    auto foe = std::make_shared<Graphics::FoePlayer>(
+
+    auto foe = std::make_shared<Graphics::Foe>(
         m_mapView,
-        namedLivingOn.chipset(),
-        namedLivingOn.name(),
-        8 * namedLivingOn.x(),
-        8 * namedLivingOn.y(),
-        namedLivingOn.floor(),
+        livingOn.chipset(),
+        24,
+        32,
+        8 * livingOn.x(),
+        8 * livingOn.y(),
+        livingOn.floor(),
         m_mapView.scaleFactor(),
-        namedLivingOn.direction()
+        livingOn.direction()
     );
 
-    localFloorState.addFoe(namedLivingOn.id(), foe);
-    m_graphicFoesFloor[namedLivingOn.id()] = floor;
+
+    localFloorState.addFoe(livingOn.id(), foe);
+    m_graphicFoesFloor[livingOn.id()] = floor;
 }
 
 void LocalMapState::visitMapUpdate(

@@ -11,7 +11,6 @@ class Foe : public Living {
 public:
     Foe(const MapView& mapView,
         const std::string& chipset,
-        const std::string& name,
         std::size_t w,
         std::size_t h,
         std::int32_t x,

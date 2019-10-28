@@ -8,7 +8,6 @@ static const float SQRT_2 = 1.414213562373;
 
 Living::Living(const MapView& mapView,
                const std::string& chipset,
-               const std::string& name,
                std::size_t w,
                std::size_t h,
                std::int32_t x,
@@ -18,7 +17,6 @@ Living::Living(const MapView& mapView,
                Direction direction,
                std::uint8_t velocity)
     : Entity(mapView, chipset, w, h, x, y, scaleFactor),
-      m_name(name),
       m_floor(floor),
       m_direction(direction),
       m_state(std::make_unique<LivingState::StandingState>(*this)),
@@ -27,7 +25,7 @@ Living::Living(const MapView& mapView,
       m_yMovement(0),
       m_isSpeaking(false)
 {
-    _setDisplayName();
+    initSpeechStuff();
     m_movingClock.restart();
     m_messageToSayClock.restart();
 }
@@ -40,21 +38,15 @@ Living::Living(const Living& living)
              living.m_x,
              living.m_y,
              living.m_scaleFactor),
-             m_name(living.m_name),
              m_floor(living.m_floor),
              m_direction(living.m_direction),
              m_state(std::make_unique<LivingState::StandingState>(*this)),
              m_velocity(living.m_velocity)
 {
-    _setDisplayName();
+    initSpeechStuff();
 }
 
-void Living::_setDisplayName() {
-    m_displayName.setString(m_name);
-    m_displayName.setColor(sf::Color::White);
-    m_displayName.setCharacterSize(20);
-    m_displayName.setFont(font("arial.ttf"));
-    //m_displayName.setStyle(sf::Text::Bold);
+void Living::initSpeechStuff() {
 
     m_speech.setColor(sf::Color::Black);
     m_speech.setCharacterSize(20);

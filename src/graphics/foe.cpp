@@ -4,7 +4,6 @@ namespace Graphics {
 
 Foe::Foe(const ::MapView& mapView,
          const std::string& chipset,
-         const std::string& name,
          std::size_t w,
          std::size_t h,
          std::int32_t x,
@@ -12,7 +11,7 @@ Foe::Foe(const ::MapView& mapView,
          std::uint8_t floor,
          std::uint16_t scaleFactor,
          Direction direction)
-    : Living(mapView, chipset, name, w, h, x, y, floor, scaleFactor),
+    : Living(mapView, chipset, w, h, x, y, floor, scaleFactor),
       m_xDst(x), m_yDst(y)
 {}
 

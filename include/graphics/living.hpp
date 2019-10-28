@@ -17,7 +17,6 @@ class Living : public Entity {
 public:
     Living(const MapView& mapView,
            const std::string& chipset,
-           const std::string& name,
            std::size_t w,
            std::size_t h,
            std::int32_t x,
@@ -36,9 +35,6 @@ public:
     Living& setPosition(std::uint16_t, std::uint16_t);
     Living& setDirection(Direction);
     Living& changeState(std::shared_ptr<LivingState::State>);
-    sf::Text& displayName() {
-        return m_displayName;
-    }
 
     void moveTowards(std::uint16_t, std::uint16_t);
     virtual void tick();
@@ -75,11 +71,9 @@ protected:
     std::pair<std::int16_t, std::int16_t> computeDistance();
     void drawMessage(sf::RenderWindow&, const sf::View&);
 
-    std::string m_name;
     std::uint8_t m_floor;
     Direction m_direction;
     std::shared_ptr<LivingState::State> m_state;
-    sf::Text m_displayName;
     std::uint8_t m_velocity;
     sf::Clock m_movingClock;
     int m_xMovement, m_yMovement;
@@ -92,7 +86,7 @@ protected:
     sf::RectangleShape m_messageRect;
 
 private:
-    void _setDisplayName();
+    void initSpeechStuff();
 };
 
 } // namespace Graphics

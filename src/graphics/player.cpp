@@ -18,7 +18,6 @@ Player::Player(const ::MapView& mapView,
         Direction direction)
     : Living(mapView,
              chipset,
-             name,
              24,
              32,
              x,
@@ -26,11 +25,21 @@ Player::Player(const ::MapView& mapView,
              floor,
              scaleFactor,
              direction),
-    m_client(client)
+    m_client(client),
+    m_name(name)
 {
     m_updatePosClock.restart();
     m_serverPosition = translateCoordsToServ(m_x, m_y);
+    setDisplayName();
 }
+
+void Player::setDisplayName() {
+    m_displayName.setString(m_name);
+    m_displayName.setColor(sf::Color::White);
+    m_displayName.setCharacterSize(20);
+    m_displayName.setFont(font("arial.ttf"));
+}
+
 
 void Player::updatePosition() {
     auto delta = computeDistance();
