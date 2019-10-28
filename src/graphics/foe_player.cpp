@@ -11,11 +11,21 @@ FoePlayer::FoePlayer(
     std::uint8_t floor,
     std::uint16_t scaleFactor,
     Direction direction
-) : Foe(mapView, chipset, name, 24, 32, x, y, floor, scaleFactor, direction) {}
+) : Foe(mapView, chipset, 24, 32, x, y, floor, scaleFactor, direction),
+    m_name(name) {
+    setDisplayName();
+}
 
 
 void FoePlayer::draw(sf::RenderWindow& window) {
     Living::draw(window);
+}
+
+void FoePlayer::setDisplayName() {
+    m_displayName.setString(m_name);
+    m_displayName.setColor(sf::Color::White);
+    m_displayName.setCharacterSize(20);
+    m_displayName.setFont(font("arial.ttf"));
 }
 
 void FoePlayer::drawHUD(sf::RenderWindow& window, const sf::View& worldView) {

@@ -16,6 +16,7 @@ class ChangeCharacter;
 class Message;
 class Ping;
 class SetPosition;
+class TeleportMap;
 } // namespace Response
 } // namespace Server
 
@@ -39,6 +40,7 @@ public:
     void visitCommand(const Dummy::Server::Command::SetPosition&) override;
     void visitCommand(const Dummy::Server::Command::Message&) override;
     void visitCommand(const Dummy::Server::Command::ChangeCharacter&) override;
+    void visitCommand(const Dummy::Server::Command::TeleportMap&) override;
 private:
     std::shared_ptr<const Dummy::Server::Response::Ping>
     ping(Dummy::Protocol::IncomingPacket&);
@@ -51,6 +53,9 @@ private:
 
     std::shared_ptr<const Dummy::Server::Response::ChangeCharacter>
     changeCharacter(Dummy::Protocol::IncomingPacket&);
+
+    std::shared_ptr<const::Dummy::Server::Response::TeleportMap>
+    teleportMap(Dummy::Protocol::IncomingPacket&);
 };
 
 } // namespace NetworkConnectorState

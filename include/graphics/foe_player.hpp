@@ -19,6 +19,16 @@ public:
 
     void draw(sf::RenderWindow&) override;
     void drawHUD(sf::RenderWindow&, const sf::View&) override;
+
+    sf::Text& displayName() {
+        return m_displayName;
+    }
+
+protected:
+    void setDisplayName();
+
+    std::string m_name;
+    sf::Text m_displayName;
 };
 
 } // namespace Graphics

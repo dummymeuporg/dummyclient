@@ -40,11 +40,19 @@ protected:
     bool blocksTop() const;
     bool blocksBottom() const;
 
+    void setDisplayName();
+
+    sf::Text& displayName() {
+        return m_displayName;
+    }
+
     std::pair<std::uint16_t, std::uint16_t>
     translateCoordsToServ(std::int32_t, std::int32_t);
     ::Client& m_client;
     sf::Clock m_updatePosClock;
     std::pair<std::uint16_t, std::uint16_t> m_serverPosition;
+    std::string m_name;
+    sf::Text m_displayName;
 };
 
 } // namespace Graphics
