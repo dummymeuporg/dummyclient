@@ -86,5 +86,7 @@ void LocalFloorState::onCharacterPosition(
 
 void
 LocalFloorState::say(std::uint32_t id, const std::string& message) {
-    m_graphicFoesMap[id]->say(message);
+    if (m_graphicFoesMap.find(id) != std::end(m_graphicFoesMap)) {
+        m_graphicFoesMap[id]->say(message);
+    }
 }
