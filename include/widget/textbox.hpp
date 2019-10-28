@@ -36,6 +36,8 @@ private:
     /* Private attributes. */
     int m_maxLength; /* For text. */
     sf::RectangleShape m_shape;
+    sf::RenderTexture m_renderTexture;
+    sf::Sprite m_sprite;
     sf::Text m_text; // What the user will see.
     //std::stringstream m_content;
     std::string m_content;

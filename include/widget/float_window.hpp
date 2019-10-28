@@ -1,0 +1,4 @@
+#ifndef FLOAT_WINDOW_HPP
+#define FLOAT_WINDOW_HPP
+
+#endif // FLOAT_WINDOW_HPP

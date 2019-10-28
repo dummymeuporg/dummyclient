@@ -18,6 +18,7 @@ Textbox::Textbox(Visual& parent)
 
 void Textbox::draw(sf::RenderWindow& renderWindow) {
     int delta = 30;
+    m_renderTexture.clear(sf::Color::Transparent);
     sf::Color backgroundColor(m_shape.getFillColor());
     if (m_isFocused) {
         backgroundColor.r = m_backgroundColor.r + delta;
@@ -38,9 +39,10 @@ void Textbox::draw(sf::RenderWindow& renderWindow) {
     m_shape.setFillColor(backgroundColor);
 
     renderWindow.draw(m_shape);
-    const sf::Vector2f& shapePos(m_shape.getPosition());
-    m_text.setPosition(shapePos.x + 5, shapePos.y + 5);
-    renderWindow.draw(m_text);
+    //m_renderTexture.draw(m_shape);
+    m_text.setPosition(5, 5);
+    //renderWindow.draw(m_text);
+    m_renderTexture.draw(m_text);
 
     if (m_isCarretDrawn) {
         const sf::Vector2f& textPosition(
@@ -49,8 +51,13 @@ void Textbox::draw(sf::RenderWindow& renderWindow) {
         carret.setPosition(textPosition.x, textPosition.y);
         carret.setSize(sf::Vector2f(2, 24));
         carret.setFillColor(sf::Color(0, 0, 0));
-        renderWindow.draw(carret);
+        //renderWindow.draw(carret);
+        m_renderTexture.draw(carret);
     }
+
+    m_renderTexture.display();
+    m_sprite.setTexture(m_renderTexture.getTexture());
+    renderWindow.draw(m_sprite);
 }
 
 void Textbox::_handleTextEntered(const sf::Event& event) {
@@ -79,16 +86,13 @@ bool Textbox::_onTextEntered(const sf::Event& event) {
     //std::cerr << "Text entered: " << event.key.code << std::endl;
     if (m_isTextRepeating
          && m_textRepeatClock.getElapsedTime().asMilliseconds() >= 30) {
-        std::cerr << "ONE" << std::endl;
         _handleTextEntered(event);
         m_textRepeatClock.restart();
     } else if (m_lastTextInput != event.key.code) {
-        std::cerr << "TWO" << std::endl;
         _handleTextEntered(event);
         m_textFirstClock.restart();
     } else if (!m_isTextRepeating
                && m_textFirstClock.getElapsedTime().asMilliseconds() >= 300) {
-        std::cerr << "THREE" << std::endl;
         m_isTextRepeating = true;
         _handleTextEntered(event);
         m_textRepeatClock.restart();
@@ -131,7 +135,7 @@ bool Textbox::_onKeyPressed(const sf::Event& event) {
 
 bool Textbox::_onMouseMoved(const sf::Event& event) {
     bool forwardEvent = true;
-    const sf::Vector2f& origin(m_shape.getPosition());
+    const sf::Vector2f& origin(m_sprite.getPosition());
     const sf::FloatRect& bounds(m_shape.getLocalBounds());
 
     if (event.mouseMove.x >= origin.x &&
@@ -211,8 +215,10 @@ bool Textbox::handleEvent(const sf::Event& event) {
 Textbox& Textbox::setRect(int x, int y, int width, int height) {
     Widget::setPos(x, y);
     Widget::setSize(width, height);
+    m_renderTexture.create(width, height, true);
     m_shape.setPosition(x, y);
     m_shape.setSize(sf::Vector2f(width, height));
+    m_sprite.setPosition(x, y);
     return *this;
 }
 
