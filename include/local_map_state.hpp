@@ -33,6 +33,10 @@ public:
         const Dummy::Protocol::MapUpdate::LivingOn&
     ) override;
 
+    void visitMapUpdate(
+        const Dummy::Protocol::MapUpdate::NamedLivingOn&
+    ) override;
+
     void tick();
 
     const LocalFloorStates& localFloorStates() const {

@@ -75,6 +75,41 @@ void LocalMapState::visitMapUpdate(
     m_localFloorStates[floor].removeFoe(livingOff.id());
 }
 
+void LocalMapState::visitMapUpdate(
+    const Dummy::Protocol::MapUpdate::NamedLivingOn& namedLivingOn
+) {
+    Dummy::Server::MapState::visitMapUpdate(namedLivingOn);
+
+    // Check that its floor is valid.
+    const auto& floor(namedLivingOn.floor());
+
+    if (floor >= m_mapView.floorViews().size()) {
+        // XXX: throw exception?
+    }
+
+    auto& localFloorState(m_localFloorStates[floor]);
+
+    if (localFloorState.containsLiving(namedLivingOn.id())) {
+        // XXX: throw exception?
+    }
+
+
+    auto foe = std::make_shared<Graphics::FoePlayer>(
+        m_mapView,
+        namedLivingOn.chipset(),
+        namedLivingOn.name(),
+        8 * namedLivingOn.x(),
+        8 * namedLivingOn.y(),
+        namedLivingOn.floor(),
+        m_mapView.scaleFactor(),
+        namedLivingOn.direction()
+    );
+
+
+    localFloorState.addFoe(namedLivingOn.id(), foe);
+    m_graphicFoesFloor[namedLivingOn.id()] = floor;
+}
+
 void LocalMapState::tick() {
     for (auto& floorState: m_localFloorStates) {
         floorState.tick();
