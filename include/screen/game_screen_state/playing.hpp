@@ -5,6 +5,7 @@
 #include "screen/game_screen_state/state.hpp"
 
 #include "widget/chatbox.hpp"
+#include "widget/icon_button.hpp"
 #include "widget/quit_message.hpp"
 
 namespace Screen {
@@ -87,6 +88,7 @@ private: /* Attributes. */
     sf::Clock m_tickMove;
     sf::Clock m_pingClock;
 
+    std::shared_ptr<Widget::IconButton> m_settingsButton;
     std::shared_ptr<Widget::Chatbox> m_chatbox;
     std::shared_ptr<Widget::QuitMessage> m_quitMessage;
 };

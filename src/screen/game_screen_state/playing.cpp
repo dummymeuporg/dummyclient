@@ -41,6 +41,7 @@ Playing::Playing(GameScreen& gameScreen)
       m_isEscapeKeyPressed(false),
       m_isEscapeMode(false),
       m_isTeleporting(false),
+      m_settingsButton(std::make_shared<Widget::IconButton>(m_gameScreen)),
       m_chatbox(std::make_shared<Widget::Chatbox>(m_gameScreen)),
       m_quitMessage(nullptr)
 {
@@ -52,6 +53,11 @@ Playing::Playing(GameScreen& gameScreen)
     m_gameView.zoom(0.5);
     m_game.window().setView(m_gameView);
 
+    m_settingsButton->setSize(32, 32);
+    m_settingsButton->setPos(0, 0);
+    m_settingsButton->setColor(sf::Color(255, 0, 0));
+
+    m_gameScreen.addWidget(m_settingsButton);
     m_gameScreen.addWidget(m_chatbox);
 
     m_mapView.map().setEventObserver(&m_gameScreen);
