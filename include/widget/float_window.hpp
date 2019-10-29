@@ -1,4 +1,18 @@
-#ifndef FLOAT_WINDOW_HPP
-#define FLOAT_WINDOW_HPP
+#pragma once
 
-#endif // FLOAT_WINDOW_HPP
+#include "widget/abstract/widget.hpp"
+
+namespace Widget {
+
+class FloatWindow : public Abstract::Widget {
+public:
+    FloatWindow(Visual&);
+    void draw(sf::RenderWindow&) override;
+    bool handleEvent(const sf::Event& event) override;
+private:
+    sf::RectangleShape m_window;
+    sf::RectangleShape m_statusBar;
+    sf::RectangleShape m_closeButton;
+};
+
+} // namespace Widget

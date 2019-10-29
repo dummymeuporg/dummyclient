@@ -43,6 +43,7 @@ Playing::Playing(GameScreen& gameScreen)
       m_isTeleporting(false),
       m_settingsButton(std::make_shared<Widget::IconButton>(m_gameScreen)),
       m_chatbox(std::make_shared<Widget::Chatbox>(m_gameScreen)),
+      m_floatWindow(std::make_shared<Widget::FloatWindow>(m_gameScreen)),
       m_quitMessage(nullptr)
 {
     m_player.setX(m_client.character()->position().first * 8);
