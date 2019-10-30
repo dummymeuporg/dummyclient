@@ -93,6 +93,7 @@ void SelectCharacterScreen::loaded() {
 
 
 void SelectCharacterScreen::returned() {
+    m_hoveredChild = nullptr;
     _refreshCharactersList();
 }
 
