@@ -43,8 +43,8 @@ Playing::Playing(GameScreen& gameScreen)
       m_isTeleporting(false),
       m_settingsButton(std::make_shared<Widget::IconButton>(m_gameScreen)),
       m_chatbox(std::make_shared<Widget::Chatbox>(m_gameScreen)),
-      m_floatWindow(std::make_shared<Widget::FloatWindow>(m_gameScreen)),
-      m_quitMessage(nullptr)
+      m_quitMessage(nullptr),
+      m_floatWindow(std::make_shared<Widget::FloatWindow>(m_gameScreen))
 {
     m_player.setX(m_client.character()->position().first * 8);
     m_player.setY(m_client.character()->position().second * 8);
@@ -58,10 +58,15 @@ Playing::Playing(GameScreen& gameScreen)
     m_settingsButton->setPos(0, 0);
     m_settingsButton->setColor(sf::Color(255, 0, 0));
 
+    m_floatWindow->setEnabled(false);
+
     m_gameScreen.addWidget(m_settingsButton);
     m_gameScreen.addWidget(m_chatbox);
+    m_gameScreen.addWidget(m_floatWindow);
 
     m_mapView.map().setEventObserver(&m_gameScreen);
+
+
 }
 
 void Playing::loaded() {
@@ -391,8 +396,18 @@ bool Playing::handleEvent(const sf::Event& event) {
     return true;
 }
 
+void Playing::onButtonClicked(const ::CustomEvent &event) {
+    if (event.source() == m_settingsButton.get()) {
+        std::cerr << "Clicked on settings button." << std::endl;
+        m_floatWindow->setEnabled(!m_floatWindow->isEnabled());
+    }
+}
+
 void Playing::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
+    case CustomEvent::ButtonClicked:
+        onButtonClicked(event);
+        break;
     case CustomEvent::Type::MovementActive:
         m_player.changeState(
             std::make_shared<Graphics::LivingState::WalkingState>(m_player)

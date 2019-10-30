@@ -12,11 +12,11 @@ public:
     Button& setBackgroundColor(const sf::Color&);
     Button& setBorderColor(const sf::Color&);
 	Button& setCaption(const std::string&);
-    Button& setEnabled(bool enabled);
+    Button& setIsClickable(bool);
     Button& setOrigin(float, float);
     virtual void setPos(int x, int y);
-    bool enabled() const {
-        return m_isEnabled;
+    bool isClickable() const {
+        return m_isClickable;
     }
     sf::FloatRect getLocalBounds() const {
         return m_buttonBackground.getLocalBounds();
@@ -29,7 +29,7 @@ private:
     sf::RectangleShape m_buttonBackground;
     bool m_isHovered;
     bool m_isPushed;
-    bool m_isEnabled;
+    bool m_isClickable;
 };
 
 };

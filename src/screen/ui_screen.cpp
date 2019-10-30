@@ -27,6 +27,9 @@ void UIScreen::draw(sf::RenderWindow& window) {
     }
     */
     for (auto& child: m_children) {
+        if (!child->isEnabled()) {
+            continue;
+        }
         auto self(child->shared_from_this());
         self->draw(window);
     }

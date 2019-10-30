@@ -27,12 +27,18 @@ public:
         return m_y;
     }
 
+    bool isEnabled() const {
+        return m_isEnabled;
+    }
+
     void addChild(std::shared_ptr<Visual>);
     void removeChild(std::shared_ptr<Visual>);
+    void setEnabled(bool);
 protected:
     ::ResourceProvider& m_resourceProvider;
     ::CustomEventQueue& m_eventQueue;
     std::uint16_t m_x, m_y;
     std::uint16_t m_width, m_height;
     std::set<std::shared_ptr<Visual>> m_children;
+    bool m_isEnabled;
 };

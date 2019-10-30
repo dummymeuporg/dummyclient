@@ -16,8 +16,16 @@ public:
     void setColor(const sf::Color& color);
 
 protected:
+    bool _onMouseMoved(const sf::Event&);
+    bool _onMouseButtonPressed(const sf::Event&);
+    bool _onMouseButtonReleased(const sf::Event&);
+    bool m_isHovered;
+    bool m_isClicked;
+    bool m_isPushed;
+
     // XXX: temporary
     sf::RectangleShape m_button;
+
 };
 
 }

@@ -7,7 +7,7 @@ Button::Button(Visual& parent)
     : Label(parent),
       m_isHovered(false),
       m_isPushed(false),
-      m_isEnabled(true)
+      m_isClickable(true)
 {    
 }
 
@@ -117,7 +117,9 @@ bool Button::_onMouseButtonReleased(const sf::Event& event) {
 
 bool Button::handleEvent(const sf::Event& event) {
     bool forwardEvent = true;
-    if (!m_isEnabled) {
+
+    // If the button is not clickable, do not forward the event.
+    if (!m_isClickable) {
         return forwardEvent;
     }
     switch(event.type)
@@ -155,8 +157,8 @@ Button& Button::setCaption(const std::string& caption) {
     return *this;
 }
 
-Button& Button::setEnabled(bool enabled) {
-    m_isEnabled = enabled;
+Button& Button::setIsClickable(bool clickable) {
+    m_isClickable = clickable;
     return *this;
 }
 

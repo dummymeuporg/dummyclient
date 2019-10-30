@@ -31,12 +31,8 @@ public:
         return m_isEnabled;
     }
 
-    void setEnabled(bool enabled);
-
 protected:
-
     Visual& m_parent;
-    bool m_isEnabled;
 
 };
 

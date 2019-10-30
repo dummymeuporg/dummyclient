@@ -63,6 +63,7 @@ private: /* Methods. */
     void drawLivings(std::uint8_t);
     void drawSprites(Sprites&);
     void moveCharacter(sf::Keyboard::Key);
+    void onButtonClicked(const ::CustomEvent& event);
     void onKeyPressed(const sf::Event&);
     void onKeyReleased(const sf::Event&);
     void onTextEntered(const sf::Event&);

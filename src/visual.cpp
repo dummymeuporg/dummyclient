@@ -2,7 +2,8 @@
 
 Visual::Visual()
     : m_resourceProvider(ResourceProvider::instance()),
-      m_eventQueue(CustomEventQueue::instance()), m_x(0), m_y(0)
+      m_eventQueue(CustomEventQueue::instance()), m_x(0), m_y(0),
+      m_isEnabled(true)
 {}
 
 void Visual::setPos(std::uint16_t x, std::uint16_t y) {
@@ -25,6 +26,9 @@ void Visual::removeChild(std::shared_ptr<Visual> child) {
 
 bool Visual::handleEvent(const sf::Event& event) {
     for(auto& child: m_children) {
+        if (!child->isEnabled()) {
+            continue;
+        }
         if(!child->handleEvent(event)) {
             return false;
         }
@@ -35,8 +39,15 @@ bool Visual::handleEvent(const sf::Event& event) {
 
 void Visual::handleCustomEvent(const ::CustomEvent& event) {
     for (auto& child: m_children) {
+        if (!child->isEnabled()) {
+            continue;
+        }
         if (event.target() == child.get() || event.target() == nullptr) {
             child->handleCustomEvent(event);
         }
     }
+}
+
+void Visual::setEnabled(bool enabled) {
+    m_isEnabled = enabled;
 }

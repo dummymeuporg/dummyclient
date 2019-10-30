@@ -18,15 +18,11 @@ void Widget::setPos(std::uint16_t x, std::uint16_t y) {
 }
 
 void Widget::draw(sf::RenderWindow& window) {
-    if (m_isEnabled) {
+    if (isEnabled()) {
         for (auto& child: m_children) {
             child->shared_from_this()->draw(window);
         }
     }
-}
-
-void Widget::setEnabled(bool enabled) {
-    m_isEnabled = enabled;
 }
 
 
