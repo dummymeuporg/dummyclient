@@ -27,6 +27,14 @@ public:
         return m_y;
     }
 
+    std::uint16_t width() const {
+        return m_width;
+    }
+
+    std::uint16_t height() const {
+        return m_height;
+    }
+
     bool isEnabled() const {
         return m_isEnabled;
     }
@@ -40,5 +48,6 @@ protected:
     std::uint16_t m_x, m_y;
     std::uint16_t m_width, m_height;
     std::set<std::shared_ptr<Visual>> m_children;
+    Visual* m_focusedChild;
     bool m_isEnabled;
 };

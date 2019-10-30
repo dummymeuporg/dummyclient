@@ -3,6 +3,7 @@
 Visual::Visual()
     : m_resourceProvider(ResourceProvider::instance()),
       m_eventQueue(CustomEventQueue::instance()), m_x(0), m_y(0),
+      m_focusedChild(nullptr),
       m_isEnabled(true)
 {}
 
