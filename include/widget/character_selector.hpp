@@ -13,6 +13,7 @@ public:
     CharacterSelector(Visual& parent);
     void draw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
+    sf::IntRect boundingRect() override;
     void setPos(std::uint16_t, std::uint16_t) override;
     CharacterSelector& setCharacters(const CharactersList&);
     const CharactersList& characters() const {

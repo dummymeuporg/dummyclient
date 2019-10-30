@@ -9,6 +9,7 @@ public:
     IconButton(Visual&);
     void draw(sf::RenderWindow&) override;
     bool handleEvent(const sf::Event& event) override;
+    sf::IntRect boundingRect() override;
 
     void setSize(std::uint16_t, std::uint16_t);
 

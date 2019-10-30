@@ -31,6 +31,10 @@ public:
         ChangeCharacterButtonClicked,
         CancelButtonClicked,
 
+        MouseEntered,
+        MouseLeft,
+        LeftClick,
+
         Count
     };
 

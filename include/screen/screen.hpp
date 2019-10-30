@@ -30,6 +30,7 @@ public:
     virtual void tick();
     virtual void loaded();
     virtual void returned();
+    sf::IntRect boundingRect() override;
     virtual void
     onResponse(const Dummy::Server::Response::Response& response) = 0;
 

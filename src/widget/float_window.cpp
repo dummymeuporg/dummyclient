@@ -2,7 +2,8 @@
 
 namespace Widget {
 
-FloatWindow::FloatWindow(Visual& parent) : Widget(parent) {}
+FloatWindow::FloatWindow(Visual& parent) : Widget(parent) {
+}
 
 void FloatWindow::draw(sf::RenderWindow& window) {
     // draw whole shape
@@ -27,6 +28,10 @@ void FloatWindow::draw(sf::RenderWindow& window) {
 
 bool FloatWindow::handleEvent(const sf::Event& event) {
     return true;
+}
+
+sf::IntRect FloatWindow::boundingRect() {
+    return sf::IntRect(m_x, m_x, m_width, m_height);
 }
 
 } // namespace Widget

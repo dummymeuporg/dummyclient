@@ -13,10 +13,12 @@ class ModalMessage : public Abstract::Widget {
 public:
     ModalMessage(Visual&, const std::string&);
     void draw(sf::RenderWindow&) override;
-    void addButton(std::shared_ptr<Button>);
-    void setMessage(const std::string&);
+    sf::IntRect boundingRect() override;
     void setSize(std::uint16_t, std::uint16_t) override;
     void setPos(std::uint16_t, std::uint16_t) override;
+
+    void addButton(std::shared_ptr<Button>);
+    void setMessage(const std::string&);
 protected:
     sf::RectangleShape m_backgroundRectangle;
     std::shared_ptr<Label> m_message;

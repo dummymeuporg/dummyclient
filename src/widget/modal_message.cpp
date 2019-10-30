@@ -61,4 +61,13 @@ void ModalMessage::addButton(std::shared_ptr<Button> button) {
     m_buttons.push_back(button);
 }
 
+sf::IntRect ModalMessage::boundingRect() {
+    return sf::IntRect(
+        m_x,
+        m_y,
+        static_cast<int>(m_backgroundRectangle.getSize().x),
+        static_cast<int>(m_backgroundRectangle.getSize().y)
+    );
+}
+
 } // namespace Widget

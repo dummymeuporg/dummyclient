@@ -157,4 +157,18 @@ CharacterSelector::selectedCharacter() const {
     }
 }
 
+sf::IntRect CharacterSelector::boundingRect() {
+    if (m_backgrounds.size() > 0) {
+        auto lastBackground(m_backgrounds[m_backgrounds.size()-1]);
+        return sf::IntRect(
+            m_x,
+            m_y,
+            lastBackground.getPosition().x + lastBackground.getSize().x,
+            lastBackground.getPosition().y + lastBackground.getSize().y
+        );
+    } else {
+        return sf::IntRect(m_x, m_y, 0, 0);
+    }
+}
+
 } // namespace Widget

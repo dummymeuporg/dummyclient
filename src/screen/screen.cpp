@@ -25,4 +25,13 @@ void Screen::returned() {
 
 }
 
+sf::IntRect Screen::boundingRect() {
+    return sf::IntRect(
+        0,
+        0,
+        static_cast<int>(m_game.width()),
+        static_cast<int>(m_game.height())
+    );
+}
+
 } // namespace Screen

@@ -62,4 +62,8 @@ void SkinPreviewer::_updateSprite() {
     m_sprite.setPosition(sf::Vector2f(m_origin.x, m_origin.y));
 }
 
+sf::IntRect SkinPreviewer::boundingRect() {
+    return sf::IntRect(m_x, m_y, m_width, m_height);
+}
+
 } // namespace Widget

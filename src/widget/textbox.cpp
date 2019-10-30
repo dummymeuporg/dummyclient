@@ -267,4 +267,13 @@ Textbox& Textbox::setMaxLength(int maxLength) {
     return *this;
 }
 
+sf::IntRect Textbox::boundingRect() {
+    return sf::IntRect(
+        m_x,
+        m_y,
+        static_cast<int>(m_shape.getSize().x),
+        static_cast<int>(m_shape.getSize().y)
+    );
+}
+
 } // namespace Widget

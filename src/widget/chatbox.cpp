@@ -67,4 +67,13 @@ void Chatbox::clearMessageInputTextbox() {
     m_messageInputTextbox->setContent("");
 }
 
+sf::IntRect Chatbox::boundingRect() {
+    return sf::IntRect(
+        m_x,
+        m_y,
+        m_width,
+        m_height
+    );
+}
+
 } // namespace Widget
