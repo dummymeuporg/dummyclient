@@ -157,7 +157,7 @@ CharacterSelector::selectedCharacter() const {
     }
 }
 
-sf::IntRect CharacterSelector::boundingRect() {
+sf::IntRect CharacterSelector::boundingRect() const {
     if (m_backgrounds.size() > 0) {
         auto lastBackground(m_backgrounds[m_backgrounds.size()-1]);
         return sf::IntRect(

@@ -67,7 +67,7 @@ void Chatbox::clearMessageInputTextbox() {
     m_messageInputTextbox->setContent("");
 }
 
-sf::IntRect Chatbox::boundingRect() {
+sf::IntRect Chatbox::boundingRect() const {
     return sf::IntRect(
         m_x,
         m_y,

@@ -22,7 +22,7 @@ public:
         ::Client&,
         std::vector<std::shared_ptr<Dummy::Core::Character>>&
     );
-    virtual ~CreateCharacterScreen();
+    ~CreateCharacterScreen() override;
     virtual void handleCustomEvent(const ::CustomEvent&) override;
 
     virtual void
@@ -32,9 +32,9 @@ public:
         const Dummy::Server::Response::CreateCharacter&
     ) override;
 private:
-    void _handleButtonClicked(const ::CustomEvent&);
-    void _onCreateCharacterButton();
-    void _back();
+    void handleButtonClicked(const ::CustomEvent&);
+    void onCreateCharacterButton();
+    void back();
     std::vector<std::shared_ptr<Dummy::Core::Character>>& m_characters;
     std::shared_ptr<Widget::Label> m_characterNameLabel; 
     std::shared_ptr<Widget::Textbox> m_characterNameTextbox;

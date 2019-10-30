@@ -12,7 +12,7 @@ public:
     void draw(sf::RenderWindow&) override;
     bool handleEvent(const sf::Event& event) override;
     void handleCustomEvent(const ::CustomEvent& event) override;
-    sf::IntRect boundingRect() override;
+    sf::IntRect boundingRect() const override;
     const std::string& typedMessage() const;
     void clearMessageInputTextbox();
 private:

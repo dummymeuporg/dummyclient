@@ -4,6 +4,7 @@ Visual::Visual()
     : m_resourceProvider(ResourceProvider::instance()),
       m_eventQueue(CustomEventQueue::instance()), m_x(0), m_y(0),
       m_focusedChild(nullptr),
+      m_hoveredChild(nullptr),
       m_isEnabled(true),
       m_isMouseHovering(false),
       m_isBeingClicked(false)
@@ -40,7 +41,11 @@ bool Visual::onMouseButtonReleased(const sf::Event& event) {
     bool forwardEvent(true);
     if (nullptr != m_hoveredChild && m_isBeingClicked) {
         m_isBeingClicked = false;
-        pushEvent(CustomEvent(this, CustomEvent::Type::LeftClick, this));
+        pushEvent(CustomEvent(
+            this,
+            CustomEvent::Type::LeftClick,
+            m_hoveredChild)
+        );
         forwardEvent = m_hoveredChild->onMouseButtonReleased(event);
     }
     return forwardEvent;
@@ -54,11 +59,13 @@ bool Visual::onMouseMoved(const sf::Event& event) {
         const auto& boundingRect(m_hoveredChild->boundingRect());
         if (!boundingRect.contains(event.mouseMove.x, event.mouseMove.y)) {
             m_hoveredChild->setMouseHovering(false);
+            std::cerr << "Pushing mouse left" << std::endl;
             pushEvent(CustomEvent(
                 this,
                 CustomEvent::Type::MouseLeft,
                 m_hoveredChild
             ));
+            m_hoveredChild = nullptr;
         }
     }
 
@@ -66,18 +73,17 @@ bool Visual::onMouseMoved(const sf::Event& event) {
     for(auto& child: m_children) {
         if (child->isEnabled()) {
             const auto& boundingRect(child->boundingRect());
-
             // Do not handle invisible widgets.
             if (boundingRect.width == 0 || boundingRect.height == 0) {
                 continue;
             }
             if (boundingRect.contains(event.mouseMove.x, event.mouseMove.y)) {
-
                 // If the child has no mouse hovering, toggle the state
                 // and send an appropriate message.
                 if (!child->isMouseHovering()) {
                     m_hoveredChild = child.get();
                     child->setMouseHovering(true);
+                    std::cerr << "Pushing mouse entered" << std::endl;
                     pushEvent(CustomEvent(
                         this,
                         CustomEvent::Type::MouseEntered,

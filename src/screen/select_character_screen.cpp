@@ -96,10 +96,9 @@ void SelectCharacterScreen::returned() {
     _refreshCharactersList();
 }
 
-void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
-{
-    auto self(shared_from_this());
-    if (event.source() == m_createCharacterButton.get()) {
+void SelectCharacterScreen::onLeftClick(const ::CustomEvent& event) {
+    event.target()->handleCustomEvent(event);
+    if (event.target() == m_createCharacterButton.get()) {
         std::cerr << "Create character please." << std::endl;
         std::shared_ptr<CreateCharacterScreen> screen =
             std::make_shared<CreateCharacterScreen>(
@@ -108,7 +107,7 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
                 m_characters
             );
         m_client.setScreen(screen, true);
-    } else if (event.source() == m_characterSelector.get()) {
+    } else if (event.target() == m_characterSelector.get()) {
         std::shared_ptr<const Dummy::Core::Character> character =
             m_characterSelector->selectedCharacter();
         std::cerr << "Selected character: " <<
@@ -117,8 +116,8 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
             std::vector<std::string>({character->skin()})
         );
         m_playButton->setEnabled(true);
-    } else if (event.source() == m_playButton.get()) {
-        m_selectedCharacter = 
+    } else if (event.target() == m_playButton.get()) {
+        m_selectedCharacter =
             m_characterSelector->selectedCharacter();
 
         std::make_unique<Dummy::Server::Command::SelectCharacter>(
@@ -130,6 +129,19 @@ void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
                 m_selectedCharacter->name()
             )
         );
+    }
+}
+
+void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
+{
+    auto self(shared_from_this());
+    switch(event.type()) {
+    case CustomEvent::Type::LeftClick:
+        onLeftClick(event);
+        break;
+    default:
+        UIScreen::handleCustomEvent(event);
+        break;
     }
 }
 

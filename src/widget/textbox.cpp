@@ -267,7 +267,7 @@ Textbox& Textbox::setMaxLength(int maxLength) {
     return *this;
 }
 
-sf::IntRect Textbox::boundingRect() {
+sf::IntRect Textbox::boundingRect() const {
     return sf::IntRect(
         m_x,
         m_y,

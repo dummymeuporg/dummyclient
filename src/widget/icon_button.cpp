@@ -81,7 +81,7 @@ bool IconButton::_onMouseButtonReleased(const sf::Event& event) {
     return forwardEvent;
 }
 
-sf::IntRect IconButton::boundingRect() {
+sf::IntRect IconButton::boundingRect() const {
     return sf::IntRect(
         m_x,
         m_y,

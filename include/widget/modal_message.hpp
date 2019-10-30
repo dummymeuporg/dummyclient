@@ -13,7 +13,7 @@ class ModalMessage : public Abstract::Widget {
 public:
     ModalMessage(Visual&, const std::string&);
     void draw(sf::RenderWindow&) override;
-    sf::IntRect boundingRect() override;
+    sf::IntRect boundingRect() const override;
     void setSize(std::uint16_t, std::uint16_t) override;
     void setPos(std::uint16_t, std::uint16_t) override;
 

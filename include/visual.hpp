@@ -16,12 +16,12 @@ public:
     Visual();
     virtual void draw(sf::RenderWindow&) = 0;
     virtual bool handleEvent(const sf::Event&);
-    void handleCustomEvent(const ::CustomEvent&);
+    virtual void handleCustomEvent(const ::CustomEvent&);
 
     virtual void setPos(std::uint16_t, std::uint16_t);
     virtual void setSize(std::uint16_t, std::uint16_t);
 
-    virtual sf::IntRect boundingRect() = 0;
+    virtual sf::IntRect boundingRect() const = 0;
 
     std::uint16_t x() const {
         return m_x;

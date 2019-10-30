@@ -17,126 +17,42 @@ void Button::draw(sf::RenderWindow& window) {
     Label::draw(window);
 }
 
-bool Button::_onMouseMoved(const sf::Event& event)
-{
-    bool forwardEvent = true;
-    const auto& origin(m_caption.getOrigin());
-    sf::Vector2f labelPos(m_x - origin.x, m_y - origin.y);
-    sf::FloatRect textRect = m_caption.getLocalBounds();
+void Button::handleCustomEvent(const ::CustomEvent& event) {
     sf::Color bgColor = m_buttonBackground.getFillColor();
-    int deltaR = 10, deltaG = 10, deltaB = 10;
-    if ((event.mouseMove.x >= (labelPos.x - 10)) &&
-            (event.mouseMove.x <= (labelPos.x + textRect.width + 10)) &&
-            (event.mouseMove.y >= (labelPos.y - 10)) &&
-            (event.mouseMove.y <= (labelPos.y + textRect.height + 10)))
-    {
-        // The mouse is hovering the button. No need to forward it.
-        forwardEvent = false;
-        if (!m_isHovered)
-        {
-            m_isHovered = true;
-            m_buttonBackground.setFillColor(
-                sf::Color(
-                    bgColor.r + deltaR,
-                    bgColor.g + deltaG,
-                    bgColor.b + deltaB
-                )
-            );
-        }
-    } else {
-        if (m_isHovered)
-        {
-            m_isHovered = false;
-            // Cancel the push state if the mouse leaves the button.
-            if (m_isPushed) {
-                std::cerr << "Cancel the pushed state" << std::endl;
-                m_isPushed = false;
-                deltaR += 30;
-                deltaG += 30;
-                deltaB += 30;
-            }
-            sf::Color bgColor = m_buttonBackground.getFillColor();
-            m_buttonBackground.setFillColor(
-                sf::Color(
-                    bgColor.r - deltaR,
-                    bgColor.g - deltaG,
-                    bgColor.b - deltaB
-                )
-            );
-
-        }
-    }
-    return forwardEvent;
-}
-
-bool Button::_onMouseButtonPressed(const sf::Event& event) {
-    // The button has to be hovered first.
-    bool forwardEvent = true;
-    sf::Color bgColor = m_buttonBackground.getFillColor();
-    if (m_isHovered) {
-        if (!m_isPushed)
-        {
-            if (event.mouseButton.button == sf::Mouse::Left) {
-                m_isPushed = true;
-                m_buttonBackground.setFillColor(
-                    sf::Color(
-                        bgColor.r + 30,
-                        bgColor.g + 30,
-                        bgColor.b + 30
-                    )
-                );
-                forwardEvent = false;
-            }
-        }
-    }
-    return forwardEvent;
-}
-
-bool Button::_onMouseButtonReleased(const sf::Event& event) {
-    bool forwardEvent = true;
-    sf::Color bgColor = m_buttonBackground.getFillColor();
-    if (m_isHovered && m_isPushed)
-    {
-        if (event.mouseButton.button == sf::Mouse::Left) {
-            m_isPushed = false;
-            m_buttonBackground.setFillColor(
-                sf::Color(
-                    bgColor.r - 30,
-                    bgColor.g - 30,
-                    bgColor.b - 30
-                )
-            );
-            pushEvent(
-                CustomEvent(this, CustomEvent::ButtonClicked, nullptr)
-            );
-            forwardEvent = false;
-        }
-    }
-    return forwardEvent;
-}
-
-bool Button::handleEvent(const sf::Event& event) {
-    bool forwardEvent = true;
-
-    // If the button is not clickable, do not forward the event.
-    if (!m_isClickable) {
-        return forwardEvent;
-    }
-    switch(event.type)
-    {
-    case sf::Event::MouseMoved:
-        forwardEvent = _onMouseMoved(event); 
+    switch(event.type()) {
+    case CustomEvent::Type::MouseEntered:
+        std::cerr << "Mouse entered!" << std::endl;
+        setBackgroundColor(
+            sf::Color(
+                bgColor.r + 30,
+                bgColor.g + 30,
+                bgColor.b + 30
+            )
+        );
         break;
-    case sf::Event::MouseButtonPressed:
-        forwardEvent = _onMouseButtonPressed(event);
+    case CustomEvent::Type::MouseLeft:
+        std::cerr << "Mouse left!" << std::endl;
+        setBackgroundColor(
+            sf::Color(
+                bgColor.r - 30,
+                bgColor.g - 30,
+                bgColor.b - 30
+            )
+        );
         break;
-    case sf::Event::MouseButtonReleased:
-        forwardEvent = _onMouseButtonReleased(event);
+    case CustomEvent::Type::LeftClick:
+        std::cerr << "Mouse click!" << std::endl;
+        setBackgroundColor(
+            sf::Color(
+                bgColor.r + 10,
+                bgColor.g + 10,
+                bgColor.b + 10
+            )
+        );
         break;
     default:
         break;
     }
-    return forwardEvent;
 }
 
 Button& Button::setBackgroundColor(const sf::Color& color) {
@@ -187,6 +103,18 @@ Button& Button::setOrigin(float x, float y) {
     Label::setOrigin(x, y);
     m_buttonBackground.setOrigin(x, y);
     return *this;
+}
+
+sf::IntRect Button::boundingRect() const {
+    const auto& bounds(m_caption.getLocalBounds());
+    std::cerr << m_caption.getString().toAnsiString() << " "
+              << bounds.width << " " << bounds.height << std::endl;
+    return sf::IntRect(
+        m_x - 10,
+        m_y - 10,
+        static_cast<int>(bounds.width) + 20,
+        static_cast<int>(bounds.height) + 20
+    );
 }
 
 

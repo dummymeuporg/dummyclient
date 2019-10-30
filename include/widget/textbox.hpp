@@ -10,8 +10,8 @@ public:
     Textbox(Visual&);
     virtual void draw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
-    virtual void handleCustomEvent(const ::CustomEvent& event) override;
-    sf::IntRect boundingRect() override;
+    void handleCustomEvent(const ::CustomEvent& event) override;
+    sf::IntRect boundingRect() const override;
     Textbox& setRect(int, int, int, int);
     Textbox& setFontSize(int);
     Textbox& setFont(const std::string& fontName);

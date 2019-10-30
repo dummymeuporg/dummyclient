@@ -61,7 +61,7 @@ void ModalMessage::addButton(std::shared_ptr<Button> button) {
     m_buttons.push_back(button);
 }
 
-sf::IntRect ModalMessage::boundingRect() {
+sf::IntRect ModalMessage::boundingRect() const {
     return sf::IntRect(
         m_x,
         m_y,

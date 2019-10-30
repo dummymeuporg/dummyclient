@@ -9,7 +9,7 @@ public:
     FloatWindow(Visual&);
     void draw(sf::RenderWindow&) override;
     bool handleEvent(const sf::Event& event) override;
-    sf::IntRect boundingRect() override;
+    sf::IntRect boundingRect() const override;
 private:
     sf::RectangleShape m_window;
     sf::RectangleShape m_statusBar;

@@ -25,7 +25,7 @@ void Screen::returned() {
 
 }
 
-sf::IntRect Screen::boundingRect() {
+sf::IntRect Screen::boundingRect() const {
     return sf::IntRect(
         0,
         0,

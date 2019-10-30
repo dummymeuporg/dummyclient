@@ -48,7 +48,7 @@ Label& Label::setOrigin(float x, float y) {
     return *this;
 }
 
-sf::IntRect Label::boundingRect() {
+sf::IntRect Label::boundingRect() const {
     auto bounds(m_caption.getLocalBounds());
     return sf::IntRect(
         m_x,

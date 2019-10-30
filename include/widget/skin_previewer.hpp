@@ -9,7 +9,7 @@ public:
     SkinPreviewer(Visual&, std::vector<std::string> = {});
     virtual void draw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
-    sf::IntRect boundingRect() override;
+    sf::IntRect boundingRect() const override;
     void showNextSkin();
     void showPreviousSkin();
     SkinPreviewer& setPos(int, int);

@@ -9,7 +9,7 @@ public:
     Label(Visual&);
     virtual void draw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
-    sf::IntRect boundingRect() override;
+    sf::IntRect boundingRect() const override;
 
     const sf::Text& caption() const {
         return m_caption;

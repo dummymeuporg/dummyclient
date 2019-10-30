@@ -30,7 +30,7 @@ bool FloatWindow::handleEvent(const sf::Event& event) {
     return true;
 }
 
-sf::IntRect FloatWindow::boundingRect() {
+sf::IntRect FloatWindow::boundingRect() const {
     return sf::IntRect(m_x, m_x, m_width, m_height);
 }
 
