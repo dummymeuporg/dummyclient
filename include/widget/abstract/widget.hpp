@@ -27,9 +27,16 @@ public:
         return m_y;
     }
 
+    bool isEnabled() const {
+        return m_isEnabled;
+    }
+
+    void setEnabled(bool enabled);
+
 protected:
 
     Visual& m_parent;
+    bool m_isEnabled;
 
 };
 
