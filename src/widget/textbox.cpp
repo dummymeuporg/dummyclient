@@ -7,8 +7,6 @@ namespace Widget {
 Textbox::Textbox(Visual& parent)
     : Widget(parent),
       m_maxLength(-1),
-      m_isHovered(false),
-      m_isFocused(false),
       m_isTextRepeating(false),
       m_isCarretDrawn(false), m_carretIndex(0)
 {
@@ -34,6 +32,7 @@ void Textbox::draw(sf::RenderWindow& renderWindow) {
         backgroundColor.r = m_backgroundColor.r - delta;
         backgroundColor.g = m_backgroundColor.g - delta;
         backgroundColor.b = m_backgroundColor.b - delta;
+        m_isCarretDrawn = false;
     }
 
     m_shape.setFillColor(backgroundColor);
@@ -133,64 +132,13 @@ bool Textbox::_onKeyPressed(const sf::Event& event) {
     return forwardEvent;
 }
 
-bool Textbox::_onMouseMoved(const sf::Event& event) {
-    bool forwardEvent = true;
-    const sf::Vector2f& origin(m_sprite.getPosition());
-    const sf::FloatRect& bounds(m_shape.getLocalBounds());
-
-    if (event.mouseMove.x >= origin.x &&
-        event.mouseMove.y >= origin.y &&
-        event.mouseMove.x <= (origin.x + bounds.width) &&
-        event.mouseMove.y <= (origin.y + bounds.height))
-    {
-        m_isHovered = true;
-    }
-    else
-    {
-        m_isHovered = false;
-    }
-    return forwardEvent;
-}
-
-bool Textbox::_onMouseButtonPressed(const sf::Event& event) {
-    bool forwardEvent = true;
-
-    // Do not handle the event if the textbox is not hovered but focused,
-    // release the handle.
-    if(!m_isHovered && m_isFocused) {
-        std::cerr << "Release for focus." << std::endl;
-        pushEvent(::CustomEvent(this, CustomEvent::ReleaseFocus, this));
-        return forwardEvent;
-    } else if (event.mouseButton.button == sf::Mouse::Left && m_isHovered) {
-        // Send a focus message.
-        pushEvent(::CustomEvent(this, CustomEvent::SetFocus, this));
-        forwardEvent = false;
-    }
-    return forwardEvent;
-}
-
-void Textbox::handleCustomEvent(const ::CustomEvent& event) {
-    if (event.type() == CustomEvent::Type::SetFocus) {
-        m_isFocused = true;
-        std::cerr << "Got focused." << std::endl;
-        m_carretClock.restart();
-        m_isCarretDrawn = true;
-    } else if(event.type() == CustomEvent::Type::ReleaseFocus) {
-        m_isFocused = false;
-        std::cerr << "Lost focus." << std::endl;
-        m_isCarretDrawn = false;
-    }
-}
 
 bool Textbox::handleEvent(const sf::Event& event) {
-    bool forwardEvent = true;
+    bool forwardEvent = Widget::handleEvent(event);
+    if (!forwardEvent) {
+        return forwardEvent;
+    }
     switch(event.type) {
-    case sf::Event::MouseMoved:
-        forwardEvent = _onMouseMoved(event);
-        break;
-    case sf::Event::MouseButtonPressed:
-        forwardEvent = _onMouseButtonPressed(event);
-        break;
     case sf::Event::TextEntered:
         if (m_isFocused) {
             forwardEvent = _onTextEntered(event);

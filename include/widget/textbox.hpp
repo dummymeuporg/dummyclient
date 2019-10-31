@@ -10,7 +10,6 @@ public:
     Textbox(Visual&);
     virtual void draw(sf::RenderWindow&) override;
     virtual bool handleEvent(const sf::Event& event) override;
-    void handleCustomEvent(const ::CustomEvent& event) override;
     sf::IntRect boundingRect() const override;
     Textbox& setRect(int, int, int, int);
     Textbox& setFontSize(int);
@@ -42,8 +41,6 @@ private:
     sf::Text m_text; // What the user will see.
     //std::stringstream m_content;
     std::string m_content;
-    bool m_isHovered;
-    bool m_isFocused;
     bool m_isTextRepeating;
     sf::Color m_backgroundColor;
     sf::Clock m_carretClock;

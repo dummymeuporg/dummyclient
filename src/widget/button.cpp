@@ -107,8 +107,6 @@ Button& Button::setOrigin(float x, float y) {
 
 sf::IntRect Button::boundingRect() const {
     const auto& bounds(m_caption.getLocalBounds());
-    std::cerr << m_caption.getString().toAnsiString() << " "
-              << bounds.width << " " << bounds.height << std::endl;
     return sf::IntRect(
         m_x - 10,
         m_y - 10,

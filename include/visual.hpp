@@ -64,8 +64,11 @@ protected:
     bool m_isEnabled;
     bool m_isMouseHovering;
     bool m_isBeingClicked;
+    bool m_isFocused;
 private:
     bool onMouseMoved(const sf::Event&);
     bool onMouseButtonPressed(const sf::Event&);
     bool onMouseButtonReleased(const sf::Event&);
+    void handleSelfCustomEvent(const ::CustomEvent&);
+    void focusChild(const Visual* child);
 };

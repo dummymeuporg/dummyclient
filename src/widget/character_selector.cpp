@@ -158,7 +158,6 @@ CharacterSelector::selectedCharacter() const {
 }
 
 sf::IntRect CharacterSelector::boundingRect() const {
-    std::cerr << "CharacterSelector " << std::endl;
     if (m_backgrounds.size() > 0) {
         auto firstBackground(m_backgrounds[0]);
         auto lastBackground(m_backgrounds[m_backgrounds.size()-1]);
@@ -169,8 +168,6 @@ sf::IntRect CharacterSelector::boundingRect() const {
 
         auto height = lastBackground.getSize().y;
 
-        std::cerr << m_x << " " << m_y << " " << width << " " << height
-                  << std::endl;
         return sf::IntRect(
             m_x,
             m_y,

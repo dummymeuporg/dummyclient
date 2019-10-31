@@ -34,6 +34,7 @@ public:
         MouseEntered,
         MouseLeft,
         LeftClick,
+        RequestFocus,
 
         Count
     };

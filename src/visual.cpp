@@ -7,7 +7,8 @@ Visual::Visual()
       m_hoveredChild(nullptr),
       m_isEnabled(true),
       m_isMouseHovering(false),
-      m_isBeingClicked(false)
+      m_isBeingClicked(false),
+      m_isFocused(false)
 {}
 
 void Visual::setPos(std::uint16_t x, std::uint16_t y) {
@@ -37,6 +38,27 @@ bool Visual::onMouseButtonPressed(const sf::Event& event) {
     return forwardEvent;
 }
 
+void Visual::focusChild(const Visual* child) {
+    if (nullptr != m_focusedChild) {
+        // Tel the current child that he is loosing focus.
+        pushEvent(::CustomEvent(
+            this,
+            CustomEvent::Type::ReleaseFocus,
+            m_focusedChild)
+        );
+    }
+
+    // Focus the new child.
+    m_focusedChild = const_cast<Visual*>(child);
+    if (nullptr != m_focusedChild) {
+        pushEvent(::CustomEvent(
+            this,
+            CustomEvent::Type::SetFocus,
+            m_focusedChild)
+        );
+    }
+}
+
 bool Visual::onMouseButtonReleased(const sf::Event& event) {
     bool forwardEvent(true);
     if (nullptr != m_hoveredChild && m_isBeingClicked) {
@@ -46,7 +68,12 @@ bool Visual::onMouseButtonReleased(const sf::Event& event) {
             CustomEvent::Type::LeftClick,
             m_hoveredChild)
         );
+        focusChild(m_hoveredChild);
         forwardEvent = m_hoveredChild->onMouseButtonReleased(event);
+    }
+
+    if (m_hoveredChild == nullptr) {
+        focusChild(nullptr);
     }
     return forwardEvent;
 }
@@ -127,8 +154,24 @@ bool Visual::handleEvent(const sf::Event& event) {
     return forwardEvent;
 }
 
+void Visual::handleSelfCustomEvent(const ::CustomEvent& event) {
+    switch(event.type()) {
+    case ::CustomEvent::Type::SetFocus:
+        m_isFocused = true;
+        break;
+    case ::CustomEvent::Type::ReleaseFocus:
+        m_isFocused = false;
+        break;
+    default:
+        break;
+    }
+}
+
 
 void Visual::handleCustomEvent(const ::CustomEvent& event) {
+    if (event.target() == this) {
+        handleSelfCustomEvent(event);
+    }
     for (auto& child: m_children) {
         if (!child->isEnabled()) {
             continue;

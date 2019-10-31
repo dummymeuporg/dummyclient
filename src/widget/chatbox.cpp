@@ -41,19 +41,29 @@ bool Chatbox::handleEvent(const sf::Event& event) {
 }
 
 void Chatbox::handleCustomEvent(const ::CustomEvent& event) {
-
+    Widget::handleCustomEvent(event);
     switch(event.type()) {
     case CustomEvent::Type::EnterKeyPressed:
         std::cerr << "[CHATBOX] Enter Key Pressed!" << std::endl;
         if (!m_isTypingMessage) {
             // XXX: Ugly (for now): simulate a SetFocus to the textbox.
+           // m_messageInputTextbox->handleCustomEvent(
             m_messageInputTextbox->handleCustomEvent(
-                ::CustomEvent(this, CustomEvent::Type::SetFocus, this)
+                ::CustomEvent(
+                    this,
+                    CustomEvent::Type::SetFocus,
+                    m_messageInputTextbox.get()
+                )
             );
             m_isTypingMessage = true;
         } else {
+            //m_messageInputTextbox->handleCustomEvent(
             m_messageInputTextbox->handleCustomEvent(
-                ::CustomEvent(this, CustomEvent::Type::ReleaseFocus, this)
+                ::CustomEvent(
+                    this,
+                    CustomEvent::Type::ReleaseFocus,
+                    m_messageInputTextbox.get()
+                )
             );
             m_isTypingMessage = false;
         }
