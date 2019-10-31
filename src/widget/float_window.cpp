@@ -3,6 +3,7 @@
 namespace Widget {
 
 FloatWindow::FloatWindow(Visual& parent) : Widget(parent) {
+    setEnabled(false);
 }
 
 void FloatWindow::draw(sf::RenderWindow& window) {

@@ -397,7 +397,7 @@ bool Playing::handleEvent(const sf::Event& event) {
 }
 
 void Playing::onButtonClicked(const ::CustomEvent &event) {
-    if (event.source() == m_settingsButton.get()) {
+    if (event.target() == m_settingsButton.get()) {
         std::cerr << "Clicked on settings button." << std::endl;
         m_floatWindow->setEnabled(!m_floatWindow->isEnabled());
     }
@@ -405,7 +405,7 @@ void Playing::onButtonClicked(const ::CustomEvent &event) {
 
 void Playing::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
-    case CustomEvent::ButtonClicked:
+    case CustomEvent::LeftClick:
         onButtonClicked(event);
         break;
     case CustomEvent::Type::MovementActive:

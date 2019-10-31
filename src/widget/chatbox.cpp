@@ -12,16 +12,20 @@ Chatbox::Chatbox(Visual& parent)
       m_isTypingMessage(false),
       m_messageInputTextbox(std::make_shared<Textbox>(*this))
 {
+    setPos(0, 720 - 30);
+    m_width = 300;
+    m_height = 30;
     m_messageInputTextbox
         ->setFontSize(18)
         .setColor(sf::Color::Black)
         .setBackgroundColor(sf::Color(184, 130, 101, 200))
         .setBorderThickness(1)
         .setBorderColor(sf::Color(103, 64, 38))
-        .setRect(0, 720 - 30, 300, 30)
+        .setRect(m_x, m_y, m_width, m_height)
         .setContent("")
         .setMaxLength(35)
         .setFont("arial.ttf");
+
 }
 
 void Chatbox::draw(sf::RenderWindow& window) {
