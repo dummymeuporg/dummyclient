@@ -58,8 +58,9 @@ Teleporting::visitResponse(const Dummy::Server::Response::ChangeCharacter&) {
 void Teleporting::onMessage(const std::string &) {
     // Nothing to do.
 }
-void Teleporting::handleCustomEvent(const ::CustomEvent &) {
+bool Teleporting::handleCustomEvent(const ::CustomEvent &) {
     // Nothing to do.
+    return true;
 }
 
 void Teleporting::onTeleport(

@@ -17,7 +17,7 @@ void Button::draw(sf::RenderWindow& window) {
     Label::draw(window);
 }
 
-void Button::handleCustomEvent(const ::CustomEvent& event) {
+bool Button::handleCustomEvent(const ::CustomEvent& event) {
     sf::Color bgColor = m_buttonBackground.getFillColor();
     switch(event.type()) {
     case CustomEvent::Type::MouseEntered:
@@ -29,7 +29,7 @@ void Button::handleCustomEvent(const ::CustomEvent& event) {
                 bgColor.b + 30
             )
         );
-        break;
+        return false;
     case CustomEvent::Type::MouseLeft:
         std::cerr << "Mouse left!" << std::endl;
         setBackgroundColor(
@@ -39,7 +39,7 @@ void Button::handleCustomEvent(const ::CustomEvent& event) {
                 bgColor.b - 30
             )
         );
-        break;
+        return false;
     case CustomEvent::Type::LeftClick:
         std::cerr << "Mouse click!" << std::endl;
         setBackgroundColor(
@@ -49,9 +49,9 @@ void Button::handleCustomEvent(const ::CustomEvent& event) {
                 bgColor.b + 10
             )
         );
-        break;
+        return false;
     default:
-        break;
+        return true;
     }
 }
 
@@ -106,10 +106,16 @@ Button& Button::setOrigin(float x, float y) {
 }
 
 sf::IntRect Button::boundingRect() const {
+    const auto& origin(m_caption.getOrigin());
     const auto& bounds(m_caption.getLocalBounds());
+    std::cerr << m_caption.getString().toAnsiString() << " "
+              << m_x - 10 - origin.x << " "
+              << m_y - 10 - origin.y << " "
+              << static_cast<int>(bounds.width) + 20 << " "
+              << static_cast<int>(bounds.height) + 20 << std::endl;
     return sf::IntRect(
-        m_x - 10,
-        m_y - 10,
+        m_x - 10 - origin.x,
+        m_y - 10 - origin.y,
         static_cast<int>(bounds.width) + 20,
         static_cast<int>(bounds.height) + 20
     );

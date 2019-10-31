@@ -70,9 +70,12 @@ void GameScreen::loaded() {
     m_state->loaded();
 }
 
-void GameScreen::handleCustomEvent(const ::CustomEvent& event) {
-    UIScreen::handleCustomEvent(event);
-    m_state->handleCustomEvent(event);
+bool GameScreen::handleCustomEvent(const ::CustomEvent& event) {
+    bool forward(UIScreen::handleCustomEvent(event));
+    if (!forward) {
+        return forward;
+    }
+    return m_state->handleCustomEvent(event);
 }
 
 bool GameScreen::handleEvent(const sf::Event& event) {

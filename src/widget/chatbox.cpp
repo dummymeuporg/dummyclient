@@ -40,7 +40,7 @@ bool Chatbox::handleEvent(const sf::Event& event) {
     return forwardEvent;
 }
 
-void Chatbox::handleCustomEvent(const ::CustomEvent& event) {
+bool Chatbox::handleCustomEvent(const ::CustomEvent& event) {
     Widget::handleCustomEvent(event);
     switch(event.type()) {
     case CustomEvent::Type::EnterKeyPressed:
@@ -67,9 +67,9 @@ void Chatbox::handleCustomEvent(const ::CustomEvent& event) {
             );
             m_isTypingMessage = false;
         }
-        break;
+        return false;
     default:
-        break;
+        return true;
     }
 }
 

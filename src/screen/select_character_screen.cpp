@@ -133,16 +133,15 @@ void SelectCharacterScreen::onLeftClick(const ::CustomEvent& event) {
     }
 }
 
-void SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
+bool SelectCharacterScreen::handleCustomEvent(const ::CustomEvent& event)
 {
     auto self(shared_from_this());
     switch(event.type()) {
     case CustomEvent::Type::LeftClick:
         onLeftClick(event);
-        break;
+        return false;
     default:
-        UIScreen::handleCustomEvent(event);
-        break;
+        return UIScreen::handleCustomEvent(event);
     }
 }
 

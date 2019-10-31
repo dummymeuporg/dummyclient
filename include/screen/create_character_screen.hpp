@@ -23,7 +23,7 @@ public:
         std::vector<std::shared_ptr<Dummy::Core::Character>>&
     );
     ~CreateCharacterScreen() override;
-    virtual void handleCustomEvent(const ::CustomEvent&) override;
+    bool handleCustomEvent(const ::CustomEvent&) override;
 
     virtual void
     onResponse(const Dummy::Server::Response::Response& response) override;

@@ -9,7 +9,7 @@ public:
     Button(Visual&);
     virtual void draw(sf::RenderWindow&) override;
     //virtual bool handleEvent(const sf::Event& event) override;
-    void handleCustomEvent(const ::CustomEvent&) override;
+    bool handleCustomEvent(const ::CustomEvent&) override;
     sf::IntRect boundingRect() const override;
     Button& setBackgroundColor(const sf::Color&);
     Button& setBorderColor(const sf::Color&);

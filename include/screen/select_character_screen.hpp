@@ -27,7 +27,7 @@ class SelectCharacterScreen : public UIScreen {
 public:
     SelectCharacterScreen(::Game&, ::Client&);
     virtual ~SelectCharacterScreen();
-    virtual void handleCustomEvent(const ::CustomEvent&) override;
+    bool handleCustomEvent(const ::CustomEvent&) override;
     virtual void loaded();
     virtual void returned();
 

@@ -16,7 +16,7 @@ public:
     Visual();
     virtual void draw(sf::RenderWindow&) = 0;
     virtual bool handleEvent(const sf::Event&);
-    virtual void handleCustomEvent(const ::CustomEvent&);
+    virtual bool handleCustomEvent(const ::CustomEvent&);
 
     virtual void setPos(std::uint16_t, std::uint16_t);
     virtual void setSize(std::uint16_t, std::uint16_t);
@@ -69,6 +69,6 @@ private:
     bool onMouseMoved(const sf::Event&);
     bool onMouseButtonPressed(const sf::Event&);
     bool onMouseButtonReleased(const sf::Event&);
-    void handleSelfCustomEvent(const ::CustomEvent&);
+    bool handleSelfCustomEvent(const ::CustomEvent&);
     void focusChild(const Visual* child);
 };

@@ -110,13 +110,11 @@ bool Visual::onMouseMoved(const sf::Event& event) {
                 if (!child->isMouseHovering()) {
                     m_hoveredChild = child.get();
                     child->setMouseHovering(true);
-                    std::cerr << "Pushing mouse entered" << std::endl;
                     pushEvent(CustomEvent(
                         this,
                         CustomEvent::Type::MouseEntered,
                         m_hoveredChild
                     ));
-
                 }
                 return child->onMouseMoved(event);
             }
@@ -154,7 +152,7 @@ bool Visual::handleEvent(const sf::Event& event) {
     return forwardEvent;
 }
 
-void Visual::handleSelfCustomEvent(const ::CustomEvent& event) {
+bool Visual::handleSelfCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
     case ::CustomEvent::Type::SetFocus:
         m_isFocused = true;
@@ -162,24 +160,53 @@ void Visual::handleSelfCustomEvent(const ::CustomEvent& event) {
     case ::CustomEvent::Type::ReleaseFocus:
         m_isFocused = false;
         break;
+    case ::CustomEvent::Type::MouseLeft:
+    case ::CustomEvent::Type::MouseEntered:
+    case ::CustomEvent::Type::LeftClick:
+        return false;
     default:
         break;
     }
+    return true;
 }
 
 
-void Visual::handleCustomEvent(const ::CustomEvent& event) {
+bool Visual::handleCustomEvent(const ::CustomEvent& event) {
+    bool forwardEvent(true);
     if (event.target() == this) {
-        handleSelfCustomEvent(event);
+         forwardEvent = handleSelfCustomEvent(event);
+         if (!forwardEvent) {
+             return false;
+         }
     }
+
+    bool found(false);
     for (auto& child: m_children) {
         if (!child->isEnabled()) {
             continue;
         }
         if (event.target() == child.get() || event.target() == nullptr) {
-            child->handleCustomEvent(event);
+            found = true;
+            forwardEvent = child->handleCustomEvent(event);
+            if (!forwardEvent) {
+                return forwardEvent;
+            }
         }
     }
+
+    if (!found) {
+        // Broadcast the message.
+        for (auto& child: m_children) {
+            if (!child->isEnabled()) {
+                continue;
+            }
+            forwardEvent = child->handleCustomEvent(event);
+            if (!forwardEvent) {
+                return forwardEvent;
+            }
+        }
+    }
+    return forwardEvent;
 }
 
 void Visual::setEnabled(bool enabled) {

@@ -60,9 +60,16 @@ Playing::Playing(GameScreen& gameScreen)
 
     m_floatWindow->setEnabled(false);
 
+    //buildEscapeMessage();
+    m_quitMessage = std::make_shared<Widget::QuitMessage>(m_gameScreen);
+    m_quitMessage->setEnabled(false);
+
     m_gameScreen.addWidget(m_settingsButton);
     m_gameScreen.addWidget(m_chatbox);
     m_gameScreen.addWidget(m_floatWindow);
+    m_gameScreen.addWidget(m_quitMessage);
+
+
 
     m_mapView.map().setEventObserver(&m_gameScreen);
 
@@ -360,11 +367,13 @@ void Playing::onMessage(const std::string& message) {
 }
 
 void Playing::buildEscapeMessage() {
-    m_quitMessage = std::make_shared<Widget::QuitMessage>(m_gameScreen);
+    //m_quitMessage = std::make_shared<Widget::QuitMessage>(m_gameScreen);
+    m_quitMessage->setEnabled(true);
 }
 
 void Playing::removeEscapeMessage() {
-    m_gameScreen.removeChild(m_quitMessage);
+    //m_gameScreen.removeChild(m_quitMessage);
+    m_quitMessage->setEnabled(false);
 }
 
 void Playing::toggleEscapeMode() {
@@ -396,30 +405,36 @@ bool Playing::handleEvent(const sf::Event& event) {
     return true;
 }
 
-void Playing::onButtonClicked(const ::CustomEvent &event) {
+bool Playing::onButtonClicked(const ::CustomEvent &event) {
     if (event.target() == m_settingsButton.get()) {
         std::cerr << "Clicked on settings button." << std::endl;
         m_floatWindow->setEnabled(!m_floatWindow->isEnabled());
+        return false;
     }
+    return true;
 }
 
-void Playing::handleCustomEvent(const ::CustomEvent& event) {
+bool Playing::handleCustomEvent(const ::CustomEvent& event) {
+    bool forwardEvent(true);
     switch(event.type()) {
     case CustomEvent::LeftClick:
-        onButtonClicked(event);
+        forwardEvent = onButtonClicked(event);
         break;
     case CustomEvent::Type::MovementActive:
         m_player.changeState(
             std::make_shared<Graphics::LivingState::WalkingState>(m_player)
         );
+        forwardEvent = false;
         break;
     case CustomEvent::Type::MovementInactive:
         m_player.changeState(
             std::make_shared<Graphics::LivingState::StandingState>(m_player)
         );
+        forwardEvent = false;
         break;
     case CustomEvent::Type::EscapeKeyPressed:
         toggleEscapeMode();
+        forwardEvent = false;
         break;
     // From escape modal box:
     case CustomEvent::CancelButtonClicked:
@@ -427,19 +442,24 @@ void Playing::handleCustomEvent(const ::CustomEvent& event) {
             removeEscapeMessage();
             m_isEscapeMode = false;
         }
+        forwardEvent = false;
         break;
     case CustomEvent::ChangeCharacterButtonClicked:
         m_client.sendCommand(
             std::make_unique<const Dummy::Server::Command::ChangeCharacter>()
         );
         // XXX: Lock the screen?
+        forwardEvent = false;
         break;
     case CustomEvent::QuitButtonClicked:
         m_game.quit();
+        forwardEvent = false;
         break;
     default:
+        forwardEvent = true;
         break;
     }
+    return forwardEvent;
 }
 
 void Playing::onArrowReleased() {

@@ -50,7 +50,7 @@ public:
     void onMessage(const std::string& message) override;
 
     bool handleEvent(const sf::Event&) override;
-    void handleCustomEvent(const ::CustomEvent&) override;
+    bool handleCustomEvent(const ::CustomEvent&) override;
 
 private: /* Methods. */
     void buildEscapeMessage();
@@ -63,7 +63,7 @@ private: /* Methods. */
     void drawLivings(std::uint8_t);
     void drawSprites(Sprites&);
     void moveCharacter(sf::Keyboard::Key);
-    void onButtonClicked(const ::CustomEvent& event);
+    bool onButtonClicked(const ::CustomEvent& event);
     void onKeyPressed(const sf::Event&);
     void onKeyReleased(const sf::Event&);
     void onTextEntered(const sf::Event&);

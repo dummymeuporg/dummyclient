@@ -148,17 +148,16 @@ void CreateCharacterScreen::onCreateCharacterButton() {
     );
 }
 
-void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
+bool CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
     case CustomEvent::Type::LeftClick:
         handleButtonClicked(event);
-        break;
+        return false;
     case ::CustomEvent::Type::CharacterCreated:
         back();
-        break;
+        return false;
     default:
-        UIScreen::handleCustomEvent(event);
-        break;
+        return UIScreen::handleCustomEvent(event);
     }
 }
 

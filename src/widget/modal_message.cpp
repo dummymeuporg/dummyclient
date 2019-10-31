@@ -62,9 +62,11 @@ void ModalMessage::addButton(std::shared_ptr<Button> button) {
 }
 
 sf::IntRect ModalMessage::boundingRect() const {
+    const auto& origin(m_backgroundRectangle.getOrigin());
+
     return sf::IntRect(
-        m_x,
-        m_y,
+        m_x - origin.x,
+        m_y - origin.y,
         static_cast<int>(m_backgroundRectangle.getSize().x),
         static_cast<int>(m_backgroundRectangle.getSize().y)
     );
