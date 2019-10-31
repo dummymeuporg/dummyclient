@@ -48,7 +48,7 @@ void LoadingScreen::loaded() {
     pushEvent(::CustomEvent(this, CustomEvent::LoadMapFromFile, this));
 }
 
-void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
+bool LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
 {
 	auto self(shared_from_this());
     switch(event.type()) {
@@ -57,14 +57,14 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
             << " from file" << std::endl;
         m_map = loadGraphicMap(m_mapNameToLoad);
         pushEvent(CustomEvent(this, CustomEvent::MapFileLoaded, this));
-        break;
+        return false;
     }
     case CustomEvent::Type::MapFileLoaded: {
         std::cerr << "Load map view" << std::endl;
         m_mapView = std::make_unique<::MapView>(std::move(m_map));
         std::cerr << "Loaded map view." << std::endl;
         pushEvent(CustomEvent(this, CustomEvent::MapViewLoaded, this));
-        break;
+        return false;
     }
     case CustomEvent::Type::MapViewLoaded: {
         std::cerr << "Can display map." << std::endl;
@@ -77,11 +77,10 @@ void LoadingScreen::handleCustomEvent(const ::CustomEvent& event)
                 m_instance
             )
         );
-
+        return false;
     }
-        break;
     default:
-        break;
+        return true;
     }
 }
 

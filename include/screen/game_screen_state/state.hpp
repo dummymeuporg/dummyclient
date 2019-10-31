@@ -71,7 +71,7 @@ public:
 
     virtual void onMessage(const std::string&) = 0;
     virtual bool handleEvent(const sf::Event&) = 0;
-    virtual void handleCustomEvent(const ::CustomEvent&) = 0;
+    virtual bool handleCustomEvent(const ::CustomEvent&) = 0;
 
 protected:
     GameScreen& m_gameScreen;

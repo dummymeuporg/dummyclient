@@ -36,7 +36,7 @@ public:
     ~GameScreen() override;
     void loaded() override;
     bool handleEvent(const sf::Event&) override;
-    void handleCustomEvent(const ::CustomEvent&) override;
+    bool handleCustomEvent(const ::CustomEvent&) override;
     void draw(sf::RenderWindow&) override;
     void tick() override;
 

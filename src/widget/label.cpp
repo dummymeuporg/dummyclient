@@ -48,4 +48,14 @@ Label& Label::setOrigin(float x, float y) {
     return *this;
 }
 
+sf::IntRect Label::boundingRect() const {
+    auto bounds(m_caption.getLocalBounds());
+    return sf::IntRect(
+        m_x,
+        m_y,
+        static_cast<int>(bounds.width),
+        static_cast<int>(bounds.height)
+    );
+}
+
 } // namespace Widget

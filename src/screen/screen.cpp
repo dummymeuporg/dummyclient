@@ -22,7 +22,17 @@ void Screen::tick() {
 }
 
 void Screen::returned() {
+    focusChild(nullptr);
+    resetHovering();
+}
 
+sf::IntRect Screen::boundingRect() const {
+    return sf::IntRect(
+        0,
+        0,
+        static_cast<int>(m_game.width()),
+        static_cast<int>(m_game.height())
+    );
 }
 
 } // namespace Screen

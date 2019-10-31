@@ -43,22 +43,44 @@ QuitMessage::QuitMessage(Visual& parent)
     addButton(m_cancelButton);
 }
 
-void QuitMessage::handleCustomEvent(const ::CustomEvent& event) {
-    if (event.source() == m_quitButton.get()) {
+bool QuitMessage::onLeftClick(const ::CustomEvent& event) {
+    if (event.target() == m_quitButton.get()) {
         std::cerr << "Quit button clicked!" << std::endl;
         pushEvent(::CustomEvent(
             this, ::CustomEvent::Type::QuitButtonClicked, &m_parent)
         );
-    } else if (event.source() == m_changeCharacterButton.get()) {
+        return false;
+    } else if (event.target() == m_changeCharacterButton.get()) {
         std::cerr << "Change character button clicked!" << std::endl;
         pushEvent(::CustomEvent(
             this, ::CustomEvent::Type::ChangeCharacterButtonClicked, &m_parent)
         );
-    } else if (event.source() == m_cancelButton.get()) {
+        return false;
+    } else if (event.target() == m_cancelButton.get()) {
         pushEvent(::CustomEvent(
             this, ::CustomEvent::Type::CancelButtonClicked, &m_parent)
         );
         std::cerr << "Cancel button clicked!";
+        return false;
     }
+    return true;
+}
+
+bool QuitMessage::handleCustomEvent(const ::CustomEvent& event) {
+    bool forwardEvent(true);
+
+    switch(event.type()) {
+    case ::CustomEvent::Type::LeftClick:
+        forwardEvent = onLeftClick(event);
+        break;
+    default:
+        break;
+    }
+
+    if (!forwardEvent) {
+        return forwardEvent;
+    }
+
+    return ModalMessage::handleCustomEvent(event);
 }
 } // namespace Widget

@@ -17,7 +17,7 @@ public:
     LoadingScreen(::Game&, ::Client&, const std::string&, const std::string&);
     virtual ~LoadingScreen();
     void loaded() override;
-    void handleCustomEvent(const ::CustomEvent&) override;
+    bool handleCustomEvent(const ::CustomEvent&) override;
 
     void onResponse(const Dummy::Server::Response::Response&) override;
 

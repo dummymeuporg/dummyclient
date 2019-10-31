@@ -27,7 +27,7 @@ class SelectCharacterScreen : public UIScreen {
 public:
     SelectCharacterScreen(::Game&, ::Client&);
     virtual ~SelectCharacterScreen();
-    virtual void handleCustomEvent(const ::CustomEvent&) override;
+    bool handleCustomEvent(const ::CustomEvent&) override;
     virtual void loaded();
     virtual void returned();
 
@@ -53,6 +53,7 @@ public:
 
 private:
     void _refreshCharactersList();
+    void onLeftClick(const ::CustomEvent&);
     std::vector<std::shared_ptr<Dummy::Core::Character>> m_characters;
     std::shared_ptr<Dummy::Core::Character> m_selectedCharacter;
     std::shared_ptr<Widget::Button> m_createCharacterButton;

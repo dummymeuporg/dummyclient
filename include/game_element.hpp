@@ -11,8 +11,8 @@ public:
         m_resourceProvider(::ResourceProvider::instance())
     {}
 
-    virtual void handleCustomEvent(const ::CustomEvent&)
-    {}
+    virtual bool handleCustomEvent(const ::CustomEvent&)
+    { return true; }
 
 protected:
     sf::Font& font(const std::string& fontName) {
@@ -26,7 +26,7 @@ protected:
     std::unique_ptr<Graphics::Map> loadGraphicMap(
         const std::string& mapName
     ) {
-        return std::move(m_resourceProvider.loadGraphicMap(mapName));
+        return m_resourceProvider.loadGraphicMap(mapName);
     }
 
     void pushEvent(const ::CustomEvent& event) {

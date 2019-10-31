@@ -121,19 +121,19 @@ CreateCharacterScreen::CreateCharacterScreen(
 
 CreateCharacterScreen::~CreateCharacterScreen() { }
 
-void CreateCharacterScreen::_handleButtonClicked(const ::CustomEvent& event) {
-    if (event.source() == m_leftSkinButton.get()) {
+void CreateCharacterScreen::handleButtonClicked(const ::CustomEvent& event) {
+    if (event.target() == m_leftSkinButton.get()) {
         m_skinPreviewer->showPreviousSkin();
-    } else if(event.source() == m_rightSkinButton.get()) {
+    } else if(event.target() == m_rightSkinButton.get()) {
         m_skinPreviewer->showNextSkin();
-    } else if (event.source() == m_createCharacterButton.get()) {
-        _onCreateCharacterButton();
-    } else if (event.source() == m_cancelButton.get()) {
-        _back();
+    } else if (event.target() == m_createCharacterButton.get()) {
+        onCreateCharacterButton();
+    } else if (event.target() == m_cancelButton.get()) {
+        back();
     }
 }
 
-void CreateCharacterScreen::_onCreateCharacterButton() {
+void CreateCharacterScreen::onCreateCharacterButton() {
     const std::string& characterName(m_characterNameTextbox->content());
     const std::string& skin(m_skinPreviewer->skin());
     std::cerr << "Name: " << m_characterNameTextbox->content()
@@ -148,21 +148,20 @@ void CreateCharacterScreen::_onCreateCharacterButton() {
     );
 }
 
-void CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
+bool CreateCharacterScreen::handleCustomEvent(const ::CustomEvent& event) {
     switch(event.type()) {
-    case ::CustomEvent::Type::ButtonClicked:
-        _handleButtonClicked(event);
-        break;
+    case CustomEvent::Type::LeftClick:
+        handleButtonClicked(event);
+        return false;
     case ::CustomEvent::Type::CharacterCreated:
-        _back();
-        break;
+        back();
+        return false;
     default:
-        UIScreen::handleCustomEvent(event);
-        break;
+        return UIScreen::handleCustomEvent(event);
     }
 }
 
-void CreateCharacterScreen::_back() {
+void CreateCharacterScreen::back() {
     auto self(shared_from_this());
     m_client.returnToPreviousScreen();
 }

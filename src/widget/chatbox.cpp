@@ -12,16 +12,20 @@ Chatbox::Chatbox(Visual& parent)
       m_isTypingMessage(false),
       m_messageInputTextbox(std::make_shared<Textbox>(*this))
 {
+    setPos(0, 720 - 30);
+    m_width = 300;
+    m_height = 30;
     m_messageInputTextbox
         ->setFontSize(18)
         .setColor(sf::Color::Black)
         .setBackgroundColor(sf::Color(184, 130, 101, 200))
         .setBorderThickness(1)
         .setBorderColor(sf::Color(103, 64, 38))
-        .setRect(0, 720 - 30, 300, 30)
+        .setRect(m_x, m_y, m_width, m_height)
         .setContent("")
         .setMaxLength(35)
         .setFont("arial.ttf");
+
 }
 
 void Chatbox::draw(sf::RenderWindow& window) {
@@ -36,26 +40,36 @@ bool Chatbox::handleEvent(const sf::Event& event) {
     return forwardEvent;
 }
 
-void Chatbox::handleCustomEvent(const ::CustomEvent& event) {
-
+bool Chatbox::handleCustomEvent(const ::CustomEvent& event) {
+    Widget::handleCustomEvent(event);
     switch(event.type()) {
     case CustomEvent::Type::EnterKeyPressed:
         std::cerr << "[CHATBOX] Enter Key Pressed!" << std::endl;
         if (!m_isTypingMessage) {
             // XXX: Ugly (for now): simulate a SetFocus to the textbox.
+           // m_messageInputTextbox->handleCustomEvent(
             m_messageInputTextbox->handleCustomEvent(
-                ::CustomEvent(this, CustomEvent::Type::SetFocus, this)
+                ::CustomEvent(
+                    this,
+                    CustomEvent::Type::SetFocus,
+                    m_messageInputTextbox.get()
+                )
             );
             m_isTypingMessage = true;
         } else {
+            //m_messageInputTextbox->handleCustomEvent(
             m_messageInputTextbox->handleCustomEvent(
-                ::CustomEvent(this, CustomEvent::Type::ReleaseFocus, this)
+                ::CustomEvent(
+                    this,
+                    CustomEvent::Type::ReleaseFocus,
+                    m_messageInputTextbox.get()
+                )
             );
             m_isTypingMessage = false;
         }
-        break;
+        return false;
     default:
-        break;
+        return true;
     }
 }
 
@@ -65,6 +79,15 @@ const std::string& Chatbox::typedMessage() const {
 
 void Chatbox::clearMessageInputTextbox() {
     m_messageInputTextbox->setContent("");
+}
+
+sf::IntRect Chatbox::boundingRect() const {
+    return sf::IntRect(
+        m_x,
+        m_y,
+        m_width,
+        m_height
+    );
 }
 
 } // namespace Widget
