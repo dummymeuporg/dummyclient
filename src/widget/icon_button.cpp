@@ -28,4 +28,5 @@ sf::IntRect IconButton::boundingRect() const {
 }
 
 
+
 } // namespace Widget

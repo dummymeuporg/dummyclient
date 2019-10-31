@@ -8,6 +8,7 @@ class IconButton : public Abstract::Widget {
 public:
     IconButton(Visual&);
     void draw(sf::RenderWindow&) override;
+    //bool handleCustomEvent(const ::CustomEvent&) override;
     sf::IntRect boundingRect() const override;
 
     void setSize(std::uint16_t, std::uint16_t);

@@ -38,6 +38,19 @@ bool Visual::onMouseButtonPressed(const sf::Event& event) {
     return forwardEvent;
 }
 
+void Visual::resetHovering() {
+    if (nullptr != m_hoveredChild) {
+        m_hoveredChild->setMouseHovering(false);
+        std::cerr << "Pushing mouse left" << std::endl;
+        pushEvent(CustomEvent(
+            this,
+            CustomEvent::Type::MouseLeft,
+            m_hoveredChild
+        ));
+        m_hoveredChild = nullptr;
+    }
+}
+
 void Visual::focusChild(const Visual* child) {
     if (nullptr != m_focusedChild) {
         // Tel the current child that he is loosing focus.
@@ -110,6 +123,7 @@ bool Visual::onMouseMoved(const sf::Event& event) {
                 if (!child->isMouseHovering()) {
                     m_hoveredChild = child.get();
                     child->setMouseHovering(true);
+                    std::cerr << "Pushing mouse entered" << std::endl;
                     pushEvent(CustomEvent(
                         this,
                         CustomEvent::Type::MouseEntered,

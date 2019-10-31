@@ -52,6 +52,9 @@ public:
     void setEnabled(bool);
     void setMouseHovering(bool);
 protected:
+    void focusChild(const Visual* child);
+    void resetHovering();
+
     ::ResourceProvider& m_resourceProvider;
     ::CustomEventQueue& m_eventQueue;
     std::uint16_t m_x, m_y;
@@ -70,5 +73,5 @@ private:
     bool onMouseButtonPressed(const sf::Event&);
     bool onMouseButtonReleased(const sf::Event&);
     bool handleSelfCustomEvent(const ::CustomEvent&);
-    void focusChild(const Visual* child);
+
 };

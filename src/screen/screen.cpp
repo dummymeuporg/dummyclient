@@ -22,7 +22,8 @@ void Screen::tick() {
 }
 
 void Screen::returned() {
-
+    focusChild(nullptr);
+    resetHovering();
 }
 
 sf::IntRect Screen::boundingRect() const {
