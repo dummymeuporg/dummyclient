@@ -52,7 +52,10 @@ int run_standalone(const char* projectPath,
 
     int ret = game.run();
     work.reset();
+
+    iocontext.stop();
     serverThread.join();
+
     session->close();
     return ret;
 }
