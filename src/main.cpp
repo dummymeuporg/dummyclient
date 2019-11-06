@@ -40,8 +40,7 @@ int run_standalone(const char* projectPath,
     ::Game game(
         "TEST.0000",
         "00000000-0000-0000-0000-000000000000",
-        *connector,
-        true
+        *connector
     );
 
     // XXX: this line prevents the iocontext from completing.
