@@ -14,6 +14,7 @@ public:
     void draw(sf::RenderWindow&) override;
 protected:
     UIScreen& addWidget(std::shared_ptr<Widget::Abstract::Widget>);
+    sf::View m_uiView;
 private:
     std::vector<std::shared_ptr<Widget::Abstract::Widget>> m_widgets;
 };

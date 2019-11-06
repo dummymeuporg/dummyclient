@@ -56,8 +56,8 @@ GameScreen::GameScreen(
                                m_game.height())),
       m_hudView(sf::FloatRect(0,
                               0,
-                              m_game.width(),
-                              m_game.height())),
+                              m_game.windowWidth(),
+                              m_game.windowHeight())),
       m_state(std::make_shared<GameScreenState::Playing>(*this))
 
 {

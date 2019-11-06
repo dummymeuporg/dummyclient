@@ -156,6 +156,10 @@ void Player::drawHUD(sf::RenderWindow& window, const sf::View& worldView) {
         m_sprite.getPosition(),
         worldView
     );
+    std::cerr << "Pixels: " << screenCoords.x << ", "
+              << screenCoords.y << std::endl;
+    auto mode = sf::VideoMode::getFullscreenModes().at(0);
+    std::cerr << "Mode: " << mode.width << ", " << mode.height << std::endl;
     const auto characterOrigin(m_sprite.getOrigin());
     m_displayName.setPosition(
         screenCoords.x + m_w/2.0,
