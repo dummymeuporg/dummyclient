@@ -15,9 +15,11 @@ public:
     Game(const char*,
          const char*,
          Connector::Connector&,
+         bool = false,
          std::size_t = 960,
          std::size_t = 720,
-         std::size_t = 2);
+         std::size_t = 2
+         );
     int run();
     sf::RenderWindow& window() {
         return m_window;
@@ -38,13 +40,24 @@ public:
         return m_scaleFactor;
     }
 
+    std::size_t windowWidth() const {
+        return m_windowWidth;
+    }
+
+    std::size_t windowHeight() const {
+        return m_windowHeight;
+    }
+
     void quit();
 private:
+    bool m_isFullscreen;
     Client m_client;
     sf::RenderWindow m_window;
     ::CustomEventQueue& m_customEventQueue;
     ::ResourceProvider& m_resourceProvider;
     std::size_t m_width, m_height;
+    std::size_t m_windowWidth, m_windowHeight;
     std::size_t m_scaleFactor;
     bool m_isRunning;
+
 };

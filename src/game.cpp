@@ -10,17 +10,32 @@
 Game::Game(const char* account,
            const char* sessionID,
            Connector::Connector& connector,
+           bool isFullscreen,
            std::size_t width, std::size_t height,
-           std::size_t scaleFactor) 
-    : m_client(connector, *this, Credentials(account, sessionID)),
+           std::size_t scaleFactor)
+    : m_isFullscreen(isFullscreen),
+    m_client(connector, *this, Credentials(account, sessionID)),
       m_window(sf::VideoMode(width, height),
 		       "DummyClient",
-               sf::Style::Titlebar | sf::Style::Close | sf::Style::Fullscreen),
+               sf::Style::Titlebar | sf::Style::Close |
+               (m_isFullscreen ?sf::Style::Fullscreen : 0)),
       m_customEventQueue(CustomEventQueue::instance()),
       m_resourceProvider(ResourceProvider::instance()),
-      m_width(width), m_height(height), m_scaleFactor(scaleFactor),
+      m_width(width),
+      m_height(height),
+      m_scaleFactor(scaleFactor),
       m_isRunning(true)
-{ }
+{
+    if (m_isFullscreen) {
+        const auto& mode(sf::VideoMode::getFullscreenModes().at(0));
+        m_windowWidth = mode.width;
+        m_windowHeight = mode.height;
+    } else {
+        m_windowWidth = m_width;
+        m_windowHeight = m_height;
+    }
+
+}
 
 int Game::run()
 {
