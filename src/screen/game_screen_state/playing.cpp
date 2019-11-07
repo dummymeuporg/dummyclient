@@ -278,7 +278,7 @@ void Playing::moveCharacter(sf::Keyboard::Key) {
     player.setYMovement(yVector);
 }
 
-void Playing::onKeyPressed(const sf::Event&) {
+void Playing::onKeyPressed(const sf::Event& event) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
         m_characterDirection |= DIRECTION_UP;
     }
@@ -495,6 +495,7 @@ void Playing::onArrowPressed() {
 }
 
 void Playing::onKeyReleased(const sf::Event& event) {
+    std::cerr << "Key released code: " << event.key.code << std::endl;
     if (sf::Keyboard::Enter == event.key.code && m_isEnterKeyPressed) {
         std::cerr << "Enter key released!" << std::endl;
         m_isEnterKeyPressed = false;

@@ -68,6 +68,7 @@ void Textbox::_handleTextEntered(const sf::Event& event) {
             --m_carretIndex;
         }
     } else if (event.text.unicode >= 0x20) {
+        std::cerr << "Entered: " << event.text.unicode << std::endl;
         if (m_maxLength > 0 && m_content.size() == m_maxLength) {
             return;
         }

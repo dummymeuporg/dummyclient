@@ -50,16 +50,16 @@ int Game::run()
     while (m_window.isOpen() && m_isRunning)
     {
         sf::Event event;
+        m_client.checkResponse();
+        m_window.clear();
         while (m_window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 m_window.close();
-        }
 
-        //m_client.checkData();
-        m_client.checkResponse();
-        m_window.clear();
-        m_client.screen()->handleEvent(event);
+            //m_client.checkData();
+            m_client.screen()->handleEvent(event);
+        }
 
         CustomEvent customEvent;
         m_customEventQueue.pollEvent(customEvent);
