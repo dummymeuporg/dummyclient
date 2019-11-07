@@ -53,4 +53,10 @@ void Config::readKeyStrokes(const boost::property_tree::ptree& pt) {
     iss >> data;
     m_leftKey = static_cast<sf::Keyboard::Key>(data);
 
+    iss.str(pt.get<std::string>("Keystrokes.interact"));
+    iss.clear();
+
+    iss >> data;
+    m_interactKey = static_cast<sf::Keyboard::Key>(data);
+
 }
