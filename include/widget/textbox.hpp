@@ -49,7 +49,7 @@ private:
     bool m_isCarretDrawn;
     unsigned int m_carretIndex;
     sf::Keyboard::Key m_lastKeyInput;
-    sf::Keyboard::Key m_lastTextInput;
+    sf::Uint32 m_lastTextInput;
 };
 
 } // namespace Widget

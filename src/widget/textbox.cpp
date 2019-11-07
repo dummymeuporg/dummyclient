@@ -67,11 +67,12 @@ void Textbox::_handleTextEntered(const sf::Event& event) {
             m_text.setString(m_content);
             --m_carretIndex;
         }
-    } else if (std::isprint(event.key.code)) {
+    } else if (event.text.unicode >= 0x20) {
+        std::cerr << "Entered: " << event.text.unicode << std::endl;
         if (m_maxLength > 0 && m_content.size() == m_maxLength) {
             return;
         }
-        m_content.insert(m_carretIndex, 1, static_cast<char>(event.key.code));
+        m_content.insert(m_carretIndex, 1, static_cast<wchar_t>(event.text.unicode));
         std::cerr << "Content = " << m_content << std::endl;
         m_text.setString(m_content);
         m_carretIndex++;
@@ -82,12 +83,12 @@ void Textbox::_handleTextEntered(const sf::Event& event) {
 
 bool Textbox::_onTextEntered(const sf::Event& event) {
     bool forwardEvent = true;
-    //std::cerr << "Text entered: " << event.key.code << std::endl;
+    std::cerr << "Text entered: " << event.text.unicode << std::endl;
     if (m_isTextRepeating
          && m_textRepeatClock.getElapsedTime().asMilliseconds() >= 30) {
         _handleTextEntered(event);
         m_textRepeatClock.restart();
-    } else if (m_lastTextInput != event.key.code) {
+    } else if (m_lastTextInput != event.text.unicode) {
         _handleTextEntered(event);
         m_textFirstClock.restart();
     } else if (!m_isTextRepeating
@@ -97,7 +98,7 @@ bool Textbox::_onTextEntered(const sf::Event& event) {
         m_textRepeatClock.restart();
     }
         
-    m_lastTextInput = event.key.code;
+    m_lastTextInput = event.text.unicode;
     return forwardEvent;
 }
 

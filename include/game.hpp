@@ -15,6 +15,7 @@ public:
     Game(const char*,
          const char*,
          Connector::Connector&,
+         const Config&,
          bool = false,
          std::size_t = 960,
          std::size_t = 720,
@@ -48,6 +49,10 @@ public:
         return m_windowHeight;
     }
 
+    const ::Config& config() const {
+        return m_config;
+    }
+
     void quit();
 private:
     bool m_isFullscreen;
@@ -55,6 +60,7 @@ private:
     sf::RenderWindow m_window;
     ::CustomEventQueue& m_customEventQueue;
     ::ResourceProvider& m_resourceProvider;
+    const ::Config& m_config;
     std::size_t m_width, m_height;
     std::size_t m_windowWidth, m_windowHeight;
     std::size_t m_scaleFactor;
