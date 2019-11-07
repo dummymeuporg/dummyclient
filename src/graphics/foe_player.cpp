@@ -37,8 +37,6 @@ void FoePlayer::drawHUD(sf::RenderWindow& window, const sf::View& worldView) {
         m_sprite.getPosition(),
         worldView
     );
-    std::cerr << "Pixels: " << screenCoords.x << ", "
-              << screenCoords.y << std::endl;
     const auto characterOrigin(m_sprite.getOrigin());
     m_displayName.setPosition(
         screenCoords.x + m_w/2.0,
