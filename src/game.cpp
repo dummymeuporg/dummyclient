@@ -10,17 +10,20 @@
 Game::Game(const char* account,
            const char* sessionID,
            Connector::Connector& connector,
+           const ::Config& config,
            bool isFullscreen,
-           std::size_t width, std::size_t height,
+           std::size_t width,
+           std::size_t height,
            std::size_t scaleFactor)
     : m_isFullscreen(isFullscreen),
-    m_client(connector, *this, Credentials(account, sessionID)),
+      m_client(connector, *this, Credentials(account, sessionID)),
       m_window(sf::VideoMode(width, height),
 		       "DummyClient",
                sf::Style::Titlebar | sf::Style::Close |
                (m_isFullscreen ?sf::Style::Fullscreen : 0)),
       m_customEventQueue(CustomEventQueue::instance()),
       m_resourceProvider(ResourceProvider::instance()),
+      m_config(config),
       m_width(width),
       m_height(height),
       m_scaleFactor(scaleFactor),
@@ -45,7 +48,6 @@ int Game::run()
         )
     );
     sf::Clock clock;
-    m_window.setKeyRepeatEnabled(false);
     m_window.setFramerateLimit(Game::FPS);
     while (m_window.isOpen() && m_isRunning)
     {

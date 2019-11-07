@@ -12,6 +12,7 @@
 #include <dummy/server/response/teleport_map.hpp>
 
 
+#include "config.hpp"
 #include "custom_event_queue.hpp"
 #include "game.hpp"
 
@@ -279,16 +280,20 @@ void Playing::moveCharacter(sf::Keyboard::Key) {
 }
 
 void Playing::onKeyPressed(const sf::Event& event) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+            || sf::Keyboard::isKeyPressed(m_game.config().upKey())) {
         m_characterDirection |= DIRECTION_UP;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
+            || sf::Keyboard::isKeyPressed(m_game.config().rightKey())) {
         m_characterDirection |= DIRECTION_RIGHT;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
+            || sf::Keyboard::isKeyPressed(m_game.config().downKey())) {
         m_characterDirection |= DIRECTION_DOWN;
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
+            || sf::Keyboard::isKeyPressed(m_game.config().leftKey())) {
         m_characterDirection |= DIRECTION_LEFT;
     }
 
@@ -467,7 +472,11 @@ void Playing::onArrowReleased() {
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
         !sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
         !sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
-        !sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        !sf::Keyboard::isKeyPressed(sf::Keyboard::Left) &&
+        !sf::Keyboard::isKeyPressed(m_game.config().upKey()) &&
+        !sf::Keyboard::isKeyPressed(m_game.config().leftKey()) &&
+        !sf::Keyboard::isKeyPressed(m_game.config().downKey()) &&
+        !sf::Keyboard::isKeyPressed(m_game.config().rightKey()))
     {
         m_gameScreen.pushEvent(
             CustomEvent(
@@ -500,16 +509,20 @@ void Playing::onKeyReleased(const sf::Event& event) {
         std::cerr << "Enter key released!" << std::endl;
         m_isEnterKeyPressed = false;
     }
-    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
+            !sf::Keyboard::isKeyPressed(m_game.config().upKey())) {
         m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_UP);
     }
-    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Right) &&
+            !sf::Keyboard::isKeyPressed(m_game.config().rightKey())) {
         m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_RIGHT);
     }
-    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Down) &&
+            !sf::Keyboard::isKeyPressed(m_game.config().downKey())) {
         m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_DOWN);
     }
-    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Left) &&
+            !sf::Keyboard::isKeyPressed(m_game.config().leftKey())) {
         m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_LEFT);
     }
 

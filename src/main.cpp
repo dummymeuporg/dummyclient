@@ -35,12 +35,13 @@ int run_standalone(const char* projectPath,
 
     auto connector(std::make_shared<Connector::LocalConnector>(communicator));
     connector->start();
-    //::Config config("dummyclient.ini");
+    ::Config config("dummyclient.ini");
     //::Game game(account, sessionID, connector);
     ::Game game(
         "TEST.0000",
         "00000000-0000-0000-0000-000000000000",
-        *connector
+        *connector,
+        config
     );
 
     // XXX: this line prevents the iocontext from completing.
@@ -65,8 +66,8 @@ int run_remote(const char* host, unsigned short port, const char* account,
 {
     Connector::NetworkConnector connector(host, port);
     connector.start();
-    //::Config config("dummyclient.ini");
-    ::Game game(account, sessionID, connector);
+    ::Config config("dummyclient.ini");
+    ::Game game(account, sessionID, connector, config);
     return game.run();
 }
 
