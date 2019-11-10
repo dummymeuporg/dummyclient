@@ -279,7 +279,61 @@ void Playing::moveCharacter(sf::Keyboard::Key) {
     player.setYMovement(yVector);
 }
 
+void Playing::triggerEvent(
+    const std::pair<std::uint16_t, std::uint16_t>& coords
+) {
+    std::uint16_t index(coords.second * m_mapView.width() + coords.first);
+    //XXX: Ugly. Too much dereferencing to access a simple property.
+    const auto& keyPressMapEvents(
+        m_mapView.map().floors()[m_player.floor()].keypressEvents()
+    );
+
+    if (keyPressMapEvents.find(index) != std::end(keyPressMapEvents)) {
+        std::cerr << "There is a key press event!" << std::endl;
+        keyPressMapEvents.at(index)->execute();
+    }
+}
+
+void Playing::testOnKeyPressedMapEvent() {
+    std::pair<std::uint16_t, uint16_t> eventCoords {
+        m_player.x() / 16,
+        m_player.y() / 16
+    };
+
+    switch(m_player.direction()) {
+    case Dummy::Core::Character::Direction::UP:
+        if (eventCoords.second > 0) {
+            --eventCoords.second;
+            triggerEvent(eventCoords);
+        }
+        break;
+    case Dummy::Core::Character::Direction::LEFT:
+        if (eventCoords.first > 0) {
+            --eventCoords.first;
+            triggerEvent(eventCoords);
+        }
+        break;
+    case Dummy::Core::Character::Direction::RIGHT:
+        if (eventCoords.first < m_mapView.width() - 1) {
+            ++eventCoords.first;
+            triggerEvent(eventCoords);
+        }
+        break;
+    case Dummy::Core::Character::Direction::DOWN:
+        if (eventCoords.second < m_mapView.height() - 1) {
+            ++eventCoords.second;
+            triggerEvent(eventCoords);
+        }
+    }
+
+}
+
 void Playing::onKeyPressed(const sf::Event& event) {
+
+    if (m_gameScreen.game().config().interactKey() == event.key.code) {
+        testOnKeyPressedMapEvent();
+    }
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
             || sf::Keyboard::isKeyPressed(m_game.config().upKey())) {
         m_characterDirection |= DIRECTION_UP;

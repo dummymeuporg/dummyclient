@@ -71,7 +71,9 @@ private: /* Methods. */
     void onArrowReleased();
     void removeEscapeMessage();
     void syncLivings();
+    void testOnKeyPressedMapEvent();
     void toggleEscapeMode();
+    void triggerEvent(const std::pair<std::uint16_t, std::uint16_t>&);
 
 
 private: /* Attributes. */
