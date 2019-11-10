@@ -48,6 +48,10 @@ public:
         return m_rightKey;
     }
 
+    sf::Keyboard::Key interactKey() const {
+        return m_interactKey;
+    }
+
 private:
     void readConfigFile();
     void readKeyStrokes(const boost::property_tree::ptree&);
@@ -60,6 +64,7 @@ private:
     sf::Keyboard::Key m_leftKey;
     sf::Keyboard::Key m_downKey;
     sf::Keyboard::Key m_rightKey;
+    sf::Keyboard::Key m_interactKey;
 
 };
 
