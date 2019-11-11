@@ -45,7 +45,10 @@ Playing::Playing(GameScreen& gameScreen)
       m_settingsButton(std::make_shared<Widget::IconButton>(m_gameScreen)),
       m_chatbox(std::make_shared<Widget::Chatbox>(m_gameScreen)),
       m_quitMessage(nullptr),
-      m_floatWindow(std::make_shared<Widget::FloatWindow>(m_gameScreen))
+      m_floatWindow(std::make_shared<Widget::FloatWindow>(m_gameScreen)),
+      m_currentGameMessage(
+          std::make_shared<Widget::Game::Message>(m_gameScreen)
+      )
 {
     m_player.setX(m_client.character()->position().first * 8);
     m_player.setY(m_client.character()->position().second * 8);
@@ -422,7 +425,9 @@ void Playing::onTeleport(
 }
 
 void Playing::onMessage(const std::string& message) {
-    std::cerr << "Message: " << message << std::endl;
+    //std::cerr << "Message: " << message << std::endl;
+    m_currentGameMessage->setContent(message);
+    m_currentGameMessage->setEnabled(true);
 }
 
 void Playing::buildEscapeMessage() {

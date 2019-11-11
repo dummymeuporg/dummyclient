@@ -8,6 +8,7 @@
 #include "widget/float_window.hpp"
 #include "widget/icon_button.hpp"
 #include "widget/quit_message.hpp"
+#include "widget/game/message.hpp"
 
 namespace Screen {
 namespace GameScreenState {
@@ -96,6 +97,7 @@ private: /* Attributes. */
     std::shared_ptr<Widget::Chatbox> m_chatbox;
     std::shared_ptr<Widget::QuitMessage> m_quitMessage;
     std::shared_ptr<Widget::FloatWindow> m_floatWindow;
+    std::shared_ptr<Widget::Game::Message> m_currentGameMessage;
 };
 
 } // namespace GameScreenState

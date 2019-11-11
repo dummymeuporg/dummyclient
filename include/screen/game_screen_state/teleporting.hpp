@@ -27,7 +27,7 @@ public:
     void
     visitResponse(const Dummy::Server::Response::ChangeCharacter &) override;
 
-    void onMessage(const std::string &) override;
+    void onMessage(const std::string&) override;
     bool handleCustomEvent(const ::CustomEvent &) override;
 
     void onTeleport(
