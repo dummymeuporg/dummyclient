@@ -16,7 +16,7 @@ Attacking::Attacking(Graphics::Living& living, int refreshFrame) :
 void Attacking::draw(sf::RenderWindow& window) {
     auto self(shared_from_this());
     static const int FRAMES[] = {0, 1, 2};
-    if (m_clock.getElapsedTime().asMilliseconds() >= 250) {
+    if (m_clock.getElapsedTime().asMilliseconds() >= m_refreshFrame/3) {
         ++m_currentFrame;
         if (m_currentFrame >= 3) {
             m_currentFrame = 0;
