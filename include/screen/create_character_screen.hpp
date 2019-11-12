@@ -1,5 +1,7 @@
 #pragma once
 
+#include <dummy/core/character.hpp>
+
 #include "screen/ui_screen.hpp"
 #include "widget/button.hpp"
 #include "widget/label.hpp"
@@ -35,6 +37,9 @@ private:
     void handleButtonClicked(const ::CustomEvent&);
     void onCreateCharacterButton();
     void back();
+
+    Dummy::Core::Character::Class m_selectedCharacterClass;
+
     std::vector<std::shared_ptr<Dummy::Core::Character>>& m_characters;
     std::shared_ptr<Widget::Label> m_characterNameLabel; 
     std::shared_ptr<Widget::Textbox> m_characterNameTextbox;
@@ -44,6 +49,15 @@ private:
     std::shared_ptr<Widget::Button> m_rightSkinButton;
     std::shared_ptr<Widget::Button> m_createCharacterButton;
     std::shared_ptr<Widget::Button> m_cancelButton;
+
+    // Character class related stuff.
+    std::shared_ptr<Widget::Label> m_characterClassLabel;
+    std::shared_ptr<Widget::Label> m_characterClassValue;
+
+    std::shared_ptr<Widget::Button> m_chooseGrognardButton;
+    std::shared_ptr<Widget::Button> m_chooseSentinelleButton;
+    std::shared_ptr<Widget::Button> m_chooseSpadassinButton;
+
 };
 
 } // namespace Screen

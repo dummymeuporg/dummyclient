@@ -53,7 +53,8 @@ void ManageCharactersState::visitCommand(
 ) {
     Dummy::Protocol::OutgoingPacket pkt;
     pkt << Dummy::Protocol::Bridge::CREATE_CHARACTER;
-    pkt << create.name() << create.skin();
+    pkt << create.name() << create.skin()
+        << static_cast<std::uint8_t>(create.characterClass());
     // XXX: put character name and skin name
     m_networkConnector.sendPacket(pkt);
 }
