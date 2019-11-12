@@ -19,6 +19,10 @@ protected:
         return m_resourceProvider.font(fontName);
     }
 
+    sf::SoundBuffer& sound(const std::string& soundName) {
+        return m_resourceProvider.sound(soundName);
+    }
+
     sf::Texture& texture(const std::string& textureName) {
         return m_resourceProvider.texture(textureName);
     }

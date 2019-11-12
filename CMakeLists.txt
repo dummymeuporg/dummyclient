@@ -43,6 +43,7 @@ GroupSources(src)
 
 set(CLIENT_LINK_LIBRARIES
     ${Boost_LIBRARIES}
+    sfml-audio
     sfml-graphics
     sfml-network
     sfml-system

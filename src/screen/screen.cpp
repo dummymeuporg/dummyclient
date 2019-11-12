@@ -5,7 +5,8 @@
 
 namespace Screen {
 Screen::Screen(::Game& game, ::Client& client)
-    : m_game(game), m_client(client)
+    : m_game(game), m_client(client),
+      m_resourceProvider(m_game.resourceProvider())
 {
 }
 

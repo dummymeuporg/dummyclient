@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <dummy/local/project.hpp>
+
 #include "graphics/map.hpp"
 #include "resource_provider.hpp"
 
@@ -20,6 +21,21 @@ sf::Font& ResourceProvider::font(const std::string& fontName) {
         m_fonts[fontName] = std::move(font);
     }
     return m_fonts[fontName];
+}
+
+sf::SoundBuffer& ResourceProvider::sound(const std::string& soundName) {
+    fs::path fullPath(std::move(fs::path("sounds")) / soundName);
+    const std::string& soundKey(fullPath.string());
+    if (m_sounds.find(soundKey) == std::end(m_sounds))
+    {
+        sf::SoundBuffer soundBuffer;
+        if (!soundBuffer.loadFromFile(soundKey)) {
+            throw ::SoundLoadingError();
+        }
+        m_sounds[soundKey] = std::move(soundBuffer);
+
+    }
+    return m_sounds[soundKey];
 }
 
 sf::Texture& ResourceProvider::texture(const std::string& textureName) {

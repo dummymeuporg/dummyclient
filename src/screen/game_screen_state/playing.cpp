@@ -242,6 +242,69 @@ void Playing::tick() {
         m_gameMessageWidget->setEnabled(false);
     }
 
+    if (
+        !m_isAttacking &&
+        sf::Keyboard::isKeyPressed(
+            m_gameScreen.game().config().firstSpellKey()
+        )
+    ) {
+        m_isAttacking = true;
+        m_isMoving = false;
+        m_gameScreen.pushEvent(
+            ::CustomEvent(
+                &m_gameScreen,
+                CustomEvent::AttackActive,
+                &m_gameScreen
+            )
+        );
+        m_characterDirection = DIRECTION_NONE;
+    }
+
+    // Check for attack cooldown
+    if (m_isAttacking &&
+            m_attackClock.getElapsedTime().asMilliseconds() >
+            m_client.character()->getCharacterClass().attackCooldown()) {
+        m_isAttacking = false;
+        m_gameScreen.pushEvent(
+            ::CustomEvent(
+                &m_gameScreen,
+                CustomEvent::MovementInactive,
+                &m_gameScreen
+            )
+        );
+        m_attackClock.restart();
+    }
+
+    if (!m_isAttacking) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+                || sf::Keyboard::isKeyPressed(m_game.config().upKey())) {
+            m_characterDirection |= DIRECTION_UP;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
+                || sf::Keyboard::isKeyPressed(m_game.config().rightKey())) {
+            m_characterDirection |= DIRECTION_RIGHT;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
+                || sf::Keyboard::isKeyPressed(m_game.config().downKey())) {
+            m_characterDirection |= DIRECTION_DOWN;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
+                || sf::Keyboard::isKeyPressed(m_game.config().leftKey())) {
+            m_characterDirection |= DIRECTION_LEFT;
+        }
+
+        if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
+            m_gameScreen.pushEvent(
+                CustomEvent(
+                    &m_gameScreen,
+                    CustomEvent::MovementActive,
+                    &m_gameScreen
+                )
+            );
+            m_isMoving = true;
+        }
+    }
+
     m_player.tick();
     m_mapState.tick();
 
@@ -355,6 +418,9 @@ void Playing::testOnKeyPressedMapEvent() {
 
 void Playing::onKeyPressed(const sf::Event& event) {
 
+    if (m_isAttacking) {
+        return;
+    }
     if (m_gameScreen.game().config().interactKey() == event.key.code) {
         if (nullptr != m_currentGameMessage) {
             m_gameMessages.pop();
@@ -362,12 +428,8 @@ void Playing::onKeyPressed(const sf::Event& event) {
         } else {
             testOnKeyPressedMapEvent();
         }
-    } else if (
-        m_gameScreen.game().config().firstSpellKey() == event.key.code
-    ) {
-        m_isAttacking = true;
     } else {
-
+        /*
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
                 || sf::Keyboard::isKeyPressed(m_game.config().upKey())) {
             m_characterDirection |= DIRECTION_UP;
@@ -395,6 +457,7 @@ void Playing::onKeyPressed(const sf::Event& event) {
             );
             m_isMoving = true;
         }
+        */
     }
 }
 
@@ -529,14 +592,21 @@ bool Playing::handleCustomEvent(const ::CustomEvent& event) {
         );
         forwardEvent = false;
         break;
-    case CustomEvent::Type::AttackActive:
+    case CustomEvent::Type::AttackActive: {
+        m_attackSound.setBuffer(
+            m_gameScreen.resourceProvider().sound("Blow1.wav")
+        );
+        m_attackClock.restart();
+        m_attackSound.play();
         m_player.changeState(
             std::make_shared<Graphics::LivingState::Attacking>(
                 m_player,
-                500)
+                m_client.character()->getCharacterClass().attackCooldown()
+            )
         );
         forwardEvent = false;
         break;
+    }
     case CustomEvent::Type::EscapeKeyPressed:
         toggleEscapeMode();
         forwardEvent = false;
@@ -578,13 +648,15 @@ void Playing::onArrowReleased() {
         !sf::Keyboard::isKeyPressed(m_game.config().downKey()) &&
         !sf::Keyboard::isKeyPressed(m_game.config().rightKey()))
     {
-        m_gameScreen.pushEvent(
-            CustomEvent(
-                &m_gameScreen,
-                CustomEvent::MovementInactive,
-                &m_gameScreen
-            )
-        );
+        if (!m_isAttacking) {
+            m_gameScreen.pushEvent(
+                CustomEvent(
+                    &m_gameScreen,
+                    CustomEvent::MovementInactive,
+                    &m_gameScreen
+                )
+            );
+        }
         m_isArrowPressed = false;
         m_direction = sf::Keyboard::Unknown;
     }
@@ -608,19 +680,6 @@ void Playing::onKeyReleased(const sf::Event& event) {
     if (sf::Keyboard::Enter == event.key.code && m_isEnterKeyPressed) {
         std::cerr << "Enter key released!" << std::endl;
         m_isEnterKeyPressed = false;
-    } else if (
-        m_gameScreen.game().config().firstSpellKey() == event.key.code
-    ) {
-        m_isAttacking = false;
-        m_isMoving = false;
-        m_gameScreen.pushEvent(
-            ::CustomEvent(
-                &m_gameScreen,
-                CustomEvent::AttackActive,
-                &m_gameScreen
-            )
-        );
-        m_isMoving = false;
     }
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
             !sf::Keyboard::isKeyPressed(m_game.config().upKey())) {
@@ -639,7 +698,8 @@ void Playing::onKeyReleased(const sf::Event& event) {
         m_characterDirection &= (DIRECTION_ALL ^ DIRECTION_LEFT);
     }
 
-    if (m_characterDirection == DIRECTION_NONE && m_isMoving) {
+    if (m_characterDirection == DIRECTION_NONE && m_isMoving && !m_isAttacking)
+    {
         m_gameScreen.pushEvent(
             ::CustomEvent(
                 &m_gameScreen,

@@ -98,6 +98,7 @@ private: /* Attributes. */
 
     sf::Clock m_tickMove;
     sf::Clock m_pingClock;
+    sf::Clock m_attackClock;
 
     std::shared_ptr<Widget::IconButton> m_settingsButton;
     std::shared_ptr<Widget::Chatbox> m_chatbox;
@@ -107,6 +108,8 @@ private: /* Attributes. */
 
     std::queue<GameMessage> m_gameMessages;
     GameMessage* m_currentGameMessage;
+
+    sf::Sound m_attackSound;
 };
 
 } // namespace GameScreenState

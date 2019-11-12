@@ -5,6 +5,7 @@
 
 #include <dummy/server/response/response_visitor.hpp>
 #include "game_element.hpp"
+#include "resource_provider.hpp"
 #include "visual.hpp"
 
 class CustomEvent;
@@ -38,9 +39,15 @@ public:
     ::Game& game() {
         return m_game;
     }
+
+    ::ResourceProvider& resourceProvider() {
+        return m_resourceProvider;
+    }
+
 protected:
     ::Game& m_game;
     ::Client& m_client;
+    ::ResourceProvider& m_resourceProvider;
 };
 
 } // namespace Screen

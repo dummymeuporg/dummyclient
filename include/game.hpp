@@ -53,6 +53,10 @@ public:
         return m_config;
     }
 
+    ::ResourceProvider& resourceProvider() {
+        return m_resourceProvider;
+    }
+
     void quit();
 private:
     bool m_isFullscreen;
