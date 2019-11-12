@@ -17,6 +17,7 @@
 #include "game.hpp"
 
 #include "graphics/foe.hpp"
+#include "graphics/living_state/attacking.hpp"
 #include "graphics/living_state/standing_state.hpp"
 #include "graphics/living_state/walking_state.hpp"
 
@@ -36,6 +37,7 @@ Playing::Playing(GameScreen& gameScreen)
       m_direction(sf::Keyboard::Unknown),
       m_isArrowPressed(false),
       m_isMoving(false),
+      m_isAttacking(false),
       m_debugMode(false),
       m_isTypingMessage(false),
       m_isEnterKeyPressed(false),
@@ -360,34 +362,39 @@ void Playing::onKeyPressed(const sf::Event& event) {
         } else {
             testOnKeyPressedMapEvent();
         }
-    }
+    } else if (
+        m_gameScreen.game().config().firstSpellKey() == event.key.code
+    ) {
+        m_isAttacking = true;
+    } else {
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
-            || sf::Keyboard::isKeyPressed(m_game.config().upKey())) {
-        m_characterDirection |= DIRECTION_UP;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
-            || sf::Keyboard::isKeyPressed(m_game.config().rightKey())) {
-        m_characterDirection |= DIRECTION_RIGHT;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
-            || sf::Keyboard::isKeyPressed(m_game.config().downKey())) {
-        m_characterDirection |= DIRECTION_DOWN;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
-            || sf::Keyboard::isKeyPressed(m_game.config().leftKey())) {
-        m_characterDirection |= DIRECTION_LEFT;
-    }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
+                || sf::Keyboard::isKeyPressed(m_game.config().upKey())) {
+            m_characterDirection |= DIRECTION_UP;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)
+                || sf::Keyboard::isKeyPressed(m_game.config().rightKey())) {
+            m_characterDirection |= DIRECTION_RIGHT;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)
+                || sf::Keyboard::isKeyPressed(m_game.config().downKey())) {
+            m_characterDirection |= DIRECTION_DOWN;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)
+                || sf::Keyboard::isKeyPressed(m_game.config().leftKey())) {
+            m_characterDirection |= DIRECTION_LEFT;
+        }
 
-    if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
-        m_gameScreen.pushEvent(
-            CustomEvent(
-                &m_gameScreen,
-                CustomEvent::MovementActive,
-                &m_gameScreen
-            )
-        );
-        m_isMoving = true;
+        if (m_characterDirection != DIRECTION_NONE && !m_isMoving) {
+            m_gameScreen.pushEvent(
+                CustomEvent(
+                    &m_gameScreen,
+                    CustomEvent::MovementActive,
+                    &m_gameScreen
+                )
+            );
+            m_isMoving = true;
+        }
     }
 }
 
@@ -522,6 +529,14 @@ bool Playing::handleCustomEvent(const ::CustomEvent& event) {
         );
         forwardEvent = false;
         break;
+    case CustomEvent::Type::AttackActive:
+        m_player.changeState(
+            std::make_shared<Graphics::LivingState::Attacking>(
+                m_player,
+                500)
+        );
+        forwardEvent = false;
+        break;
     case CustomEvent::Type::EscapeKeyPressed:
         toggleEscapeMode();
         forwardEvent = false;
@@ -593,6 +608,19 @@ void Playing::onKeyReleased(const sf::Event& event) {
     if (sf::Keyboard::Enter == event.key.code && m_isEnterKeyPressed) {
         std::cerr << "Enter key released!" << std::endl;
         m_isEnterKeyPressed = false;
+    } else if (
+        m_gameScreen.game().config().firstSpellKey() == event.key.code
+    ) {
+        m_isAttacking = false;
+        m_isMoving = false;
+        m_gameScreen.pushEvent(
+            ::CustomEvent(
+                &m_gameScreen,
+                CustomEvent::AttackActive,
+                &m_gameScreen
+            )
+        );
+        m_isMoving = false;
     }
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Up) &&
             !sf::Keyboard::isKeyPressed(m_game.config().upKey())) {

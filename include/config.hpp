@@ -52,6 +52,10 @@ public:
         return m_interactKey;
     }
 
+    sf::Keyboard::Key firstSpellKey() const {
+        return m_firstSpellKey;
+    }
+
 private:
     void readConfigFile();
     void readKeyStrokes(const boost::property_tree::ptree&);
@@ -65,6 +69,9 @@ private:
     sf::Keyboard::Key m_downKey;
     sf::Keyboard::Key m_rightKey;
     sf::Keyboard::Key m_interactKey;
+
+    // Spells
+    sf::Keyboard::Key m_firstSpellKey;
 
 };
 

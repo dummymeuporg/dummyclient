@@ -88,6 +88,7 @@ private: /* Attributes. */
 
     bool m_isArrowPressed;
     bool m_isMoving;
+    bool m_isAttacking;
     bool m_debugMode;
     bool m_isTypingMessage;
     bool m_isEnterKeyPressed;

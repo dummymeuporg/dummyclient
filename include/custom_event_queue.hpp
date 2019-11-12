@@ -25,6 +25,7 @@ public:
         MapViewLoaded,
         MovementActive,
         MovementInactive,
+        AttackActive,
         EnterKeyPressed,
         EscapeKeyPressed,
         QuitButtonClicked,
