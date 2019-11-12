@@ -6,9 +6,14 @@ namespace Game {
 
 Message::Message(Visual& parent) : Widget(parent) {
     setEnabled(false);
-    m_rectangle.setFillColor(sf::Color(183, 109, 44));
+    m_rectangle.setFillColor(sf::Color(183, 109, 44, 200));
     m_rectangle.setOutlineColor(sf::Color(94, 47, 6));
     m_rectangle.setOutlineThickness(2);
+}
+
+void Message::setPos(std::uint16_t x, std::uint16_t y) {
+    Abstract::Widget::setPos(x, y);
+    m_rectangle.setPosition(m_x, m_y);
 }
 
 
@@ -16,11 +21,11 @@ void Message::draw(sf::RenderWindow& window) {
     sf::Text messageText;
     messageText.setFont(font("arial.ttf"));
     messageText.setFillColor(sf::Color(0, 0, 0));
-    messageText.setCharacterSize(24);
+    messageText.setCharacterSize(18);
     messageText.setString(m_message);
     messageText.setPosition(m_x + 10, m_y + 10);
-    window.draw(messageText);
     window.draw(m_rectangle);
+    window.draw(messageText);
 }
 
 bool Message::handleCustomEvent(const ::CustomEvent& customEvent) {

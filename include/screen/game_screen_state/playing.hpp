@@ -13,6 +13,11 @@
 namespace Screen {
 namespace GameScreenState {
 
+struct GameMessage {
+    std::string message;
+    std::pair<std::uint16_t, std::uint16_t> coordsOrigin;
+};
+
 class Playing : public State {
 public:
     static const int DIRECTION_NONE = 0x00;
@@ -97,7 +102,10 @@ private: /* Attributes. */
     std::shared_ptr<Widget::Chatbox> m_chatbox;
     std::shared_ptr<Widget::QuitMessage> m_quitMessage;
     std::shared_ptr<Widget::FloatWindow> m_floatWindow;
-    std::shared_ptr<Widget::Game::Message> m_currentGameMessage;
+    std::shared_ptr<Widget::Game::Message> m_gameMessageWidget;
+
+    std::queue<GameMessage> m_gameMessages;
+    GameMessage* m_currentGameMessage;
 };
 
 } // namespace GameScreenState

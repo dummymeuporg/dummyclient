@@ -46,9 +46,10 @@ Playing::Playing(GameScreen& gameScreen)
       m_chatbox(std::make_shared<Widget::Chatbox>(m_gameScreen)),
       m_quitMessage(nullptr),
       m_floatWindow(std::make_shared<Widget::FloatWindow>(m_gameScreen)),
-      m_currentGameMessage(
+      m_gameMessageWidget(
           std::make_shared<Widget::Game::Message>(m_gameScreen)
-      )
+      ),
+      m_currentGameMessage(nullptr)
 {
     m_player.setX(m_client.character()->position().first * 8);
     m_player.setY(m_client.character()->position().second * 8);
@@ -73,7 +74,11 @@ Playing::Playing(GameScreen& gameScreen)
     m_gameScreen.addWidget(m_floatWindow);
     m_gameScreen.addWidget(m_quitMessage);
 
-
+    m_gameMessageWidget->setSize(700, 150);
+    m_gameMessageWidget->setPos(
+        (m_game.window().getSize().x - m_gameMessageWidget->width())/2,
+        50
+    );
 
     m_mapView.map().setEventObserver(&m_gameScreen);
 
@@ -220,6 +225,21 @@ void Playing::drawCharacterHUD() {
 
 void Playing::tick() {
 
+    // If there is a game message to display, display it
+    if (nullptr == m_currentGameMessage && m_gameMessages.size() > 0) {
+        m_currentGameMessage = &m_gameMessages.front();
+        if (m_currentGameMessage->coordsOrigin.first == m_player.x()/16 &&
+            m_currentGameMessage->coordsOrigin.second == m_player.y()/16)
+        {
+            m_gameMessageWidget->setContent(m_currentGameMessage->message);
+            m_gameMessageWidget->setEnabled(true);
+        }
+    } else if (nullptr == m_currentGameMessage &&
+               m_gameMessageWidget->isEnabled())
+    {
+        m_gameMessageWidget->setEnabled(false);
+    }
+
     m_player.tick();
     m_mapState.tick();
 
@@ -334,7 +354,12 @@ void Playing::testOnKeyPressedMapEvent() {
 void Playing::onKeyPressed(const sf::Event& event) {
 
     if (m_gameScreen.game().config().interactKey() == event.key.code) {
-        testOnKeyPressedMapEvent();
+        if (nullptr != m_currentGameMessage) {
+            m_gameMessages.pop();
+            m_currentGameMessage = nullptr;
+        } else {
+            testOnKeyPressedMapEvent();
+        }
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)
@@ -420,14 +445,15 @@ void Playing::onTeleport(
     m_client.character()->setMapLocation(destinationMap);
     m_client.character()->setPosition({x*2, y*2});
 
-    // XXX: Change state!
     m_gameScreen.setState(std::make_shared<Teleporting>(m_gameScreen));
 }
 
 void Playing::onMessage(const std::string& message) {
     //std::cerr << "Message: " << message << std::endl;
-    m_currentGameMessage->setContent(message);
-    m_currentGameMessage->setEnabled(true);
+    GameMessage gameMessage {
+        message, { m_player.x()/16, m_player.y()/16}
+    };
+    m_gameMessages.push(gameMessage);
 }
 
 void Playing::buildEscapeMessage() {

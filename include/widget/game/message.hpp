@@ -10,6 +10,7 @@ class Message : public Abstract::Widget {
 public:
     Message(Visual&);
     void draw(sf::RenderWindow&) override;
+    void setPos(std::uint16_t, std::uint16_t) override;
     bool handleCustomEvent(const ::CustomEvent&) override;
     sf::IntRect boundingRect() const override;
     void setSize(std::uint16_t, std::uint16_t);
