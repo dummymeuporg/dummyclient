@@ -17,6 +17,7 @@ public:
         std::int32_t x,
         std::int32_t y,
         std::uint8_t floor,
+        std::uint8_t m_velocity,
         std::uint16_t scaleFactor,
         Direction direction = Direction::DOWN
     );

@@ -13,9 +13,9 @@ Living::Living(const MapView& mapView,
                std::int32_t x,
                std::int32_t y,
                std::uint8_t floor,
+               std::uint8_t velocity,
                std::size_t scaleFactor,
-               Direction direction,
-               std::uint8_t velocity)
+               Direction direction)
     : Entity(mapView, chipset, w, h, x, y, scaleFactor),
       m_floor(floor),
       m_direction(direction),
@@ -39,9 +39,9 @@ Living::Living(const Living& living)
              living.m_y,
              living.m_scaleFactor),
              m_floor(living.m_floor),
+             m_velocity(living.m_velocity),
              m_direction(living.m_direction),
-             m_state(std::make_unique<LivingState::StandingState>(*this)),
-             m_velocity(living.m_velocity)
+             m_state(std::make_unique<LivingState::StandingState>(*this))
 {
     initSpeechStuff();
 }

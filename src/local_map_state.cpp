@@ -56,6 +56,7 @@ void LocalMapState::visitMapUpdate(
         8 * livingOn.x(),
         8 * livingOn.y(),
         livingOn.floor(),
+        livingOn.velocity(),
         m_mapView.scaleFactor(),
         livingOn.direction()
     );
@@ -101,6 +102,7 @@ void LocalMapState::visitMapUpdate(
         8 * namedLivingOn.x(),
         8 * namedLivingOn.y(),
         namedLivingOn.floor(),
+        namedLivingOn.velocity(),
         m_mapView.scaleFactor(),
         namedLivingOn.direction()
     );

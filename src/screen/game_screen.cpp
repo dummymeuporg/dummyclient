@@ -46,6 +46,7 @@ GameScreen::GameScreen(
           m_client.character()->position().first,
           m_client.character()->position().second,
           m_client.character()->floor(),
+          m_client.character()->velocity(),
           game.scaleFactor(),
           m_client.character()->direction()
       ),

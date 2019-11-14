@@ -22,9 +22,9 @@ public:
            std::int32_t x,
            std::int32_t y,
            std::uint8_t floor,
+           std::uint8_t velocity,
            std::size_t scaleFactor,
-           Direction = Direction::DOWN,
-           std::uint8_t velocity = 100);
+           Direction = Direction::DOWN);
     Living(const Living&);
     void draw(sf::RenderWindow&) override;
     void drawHUD(sf::RenderWindow&, const sf::View&) override;

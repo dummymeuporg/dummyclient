@@ -9,9 +9,19 @@ FoePlayer::FoePlayer(
     std::int32_t x,
     std::int32_t y,
     std::uint8_t floor,
+    std::uint8_t velocity,
     std::uint16_t scaleFactor,
     Direction direction
-) : Foe(mapView, chipset, 24, 32, x, y, floor, scaleFactor, direction),
+) : Foe(mapView,
+        chipset,
+        24,
+        32,
+        x,
+        y,
+        floor,
+        velocity,
+        scaleFactor,
+        direction),
     m_name(name) {
     setDisplayName();
 }
