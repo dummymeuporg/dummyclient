@@ -28,6 +28,7 @@ public:
     static const int DIRECTION_ALL = 0x0f;
 
     Playing(GameScreen&);
+    ~Playing() override;
     void draw(sf::RenderWindow&) override;
     void tick() override;
     void loaded() override;

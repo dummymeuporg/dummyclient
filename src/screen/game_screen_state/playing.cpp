@@ -46,7 +46,7 @@ Playing::Playing(GameScreen& gameScreen)
       m_isTeleporting(false),
       m_settingsButton(std::make_shared<Widget::IconButton>(m_gameScreen)),
       m_chatbox(std::make_shared<Widget::Chatbox>(m_gameScreen)),
-      m_quitMessage(nullptr),
+      m_quitMessage(std::make_shared<Widget::QuitMessage>(m_gameScreen)),
       m_floatWindow(std::make_shared<Widget::FloatWindow>(m_gameScreen)),
       m_gameMessageWidget(
           std::make_shared<Widget::Game::Message>(m_gameScreen)
@@ -68,13 +68,14 @@ Playing::Playing(GameScreen& gameScreen)
     m_floatWindow->setEnabled(false);
 
     //buildEscapeMessage();
-    m_quitMessage = std::make_shared<Widget::QuitMessage>(m_gameScreen);
     m_quitMessage->setEnabled(false);
 
+    /*
     m_gameScreen.addWidget(m_settingsButton);
     m_gameScreen.addWidget(m_chatbox);
     m_gameScreen.addWidget(m_floatWindow);
     m_gameScreen.addWidget(m_quitMessage);
+    */
 
     m_gameMessageWidget->setSize(700, 150);
     m_gameMessageWidget->setPos(
@@ -85,6 +86,14 @@ Playing::Playing(GameScreen& gameScreen)
     m_mapView.map().setEventObserver(&m_gameScreen);
 
 
+}
+
+Playing::~Playing() {
+    m_gameScreen.removeChild(m_settingsButton);
+    m_gameScreen.removeChild(m_chatbox);
+    m_gameScreen.removeChild(m_quitMessage);
+    m_gameScreen.removeChild(m_floatWindow);
+    m_gameScreen.removeChild(m_gameMessageWidget);
 }
 
 void Playing::loaded() {

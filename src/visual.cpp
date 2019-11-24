@@ -11,6 +11,10 @@ Visual::Visual()
       m_isFocused(false)
 {}
 
+Visual::~Visual() {
+    std::cerr << "~Visual() called." << std::endl;
+}
+
 void Visual::setPos(std::uint16_t x, std::uint16_t y) {
     m_x = x;
     m_y = y;

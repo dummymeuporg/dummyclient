@@ -14,6 +14,7 @@ class Visual : public std::enable_shared_from_this<Visual>,
 {
 public:
     Visual();
+    virtual ~Visual();
     virtual void draw(sf::RenderWindow&) = 0;
     virtual bool handleEvent(const sf::Event&);
     virtual bool handleCustomEvent(const ::CustomEvent&);
