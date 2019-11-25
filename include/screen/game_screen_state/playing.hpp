@@ -1,5 +1,7 @@
 #pragma once
 
+#include <dummy/core/spell/spell_visitor.hpp>
+
 #include "floor_view.hpp"
 
 #include "screen/game_screen_state/state.hpp"
@@ -18,7 +20,7 @@ struct GameMessage {
     std::pair<std::uint16_t, std::uint16_t> coordsOrigin;
 };
 
-class Playing : public State {
+class Playing : public State, public Dummy::Core::Spell::SpellVisitor {
 public:
     static const int DIRECTION_NONE = 0x00;
     static const int DIRECTION_UP = 0x01;
@@ -46,6 +48,15 @@ public:
 
     void
     visitResponse(const Dummy::Server::Response::TeleportMap&) override;
+
+    void
+    visitSpell(const Dummy::Core::Spell::GrognardAttack&) override;
+
+    void
+    visitSpell(const Dummy::Core::Spell::SentinelleAttack&) override;
+
+    void
+    visitSpell(const Dummy::Core::Spell::SpadassinAttack&) override;
 
     void onTeleport(
         const std::string&,

@@ -602,6 +602,10 @@ bool Playing::handleCustomEvent(const ::CustomEvent& event) {
         forwardEvent = false;
         break;
     case CustomEvent::Type::AttackActive: {
+
+        // XXX: Send attack command.
+        //m_client.character()->characterClass()
+
         m_attackSound.setBuffer(
             m_gameScreen.resourceProvider().sound("Blow1.wav")
         );
@@ -770,6 +774,18 @@ void Playing::onTextEntered(const sf::Event& event) {
         // Forward the event to the chatbox.
         m_chatbox->handleEvent(event);
     }
+}
+
+void Playing::visitSpell(const Dummy::Core::Spell::GrognardAttack&) {
+    // Send GrognardAttack command.
+}
+
+void Playing::visitSpell(const Dummy::Core::Spell::SpadassinAttack&) {
+    // Send GrognardAttack command.
+}
+
+void Playing::visitSpell(const Dummy::Core::Spell::SentinelleAttack&) {
+    // Send GrognardAttack command.
 }
 
 } // namespace GameScreenState
