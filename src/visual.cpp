@@ -12,7 +12,7 @@ Visual::Visual()
 {}
 
 Visual::~Visual() {
-    std::cerr << "~Visual() called." << std::endl;
+    //std::cerr << "~Visual() called." << std::endl;
 }
 
 void Visual::setPos(std::uint16_t x, std::uint16_t y) {

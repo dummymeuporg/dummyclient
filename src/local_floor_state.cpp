@@ -52,7 +52,7 @@ LocalFloorState::removeFoe(const std::uint32_t id) {
 void LocalFloorState::onCharacterPosition(
     const Dummy::Protocol::MapUpdate::CharacterPosition& characterPosition
 ) {
-    std::cerr << "LocalFloorState::onCharacterPosition" << std::endl;
+    //std::cerr << "LocalFloorState::onCharacterPosition" << std::endl;
     const auto& id(characterPosition.id());
     int xVector = 0, yVector = 0;
     if (m_localMapState.livings().find(id) !=

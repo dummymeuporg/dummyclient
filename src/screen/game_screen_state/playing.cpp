@@ -1,10 +1,18 @@
 #include <memory>
 #include <boost/range/irange.hpp>
 
+#include <dummy/core/character_class/character_class.hpp>
+#include <dummy/core/spell/spell.hpp>
+
 #include <dummy/server/command/change_character.hpp>
 #include <dummy/server/command/message.hpp>
 #include <dummy/server/command/ping.hpp>
 #include <dummy/server/command/teleport_map.hpp>
+
+#include <dummy/server/command/spell/grognard_attack.hpp>
+#include <dummy/server/command/spell/sentinelle_attack.hpp>
+#include <dummy/server/command/spell/spadassin_attack.hpp>
+
 
 #include <dummy/server/response/change_character.hpp>
 #include <dummy/server/response/message.hpp>
@@ -267,6 +275,7 @@ void Playing::tick() {
             )
         );
         m_characterDirection = DIRECTION_NONE;
+        m_attackClock.restart();
     }
 
     // Check for attack cooldown
@@ -513,9 +522,7 @@ void Playing::onTeleport(
     std::uint8_t floor
 ) {
     auto self(shared_from_this());
-    std::cerr << "Teleport to: " << destinationMap << "("
-        << x << ", " << y << ", " << static_cast<int>(floor) << ")"
-        << std::endl;
+
     m_client.sendCommand(
         std::make_unique<const Dummy::Server::Command::TeleportMap>(
             destinationMap, x*2, y*2, floor, "main"
@@ -604,7 +611,7 @@ bool Playing::handleCustomEvent(const ::CustomEvent& event) {
     case CustomEvent::Type::AttackActive: {
 
         // XXX: Send attack command.
-        //m_client.character()->characterClass()
+        m_client.character()->getCharacterClass().attackSpell().accept(*this);
 
         m_attackSound.setBuffer(
             m_gameScreen.resourceProvider().sound("Blow1.wav")
@@ -778,14 +785,30 @@ void Playing::onTextEntered(const sf::Event& event) {
 
 void Playing::visitSpell(const Dummy::Core::Spell::GrognardAttack&) {
     // Send GrognardAttack command.
+    std::cerr << "SEND GROGNARD ATTACK COMMAND." << std::endl;
+    m_client.sendCommand(
+        std::make_shared<Dummy::Server::Command::Spell::GrognardAttack>(
+            static_cast<std::uint8_t>(m_client.character()->direction())
+        )
+    );
 }
 
 void Playing::visitSpell(const Dummy::Core::Spell::SpadassinAttack&) {
-    // Send GrognardAttack command.
+    // Send SpadassinAttack command.
+    m_client.sendCommand(
+        std::make_shared<Dummy::Server::Command::Spell::SpadassinAttack>(
+            static_cast<std::uint8_t>(m_client.character()->direction())
+        )
+    );
 }
 
 void Playing::visitSpell(const Dummy::Core::Spell::SentinelleAttack&) {
-    // Send GrognardAttack command.
+    // Send SentinelleAttack command.
+    m_client.sendCommand(
+        std::make_shared<Dummy::Server::Command::Spell::SentinelleAttack>(
+            static_cast<std::uint8_t>(m_client.character()->direction())
+        )
+    );
 }
 
 } // namespace GameScreenState
